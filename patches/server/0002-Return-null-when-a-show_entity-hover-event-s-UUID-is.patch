@@ -1,0 +1,42 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Video <videogamesm12@gmail.com>
+Date: Sat, 12 Mar 2022 19:34:59 -0700
+Subject: [PATCH] Return null when a show_entity hover event's UUID isn't valid
+
+
+diff --git a/src/main/java/net/minecraft/network/chat/HoverEvent.java b/src/main/java/net/minecraft/network/chat/HoverEvent.java
+index fda8aad4a394cf331f3421ec07ffe0d605c8da4e..c5711b3d120699ec78f81e9b6ee80d0764552e94 100644
+--- a/src/main/java/net/minecraft/network/chat/HoverEvent.java
++++ b/src/main/java/net/minecraft/network/chat/HoverEvent.java
+@@ -175,7 +175,14 @@ public class HoverEvent {
+             } else {
+                 JsonObject jsonObject = json.getAsJsonObject();
+                 EntityType<?> entityType = Registry.ENTITY_TYPE.get(new ResourceLocation(GsonHelper.getAsString(jsonObject, "type")));
+-                UUID uUID = UUID.fromString(GsonHelper.getAsString(jsonObject, "id"));
++                // Scissors start
++                UUID uUID;
++                try {
++                    uUID = UUID.fromString(GsonHelper.getAsString(jsonObject, "id"));
++                } catch (Exception ex) {
++                    return null;
++                }
++                // Scissors end
+                 Component component = Component.Serializer.fromJson(jsonObject.get("name"));
+                 return new HoverEvent.EntityTooltipInfo(entityType, uUID, component);
+             }
+@@ -187,7 +194,14 @@ public class HoverEvent {
+                 CompoundTag compoundTag = TagParser.parseTag(text.getString());
+                 Component component = Component.Serializer.fromJson(compoundTag.getString("name"));
+                 EntityType<?> entityType = Registry.ENTITY_TYPE.get(new ResourceLocation(compoundTag.getString("type")));
+-                UUID uUID = UUID.fromString(compoundTag.getString("id"));
++                // Scissors start
++                UUID uUID;
++                try {
++                    uUID = UUID.fromString(compoundTag.getString("id"));
++                } catch (Exception ex) {
++                    return null;
++                }
++                // Scissors end
+                 return new HoverEvent.EntityTooltipInfo(entityType, uUID, component);
+             } catch (CommandSyntaxException | JsonSyntaxException var5) {
+                 return null;
