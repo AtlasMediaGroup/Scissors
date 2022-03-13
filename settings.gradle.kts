@@ -5,6 +5,6 @@ pluginManagement {
     }
 }
 
-rootProject.name = "forktest"
+rootProject.name = "Scissors"
 
-include("forktest-api", "forktest-server")
+include("Scissors-API", "Scissors-Server")
