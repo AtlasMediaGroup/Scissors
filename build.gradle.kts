@@ -50,7 +50,7 @@ subprojects {
 }
 
 paperweight {
-    serverProject.set(project(":forktest-server"))
+    serverProject.set(project(":Scissors-Server"))
 
     remapRepo.set("https://maven.fabricmc.net/")
     decompileRepo.set("https://files.minecraftforge.net/maven/")
@@ -58,56 +58,10 @@ paperweight {
     usePaperUpstream(providers.gradleProperty("paperRef")) {
         withPaperPatcher {
             apiPatchDir.set(layout.projectDirectory.dir("patches/api"))
-            apiOutputDir.set(layout.projectDirectory.dir("forktest-api"))
+            apiOutputDir.set(layout.projectDirectory.dir("Scissors-API"))
 
             serverPatchDir.set(layout.projectDirectory.dir("patches/server"))
-            serverOutputDir.set(layout.projectDirectory.dir("forktest-server"))
-        }
-    }
-}
-
-//
-// Everything below here is optional if you don't care about publishing API or dev bundles to your repository
-//
-
-tasks.generateDevelopmentBundle {
-    apiCoordinates.set("com.example.paperfork:forktest-api")
-    mojangApiCoordinates.set("io.papermc.paper:paper-mojangapi")
-    libraryRepositories.set(
-        listOf(
-            "https://repo.maven.apache.org/maven2/",
-            "https://libraries.minecraft.net/",
-            "https://papermc.io/repo/repository/maven-public/",
-            "https://maven.quiltmc.org/repository/release/",
-            // "https://my.repo/", // This should be a repo hosting your API (in this example, 'com.example.paperfork:forktest-api')
-        )
-    )
-}
-
-allprojects {
-    // Publishing API:
-    // ./gradlew :ForkTest-API:publish[ToMavenLocal]
-    publishing {
-        repositories {
-            maven {
-                name = "myRepoSnapshots"
-                url = uri("https://my.repo/")
-                // See Gradle docs for how to provide credentials to PasswordCredentials
-                // https://docs.gradle.org/current/samples/sample_publishing_credentials.html
-                credentials(PasswordCredentials::class)
-            }
-        }
-    }
-}
-
-publishing {
-    // Publishing dev bundle:
-    // ./gradlew publishDevBundlePublicationTo(MavenLocal|MyRepoSnapshotsRepository) -PpublishDevBundle
-    if (project.hasProperty("publishDevBundle")) {
-        publications.create<MavenPublication>("devBundle") {
-            artifact(tasks.generateDevelopmentBundle) {
-                artifactId = "dev-bundle"
-            }
+            serverOutputDir.set(layout.projectDirectory.dir("Scissors-Server"))
         }
     }
 }
