@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Video <videogamesm12@gmail.com>
+Date: Sun, 13 Mar 2022 08:14:44 -0600
+Subject: [PATCH] Ignore errors thrown when trying to remove minecart entities
+ with content in them
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java
+index d80c7be5b153db4046d0b11c0116c6aa860ea48c..dfbae9ca58722c0aeb6cb9888643016d4cb36f63 100644
+--- a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java
++++ b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java
+@@ -192,7 +192,12 @@ public abstract class AbstractMinecartContainer extends AbstractMinecart impleme
+     @Override
+     public void remove(Entity.RemovalReason reason) {
+         if (!this.level.isClientSide && reason.shouldDestroy()) {
+-            Containers.dropContents(this.level, this, this);
++            // Scissors start - Ignore errors thrown when trying to remove minecart entities with content in them
++            try {
++                Containers.dropContents(this.level, this, this);
++            } catch (Exception ignored) {
++            }
++            // Scissors end
+         }
+ 
+         super.remove(reason);
