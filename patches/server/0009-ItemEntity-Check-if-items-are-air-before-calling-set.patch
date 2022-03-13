@@ -1,0 +1,26 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Luna <lunahatesgogle@gmail.com>
+Date: Sun, 13 Mar 2022 14:38:38 -0300
+Subject: [PATCH] ItemEntity - Check if items are air before calling setItem
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/item/ItemEntity.java b/src/main/java/net/minecraft/world/entity/item/ItemEntity.java
+index 063f3e4c67e6716c9a03dbe4b72eafd32e4f0d53..03b8cc0ae12f17cf3a1c57958cf10ca23750b92a 100644
+--- a/src/main/java/net/minecraft/world/entity/item/ItemEntity.java
++++ b/src/main/java/net/minecraft/world/entity/item/ItemEntity.java
+@@ -377,11 +377,14 @@ public class ItemEntity extends Entity {
+ 
+         CompoundTag nbttagcompound1 = nbt.getCompound("Item");
+ 
+-        this.setItem(ItemStack.of(nbttagcompound1));
++        // Scissors start
+         if (this.getItem().isEmpty()) {
+             this.discard();
++            return;
+         }
+ 
++        this.setItem(ItemStack.of(nbttagcompound1));
++        // Scissors end
+     }
+ 
+     @Override
