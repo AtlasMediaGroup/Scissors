@@ -6,9 +6,21 @@ Subject: [PATCH] Fixes Knowledge Books causing log spam when invalid data is
 
 
 diff --git a/src/main/java/net/minecraft/world/item/KnowledgeBookItem.java b/src/main/java/net/minecraft/world/item/KnowledgeBookItem.java
-index bb5319afd112f1013445e29e9fcad137d4c581f9..13f6cd57c3dc39cfd58b2a58aec8a1f08fad5d4a 100644
+index bb5319afd112f1013445e29e9fcad137d4c581f9..1cd62752e675b91fdcc21733509c95d5bd97625a 100644
 --- a/src/main/java/net/minecraft/world/item/KnowledgeBookItem.java
 +++ b/src/main/java/net/minecraft/world/item/KnowledgeBookItem.java
+@@ -40,9 +40,9 @@ public class KnowledgeBookItem extends Item {
+ 
+                 for(int i = 0; i < listTag.size(); ++i) {
+                     String string = listTag.getString(i);
+-                    Optional<? extends Recipe<?>> optional = recipeManager.byKey(new ResourceLocation(string));
++                    Optional<? extends Recipe<?>> optional = recipeManager.byKey(ResourceLocation.tryParse(string)); // Scissors - Validate resource locations
+                     if (!optional.isPresent()) {
+-                        LOGGER.error("Invalid recipe: {}", (Object)string);
++                        // Scissors - Don't log errors caused by invalid recipes being provided
+                         return InteractionResultHolder.fail(itemStack);
+                     }
+ 
 @@ -55,7 +55,7 @@ public class KnowledgeBookItem extends Item {
  
              return InteractionResultHolder.sidedSuccess(itemStack, world.isClientSide());
