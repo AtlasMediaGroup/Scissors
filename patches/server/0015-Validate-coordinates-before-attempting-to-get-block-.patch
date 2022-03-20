@@ -6,16 +6,21 @@ Subject: [PATCH] Validate coordinates before attempting to get block entities
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 621ec8e8a197323da6b423fee57c816ac9d7c875..f3d6b9b8db85c8e93a3af161c15b7aa873ebc5cf 100644
+index 621ec8e8a197323da6b423fee57c816ac9d7c875..88d1620ba81eaa2d868401951a264fe0e0f998c6 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -2937,16 +2937,21 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+@@ -2933,21 +2933,26 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+         if (this.player.gameMode.isCreative()) {
+             boolean flag = packet.getSlotNum() < 0;
+             ItemStack itemstack = packet.getItem();
+-            CompoundTag nbttagcompound = itemstack.getTagElement("BlockEntityTag");
  
++            /* Scissors - Do not pre-load chunks
++            CompoundTag nbttagcompound = itemstack.getTagElement("BlockEntityTag");
              if (!itemstack.isEmpty() && nbttagcompound != null && nbttagcompound.contains("x") && nbttagcompound.contains("y") && nbttagcompound.contains("z") && this.player.getBukkitEntity().hasPermission("minecraft.nbt.copy")) { // Spigot
                  BlockPos blockposition = new BlockPos(nbttagcompound.getInt("x"), nbttagcompound.getInt("y"), nbttagcompound.getInt("z"));
 -                BlockEntity tileentity = this.player.level.getBlockEntity(blockposition);
-+                // Scissors start - Validate coordinates before anything else
-+                if (Level.isInSpawnableBounds(blockposition))
++                if (Level.isInSpawnableBounds(blockposition) && blockposition.getY() < 255)
 +                {
 +                    BlockEntity tileentity = this.player.level.getBlockEntity(blockposition);
  
@@ -34,7 +39,8 @@ index 621ec8e8a197323da6b423fee57c816ac9d7c875..f3d6b9b8db85c8e93a3af161c15b7aa8
 +                        itemstack.addTagElement("BlockEntityTag", (Tag) nbttagcompound1);
 +                    }
                  }
-+                // Scissors end
              }
++            */
  
              boolean flag1 = packet.getSlotNum() >= 1 && packet.getSlotNum() <= 45;
+             boolean flag2 = itemstack.isEmpty() || itemstack.getDamageValue() >= 0 && itemstack.getCount() <= 64 && !itemstack.isEmpty();
