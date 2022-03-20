@@ -1,0 +1,40 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Video <videogamesm12@gmail.com>
+Date: Sun, 20 Mar 2022 07:46:37 -0600
+Subject: [PATCH] Validate coordinates before attempting to get block entities
+ when handling Creative Inventory packets
+
+
+diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+index 621ec8e8a197323da6b423fee57c816ac9d7c875..f3d6b9b8db85c8e93a3af161c15b7aa873ebc5cf 100644
+--- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+@@ -2937,16 +2937,21 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+ 
+             if (!itemstack.isEmpty() && nbttagcompound != null && nbttagcompound.contains("x") && nbttagcompound.contains("y") && nbttagcompound.contains("z") && this.player.getBukkitEntity().hasPermission("minecraft.nbt.copy")) { // Spigot
+                 BlockPos blockposition = new BlockPos(nbttagcompound.getInt("x"), nbttagcompound.getInt("y"), nbttagcompound.getInt("z"));
+-                BlockEntity tileentity = this.player.level.getBlockEntity(blockposition);
++                // Scissors start - Validate coordinates before anything else
++                if (Level.isInSpawnableBounds(blockposition))
++                {
++                    BlockEntity tileentity = this.player.level.getBlockEntity(blockposition);
+ 
+-                if (tileentity != null) {
+-                    CompoundTag nbttagcompound1 = tileentity.save(new CompoundTag());
++                    if (tileentity != null) {
++                        CompoundTag nbttagcompound1 = tileentity.save(new CompoundTag());
+ 
+-                    nbttagcompound1.remove("x");
+-                    nbttagcompound1.remove("y");
+-                    nbttagcompound1.remove("z");
+-                    itemstack.addTagElement("BlockEntityTag", (Tag) nbttagcompound1);
++                        nbttagcompound1.remove("x");
++                        nbttagcompound1.remove("y");
++                        nbttagcompound1.remove("z");
++                        itemstack.addTagElement("BlockEntityTag", (Tag) nbttagcompound1);
++                    }
+                 }
++                // Scissors end
+             }
+ 
+             boolean flag1 = packet.getSlotNum() >= 1 && packet.getSlotNum() <= 45;
