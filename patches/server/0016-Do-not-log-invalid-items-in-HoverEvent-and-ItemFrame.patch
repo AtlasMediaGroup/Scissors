@@ -1,0 +1,41 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Luna <lunahatesgogle@gmail.com>
+Date: Sun, 20 Mar 2022 09:31:16 -0300
+Subject: [PATCH] Do not log invalid items in HoverEvent and ItemFrame
+
+
+diff --git a/src/main/java/net/minecraft/network/chat/HoverEvent.java b/src/main/java/net/minecraft/network/chat/HoverEvent.java
+index c5711b3d120699ec78f81e9b6ee80d0764552e94..9c1341803cf892f7f3af11381bd56bc95f31fad0 100644
+--- a/src/main/java/net/minecraft/network/chat/HoverEvent.java
++++ b/src/main/java/net/minecraft/network/chat/HoverEvent.java
+@@ -315,7 +315,7 @@ public class HoverEvent {
+                         CompoundTag compoundTag = TagParser.parseTag(string);
+                         return new HoverEvent.ItemStackInfo(item, i, compoundTag);
+                     } catch (CommandSyntaxException var6) {
+-                        HoverEvent.LOGGER.warn("Failed to parse tag: {}", string, var6);
++                        // Scissors - Ignore invalid items
+                     }
+                 }
+ 
+@@ -329,7 +329,7 @@ public class HoverEvent {
+                 CompoundTag compoundTag = TagParser.parseTag(text.getString());
+                 return new HoverEvent.ItemStackInfo(ItemStack.of(compoundTag));
+             } catch (CommandSyntaxException var2) {
+-                HoverEvent.LOGGER.warn("Failed to parse item tag: {}", text, var2);
++                // Scissors - Ignore invalid items
+                 return null;
+             }
+         }
+diff --git a/src/main/java/net/minecraft/world/entity/decoration/ItemFrame.java b/src/main/java/net/minecraft/world/entity/decoration/ItemFrame.java
+index b829efdb40051a41b3bf1cabb8bf7d7c952797b5..a0f20bd54f713afe17c9b5fea9fdee6c59b6e219 100644
+--- a/src/main/java/net/minecraft/world/entity/decoration/ItemFrame.java
++++ b/src/main/java/net/minecraft/world/entity/decoration/ItemFrame.java
+@@ -388,7 +388,7 @@ public class ItemFrame extends HangingEntity {
+             ItemStack itemstack = ItemStack.of(nbttagcompound1);
+ 
+             if (itemstack.isEmpty()) {
+-                ItemFrame.LOGGER.warn("Unable to load item from: {}", nbttagcompound1);
++                // Scissors - ignore invalid items
+             }
+ 
+             ItemStack itemstack1 = this.getItem();
