@@ -5,7 +5,7 @@ Subject: [PATCH] Change version fetcher to AMG
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index ece77f5ea4b14bbed7c070131b3251ea86764538..bba6e4b2add0b21d455f623ae01cadb901621fd9 100644
+index ece77f5ea4b14bbed7c070131b3251ea86764538..7437299baa0a8d720e7b374d92530169aed5aa1d 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 @@ -19,7 +19,7 @@ import java.util.stream.StreamSupport;
@@ -28,19 +28,12 @@ index ece77f5ea4b14bbed7c070131b3251ea86764538..bba6e4b2add0b21d455f623ae01cadb9
          final Component history = getHistory();
  
          return history != null ? TextComponent.ofChildren(updateMessage, Component.newline(), history) : updateMessage;
-@@ -56,13 +56,8 @@ public class PaperVersionFetcher implements VersionFetcher {
- 
+@@ -57,7 +57,7 @@ public class PaperVersionFetcher implements VersionFetcher {
      private static Component getUpdateStatusMessage(@Nonnull String repo, @Nonnull String branch, @Nonnull String versionInfo) {
          int distance;
--        try {
+         try {
 -            int jenkinsBuild = Integer.parseInt(versionInfo);
--            distance = fetchDistanceFromSiteApi(jenkinsBuild, getMinecraftVersion());
--        } catch (NumberFormatException ignored) {
--            versionInfo = versionInfo.replace("\"", "");
--            distance = fetchDistanceFromGitHub(repo, branch, versionInfo);
--        }
-+        versionInfo = versionInfo.replace("\"", "");
-+        distance = fetchDistanceFromGitHub(repo, branch, versionInfo);
- 
-         switch (distance) {
-             case -1:
++            int jenkinsBuild = Integer.parseInt("force-git");
+             distance = fetchDistanceFromSiteApi(jenkinsBuild, getMinecraftVersion());
+         } catch (NumberFormatException ignored) {
+             versionInfo = versionInfo.replace("\"", "");
