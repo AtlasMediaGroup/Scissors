@@ -1,0 +1,24 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Telesphoreo <me@telesphoreo.me>
+Date: Sat, 26 Mar 2022 23:03:39 -0500
+Subject: [PATCH] Add getCommit() method to Bukkit
+
+
+diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
+index c551010f84ac5d3ebc626c253a8f8282924152c4..80f19df4262958315d50df5104a8fea6d0b33094 100644
+--- a/src/main/java/org/bukkit/Bukkit.java
++++ b/src/main/java/org/bukkit/Bukkit.java
+@@ -108,6 +108,13 @@ public final class Bukkit {
+         // Paper end
+     }
+ 
++    // Scissors start - Allow getting git commit
++    public static String getCommit() {
++        Map<String, String> attributes = JarManifests.MANIFEST_MAP;
++        return attributes.get("Git-Commit");
++    }
++    // Scissors end
++
+     /**
+      * Gets the name of this server implementation.
+      *

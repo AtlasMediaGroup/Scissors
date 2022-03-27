@@ -5,14 +5,19 @@ Subject: [PATCH] Change version fetcher to AMG
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index ece77f5ea4b14bbed7c070131b3251ea86764538..eabe002dcd1aeacf04b694da2185770f20672d2b 100644
+index ece77f5ea4b14bbed7c070131b3251ea86764538..a2897c410ace49d93ff4f7794e6f1472d60d1031 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-@@ -16,10 +16,11 @@ import java.io.*;
- import java.net.HttpURLConnection;
- import java.net.URL;
- import java.util.stream.StreamSupport;
-+import org.bukkit.Bukkit;
+@@ -4,6 +4,8 @@ import com.destroystokyo.paper.util.VersionFetcher;
+ import com.google.common.base.Charsets;
+ import com.google.common.io.Resources;
+ import com.google.gson.*;
++import io.papermc.paper.util.JarManifests;
++import java.util.Map;
+ import net.kyori.adventure.text.Component;
+ import net.kyori.adventure.text.event.ClickEvent;
+ import net.kyori.adventure.text.format.NamedTextColor;
+@@ -19,7 +21,7 @@ import java.util.stream.StreamSupport;
  
  public class PaperVersionFetcher implements VersionFetcher {
      private static final java.util.regex.Pattern VER_PATTERN = java.util.regex.Pattern.compile("^([0-9\\.]*)\\-.*R"); // R is an anchor, will always give '-R' at end
@@ -21,7 +26,7 @@ index ece77f5ea4b14bbed7c070131b3251ea86764538..eabe002dcd1aeacf04b694da2185770f
      private static final String DOWNLOAD_PAGE = "https://papermc.io/downloads";
      private static @Nullable String mcVer;
  
-@@ -31,8 +32,8 @@ public class PaperVersionFetcher implements VersionFetcher {
+@@ -31,8 +33,8 @@ public class PaperVersionFetcher implements VersionFetcher {
      @Nonnull
      @Override
      public Component getVersionMessage(@Nonnull String serverVersion) {
@@ -32,8 +37,17 @@ index ece77f5ea4b14bbed7c070131b3251ea86764538..eabe002dcd1aeacf04b694da2185770f
          final Component history = getHistory();
  
          return history != null ? TextComponent.ofChildren(updateMessage, Component.newline(), history) : updateMessage;
-@@ -56,13 +57,10 @@ public class PaperVersionFetcher implements VersionFetcher {
+@@ -54,15 +56,19 @@ public class PaperVersionFetcher implements VersionFetcher {
+         return mcVer;
+     }
  
++    // Scissors start - Allow getting git commit
++    public static String getCommit() {
++        Map<String, String> attributes = JarManifests.MANIFEST_MAP;
++        return attributes.get("Git-Commit");
++    }
++    // Scissors end
++
      private static Component getUpdateStatusMessage(@Nonnull String repo, @Nonnull String branch, @Nonnull String versionInfo) {
          int distance;
 -        try {
@@ -44,7 +58,7 @@ index ece77f5ea4b14bbed7c070131b3251ea86764538..eabe002dcd1aeacf04b694da2185770f
 -            distance = fetchDistanceFromGitHub(repo, branch, versionInfo);
 -        }
 +        // Scissors start - always use Git for version checking
-+        versionInfo = Bukkit.getCommit();
++        versionInfo = getCommit();
 +        distance = fetchDistanceFromGitHub(repo, branch, versionInfo);
 +        // Scissors end
  
