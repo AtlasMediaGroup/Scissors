@@ -5,10 +5,14 @@ Subject: [PATCH] Change version fetcher to AMG
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index ece77f5ea4b14bbed7c070131b3251ea86764538..7437299baa0a8d720e7b374d92530169aed5aa1d 100644
+index ece77f5ea4b14bbed7c070131b3251ea86764538..eabe002dcd1aeacf04b694da2185770f20672d2b 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-@@ -19,7 +19,7 @@ import java.util.stream.StreamSupport;
+@@ -16,10 +16,11 @@ import java.io.*;
+ import java.net.HttpURLConnection;
+ import java.net.URL;
+ import java.util.stream.StreamSupport;
++import org.bukkit.Bukkit;
  
  public class PaperVersionFetcher implements VersionFetcher {
      private static final java.util.regex.Pattern VER_PATTERN = java.util.regex.Pattern.compile("^([0-9\\.]*)\\-.*R"); // R is an anchor, will always give '-R' at end
@@ -17,7 +21,7 @@ index ece77f5ea4b14bbed7c070131b3251ea86764538..7437299baa0a8d720e7b374d92530169
      private static final String DOWNLOAD_PAGE = "https://papermc.io/downloads";
      private static @Nullable String mcVer;
  
-@@ -31,8 +31,8 @@ public class PaperVersionFetcher implements VersionFetcher {
+@@ -31,8 +32,8 @@ public class PaperVersionFetcher implements VersionFetcher {
      @Nonnull
      @Override
      public Component getVersionMessage(@Nonnull String serverVersion) {
@@ -28,12 +32,21 @@ index ece77f5ea4b14bbed7c070131b3251ea86764538..7437299baa0a8d720e7b374d92530169
          final Component history = getHistory();
  
          return history != null ? TextComponent.ofChildren(updateMessage, Component.newline(), history) : updateMessage;
-@@ -57,7 +57,7 @@ public class PaperVersionFetcher implements VersionFetcher {
+@@ -56,13 +57,10 @@ public class PaperVersionFetcher implements VersionFetcher {
+ 
      private static Component getUpdateStatusMessage(@Nonnull String repo, @Nonnull String branch, @Nonnull String versionInfo) {
          int distance;
-         try {
+-        try {
 -            int jenkinsBuild = Integer.parseInt(versionInfo);
-+            int jenkinsBuild = Integer.parseInt("force-git");
-             distance = fetchDistanceFromSiteApi(jenkinsBuild, getMinecraftVersion());
-         } catch (NumberFormatException ignored) {
-             versionInfo = versionInfo.replace("\"", "");
+-            distance = fetchDistanceFromSiteApi(jenkinsBuild, getMinecraftVersion());
+-        } catch (NumberFormatException ignored) {
+-            versionInfo = versionInfo.replace("\"", "");
+-            distance = fetchDistanceFromGitHub(repo, branch, versionInfo);
+-        }
++        // Scissors start - always use Git for version checking
++        versionInfo = Bukkit.getCommit();
++        distance = fetchDistanceFromGitHub(repo, branch, versionInfo);
++        // Scissors end
+ 
+         switch (distance) {
+             case -1:
