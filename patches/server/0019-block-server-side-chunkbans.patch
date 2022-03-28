@@ -1,0 +1,162 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: ayunami2000 <spwilliamsiam@gmail.com>
+Date: Mon, 28 Mar 2022 17:02:21 -0400
+Subject: [PATCH] block server-side chunkbana
+
+
+diff --git a/src/main/java/net/minecraft/network/PacketEncoder.java b/src/main/java/net/minecraft/network/PacketEncoder.java
+index b039a32b805fc02033fa862a1c40c4a51639e69a..1d407ebea9ff2932f93b7d6842b0e2a4e801b48c 100644
+--- a/src/main/java/net/minecraft/network/PacketEncoder.java
++++ b/src/main/java/net/minecraft/network/PacketEncoder.java
+@@ -4,9 +4,17 @@ import io.netty.buffer.ByteBuf;
+ import io.netty.channel.ChannelHandlerContext;
+ import io.netty.handler.codec.MessageToByteEncoder;
+ import io.papermc.paper.adventure.PaperAdventure; // Paper
++
+ import java.io.IOException;
++
++import net.minecraft.nbt.CompoundTag;
+ import net.minecraft.network.protocol.Packet;
+ import net.minecraft.network.protocol.PacketFlow;
++import net.minecraft.network.protocol.game.*;
++import net.minecraft.network.syncher.SynchedEntityData;
++import net.minecraft.server.MinecraftServer;
++import net.minecraft.world.item.ItemStack;
++import net.minecraft.world.level.chunk.LevelChunk;
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+ import org.apache.logging.log4j.Marker;
+@@ -44,27 +52,93 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
+                     packet.write(friendlyByteBuf);
+                     int j = friendlyByteBuf.writerIndex() - i;
+                     if (j > 8388608) {
+-                        throw new IllegalArgumentException("Packet too big (is " + j + ", should be less than 8388608): " + packet);
++                        // Scissors start
++                        noKicking(friendlyByteBuf, packet, integer, channelHandlerContext);
++                        //throw new IllegalArgumentException("Packet too big (is " + j + ", should be less than 8388608): " + packet);
++                        // Scissors end
+                     }
+                 } catch (Throwable var9) {
++                    // Scissors start
++                    noKicking(friendlyByteBuf, packet, integer, channelHandlerContext);
++                    /*
+                     LOGGER.error("Packet encoding of packet ID {} threw (skippable? {})", integer, packet.isSkippable(), var9); // Paper - WHAT WAS IT? WHO DID THIS TO YOU? WHAT DID YOU SEE?
+                     if (packet.isSkippable()) {
+                         throw new SkipPacketException(var9);
+                     } else {
+                         throw var9;
+                     }
++                    */
++                    // Scissors end
+                 }
+ 
+                 // Paper start
+                 int packetLength = friendlyByteBuf.readableBytes();
+                 if (packetLength > MAX_PACKET_SIZE) {
+-                    throw new PacketTooLargeException(packet, packetLength);
++                    // Scissors start
++                    friendlyByteBuf.clear();
++                    noKicking(friendlyByteBuf, packet, integer, channelHandlerContext);
++                    packetLength = friendlyByteBuf.readableBytes();
++                    if (packetLength > MAX_PACKET_SIZE) {
++                        friendlyByteBuf.clear();
++                        //throw new PacketTooLargeException(packet, packetLength);
++                    }
++                    //throw new PacketTooLargeException(packet, packetLength);
++                    // Scissors end
+                 }
+                 // Paper end
+             }
+         }
+     }
+ 
++    // Scissors start
++    private static void noKicking(FriendlyByteBuf friendlyByteBuf, Packet packet, Integer integer, ChannelHandlerContext channelHandlerContext) {
++        // no kicking!!
++        friendlyByteBuf.clear();
++        friendlyByteBuf.writeVarInt(integer);
++        friendlyByteBuf.adventure$locale = channelHandlerContext.channel().attr(PaperAdventure.LOCALE_ATTRIBUTE).get(); // Paper
++        boolean didIt = true;
++        if (packet instanceof ClientboundBlockEntityDataPacket blockEntityDataPacket) {
++            packet = new ClientboundBlockEntityDataPacket(blockEntityDataPacket.getPos(), blockEntityDataPacket.getType(), new CompoundTag());
++        } else if (packet instanceof ClientboundLevelChunkPacket chunkPacket) {
++            chunkPacket.clearNbt();
++        } else if (packet instanceof ClientboundSetEntityDataPacket entityDataPacket) {
++            friendlyByteBuf.writeVarInt(entityDataPacket.getId());
++            friendlyByteBuf.writeByte(255);
++            didIt = false;//prevent default packet writing
++        } else if (packet instanceof ClientboundContainerSetContentPacket containerSetContentPacket) {
++            containerSetContentPacket.clearNbt();
++        } else if (packet instanceof ClientboundSetEquipmentPacket setEquipmentPacket) {
++            friendlyByteBuf.writeVarInt(setEquipmentPacket.getEntity());
++            didIt = false;//prevent default
++        } else if (packet instanceof ClientboundContainerSetSlotPacket containerSetSlotPacket) {
++            //i really would rather cancel this packet entirely buuut idk how sOOOOoooo
++            friendlyByteBuf.writeByte(containerSetSlotPacket.getContainerId());
++            friendlyByteBuf.writeVarInt(containerSetSlotPacket.getStateId());
++            friendlyByteBuf.writeShort(containerSetSlotPacket.getSlot());
++            friendlyByteBuf.writeItem(ItemStack.EMPTY);
++            didIt = false;//prevent default
++        } else if (packet instanceof ClientboundMapItemDataPacket mapItemDataPacket) {
++            packet = new ClientboundMapItemDataPacket(mapItemDataPacket.getMapId(),mapItemDataPacket.getScale(),mapItemDataPacket.isLocked(),null,null);
++        } else {
++            didIt = false;
++            LOGGER.info(packet.getClass().getName() + " overflowed/errored and was not caught!!");
++        }
++        if (didIt) {
++            try {
++                int i = friendlyByteBuf.writerIndex();
++                packet.write(friendlyByteBuf);
++                int j = friendlyByteBuf.writerIndex() - i;
++                if (j > 8388608) {
++                    friendlyByteBuf.clear();
++                    //throw new IllegalArgumentException("Packet too big (is " + j + ", should be less than 8388608): " + packet);
++                }
++            } catch (Throwable var69) {
++                friendlyByteBuf.clear();
++            }
++        }
++    }
++    // Scissors end
++
+     // Paper start
+     private static int MAX_PACKET_SIZE = 2097152;
+ 
+diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundContainerSetContentPacket.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundContainerSetContentPacket.java
+index dbd8b9b09b82c1b75e8be9dc7416d9f0863c8c87..f71f68d1482f7e0481a95533e42e8ee5089f15ff 100644
+--- a/src/main/java/net/minecraft/network/protocol/game/ClientboundContainerSetContentPacket.java
++++ b/src/main/java/net/minecraft/network/protocol/game/ClientboundContainerSetContentPacket.java
+@@ -10,7 +10,14 @@ public class ClientboundContainerSetContentPacket implements Packet<ClientGamePa
+     private final int containerId;
+     private final int stateId;
+     private final List<ItemStack> items;
+-    private final ItemStack carriedItem;
++    private ItemStack carriedItem; // Scissors - removed "final"
++
++    // Scissors start
++    public void clearNbt(){
++        this.items.clear();
++        this.carriedItem = ItemStack.EMPTY;
++    }
++    // Scissors end
+ 
+     public ClientboundContainerSetContentPacket(int syncId, int revision, NonNullList<ItemStack> contents, ItemStack cursorStack) {
+         this.containerId = syncId;
+diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacket.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacket.java
+index 60d72e488bc77cd913328be400ca374a873b4561..89c385c5ec88c8b51f9e118b65f3b9c2a58c7d9b 100644
+--- a/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacket.java
++++ b/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacket.java
+@@ -50,6 +50,13 @@ public class ClientboundLevelChunkPacket implements Packet<ClientGamePacketListe
+     }
+     // Paper end
+ 
++    // Scissors start
++    public void clearNbt() {
++        this.blockEntitiesTags.clear();
++        this.extraPackets.clear();
++    }
++    // Scissors end
++
+     // Paper start - Anti-Xray - Add chunk packet info
+     @Deprecated public ClientboundLevelChunkPacket(LevelChunk chunk) { this(chunk, true); } // Notice for updates: Please make sure this constructor isn't used anywhere
+     public ClientboundLevelChunkPacket(LevelChunk chunk, boolean modifyBlocks) {
