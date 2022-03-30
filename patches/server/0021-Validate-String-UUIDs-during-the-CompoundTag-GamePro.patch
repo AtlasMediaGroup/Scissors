@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Video <videogamesm12@gmail.com>
+Date: Wed, 30 Mar 2022 02:01:55 -0600
+Subject: [PATCH] Validate String UUIDs during the CompoundTag -> GameProfile
+ conversion process
+
+
+diff --git a/src/main/java/net/minecraft/nbt/NbtUtils.java b/src/main/java/net/minecraft/nbt/NbtUtils.java
+index 24f009fa3b84323b4c43e0ed15c224d16a7ede81..1d1876c78f82ce36d45320e4575c79fdc284ce0e 100644
+--- a/src/main/java/net/minecraft/nbt/NbtUtils.java
++++ b/src/main/java/net/minecraft/nbt/NbtUtils.java
+@@ -78,7 +78,12 @@ public final class NbtUtils {
+ 
+         // Paper start - support string UUID's
+         if (compound.contains("Id", 8)) {
+-            uUID = UUID.fromString(compound.getString("Id"));
++            // Scissors start - Validate String UUIDs in game profiles
++            try {
++                uUID = UUID.fromString(compound.getString("Id"));
++            } catch (Exception ignored) {
++            }
++            // Scissors end
+         }
+         // Paper end
+         if (compound.hasUUID("Id")) {
