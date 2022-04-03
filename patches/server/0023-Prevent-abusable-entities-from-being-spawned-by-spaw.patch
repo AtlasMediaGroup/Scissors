@@ -1,0 +1,26 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Business Goose <arclicious@vivaldi.net>
+Date: Mon, 4 Apr 2022 00:16:54 +0100
+Subject: [PATCH] Prevent abusable entities from being spawned by spawners
+
+
+diff --git a/src/main/java/net/minecraft/world/level/BaseSpawner.java b/src/main/java/net/minecraft/world/level/BaseSpawner.java
+index 569cef8fcb1e3e1e8b66dad4fa9b956b44542bf1..6fe46cc2ebe1bab58c8538d681c48bbcc30302a6 100644
+--- a/src/main/java/net/minecraft/world/level/BaseSpawner.java
++++ b/src/main/java/net/minecraft/world/level/BaseSpawner.java
+@@ -64,6 +64,15 @@ public abstract class BaseSpawner {
+     public ResourceLocation getEntityId(@Nullable Level world, BlockPos pos) {
+         String s = this.nextSpawnData.getTag().getString("id");
+ 
++        // Scissors start - These entities have been known to cause issues while in spawners
++        List<String> blockedEntities = List.of("minecraft:lightning_bolt", "minecraft:falling_block", "minecraft:tnt");
++
++        if (blockedEntities.contains(s)) { // IDs in spawners are always lowercase and are always in the minecraft namespace.
++            return null;
++        }
++
++        // Scissors end
++
+         try {
+             return StringUtil.isNullOrEmpty(s) ? null : new ResourceLocation(s);
+         } catch (ResourceLocationException resourcekeyinvalidexception) {
