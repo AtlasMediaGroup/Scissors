@@ -1,0 +1,95 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Business Goose <arclicious@vivaldi.net>
+Date: Mon, 4 Apr 2022 00:16:54 +0100
+Subject: [PATCH] Prevent abusable entities from being spawned by spawners
+
+
+diff --git a/src/main/java/net/minecraft/world/level/BaseSpawner.java b/src/main/java/net/minecraft/world/level/BaseSpawner.java
+index 569cef8fcb1e3e1e8b66dad4fa9b956b44542bf1..f844e0b1e44f0b45b1febadf02d7b37d3099fbdb 100644
+--- a/src/main/java/net/minecraft/world/level/BaseSpawner.java
++++ b/src/main/java/net/minecraft/world/level/BaseSpawner.java
+@@ -19,7 +19,9 @@ import net.minecraft.util.StringUtil;
+ import net.minecraft.util.random.WeightedRandomList;
+ import net.minecraft.world.entity.Entity;
+ import net.minecraft.world.entity.EntityType;
++import net.minecraft.world.entity.LivingEntity;
+ import net.minecraft.world.entity.Mob;
++import net.minecraft.world.entity.MobCategory;
+ import net.minecraft.world.entity.MobSpawnType;
+ import net.minecraft.world.entity.SpawnGroupData;
+ import net.minecraft.world.entity.SpawnPlacements;
+@@ -31,6 +33,7 @@ public abstract class BaseSpawner {
+ 
+     private static final Logger LOGGER = LogManager.getLogger();
+     private static final int EVENT_SPAWN = 1;
++    public static List<MobCategory> whitelistedCategories = List.of(MobCategory.CREATURE, MobCategory.MONSTER, MobCategory.WATER_CREATURE, MobCategory.UNDERGROUND_WATER_CREATURE, MobCategory.AMBIENT); // Scissors
+     public static WeightedRandomList<SpawnData> EMPTY_POTENTIALS = WeightedRandomList.create(); // Paper - private->public
+     public int spawnDelay = 20;
+     public WeightedRandomList<SpawnData> spawnPotentials;
+@@ -64,6 +67,13 @@ public abstract class BaseSpawner {
+     public ResourceLocation getEntityId(@Nullable Level world, BlockPos pos) {
+         String s = this.nextSpawnData.getTag().getString("id");
+ 
++        // Scissors start
++        Optional<EntityType<?>> entityType = EntityType.byString(s);
++        if (entityType.isPresent() && !whitelistedCategories.contains(entityType.get().getCategory())) {
++            return null;
++        }
++        // Scissors end
++
+         try {
+             return StringUtil.isNullOrEmpty(s) ? null : new ResourceLocation(s);
+         } catch (ResourceLocationException resourcekeyinvalidexception) {
+@@ -73,6 +83,12 @@ public abstract class BaseSpawner {
+     }
+ 
+     public void setEntityId(EntityType<?> type) {
++        // Scissors start - Don't allow unnatural entities to be added to spawners
++        if (!whitelistedCategories.contains(type.getCategory())) {
++            return;
++        }
++        // Scissors end
++
+         this.nextSpawnData.getTag().putString("id", Registry.ENTITY_TYPE.getKey(type).toString());
+         this.spawnPotentials = BaseSpawner.EMPTY_POTENTIALS; // CraftBukkit - SPIGOT-3496, MC-92282
+     }
+@@ -121,7 +137,7 @@ public abstract class BaseSpawner {
+                     CompoundTag nbttagcompound = this.nextSpawnData.getTag();
+                     Optional<EntityType<?>> optional = EntityType.by(nbttagcompound);
+ 
+-                    if (!optional.isPresent()) {
++                    if (!(optional.isPresent() && whitelistedCategories.contains(optional.get().getCategory()))) { // Scissors - Don't try spawning in entites that aren't whitelisted
+                         this.delay(world, pos);
+                         return;
+                     }
+@@ -254,12 +270,16 @@ public abstract class BaseSpawner {
+             ListTag nbttaglist = nbt.getList("SpawnPotentials", 10);
+ 
+             for (int i = 0; i < nbttaglist.size(); ++i) {
+-                list.add(new SpawnData(nbttaglist.getCompound(i)));
++                // Scissors start - Filter unnatural entity types from being added
++                if (isValid(nbttaglist.getCompound(i))) {
++                    list.add(new SpawnData(nbttaglist.getCompound(i)));
++                }
++                // Scissors end
+             }
+         }
+ 
+         this.spawnPotentials = WeightedRandomList.create((List) list);
+-        if (nbt.contains("SpawnData", 10)) {
++        if (nbt.contains("SpawnData", 10) && isValid(nbt.getCompound("SpawnData"))) { // Scissors - Filter unnatural entity types from being added
+             this.setNextSpawnData(world, pos, new SpawnData(1, nbt.getCompound("SpawnData")));
+         } else if (!list.isEmpty()) {
+             this.spawnPotentials.getRandom(this.random).ifPresent((mobspawnerdata) -> {
+@@ -371,4 +391,11 @@ public abstract class BaseSpawner {
+     public double getoSpin() {
+         return this.oSpin;
+     }
++
++    // Scissors start
++    public boolean isValid(CompoundTag tag) {
++        Optional<EntityType<?>> type = EntityType.by(tag);
++        return type.isPresent() && whitelistedCategories.contains(type.get().getCategory());
++    }
++    // Scissors end
+ }
