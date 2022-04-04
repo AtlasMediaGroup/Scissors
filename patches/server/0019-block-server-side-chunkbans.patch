@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: ayunami2000 <spwilliamsiam@gmail.com>
 Date: Mon, 28 Mar 2022 17:02:21 -0400
-Subject: [PATCH] block server-side chunkbana
+Subject: [PATCH] block server-side chunkbans
 
 
 diff --git a/src/main/java/net/minecraft/network/PacketEncoder.java b/src/main/java/net/minecraft/network/PacketEncoder.java
