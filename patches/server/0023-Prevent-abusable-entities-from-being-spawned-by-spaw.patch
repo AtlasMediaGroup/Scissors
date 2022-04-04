@@ -5,7 +5,7 @@ Subject: [PATCH] Prevent abusable entities from being spawned by spawners
 
 
 diff --git a/src/main/java/net/minecraft/world/level/BaseSpawner.java b/src/main/java/net/minecraft/world/level/BaseSpawner.java
-index 569cef8fcb1e3e1e8b66dad4fa9b956b44542bf1..765b9d44cf49a21863fbc0d2c37b761c75237c79 100644
+index 569cef8fcb1e3e1e8b66dad4fa9b956b44542bf1..5b800ac1e76727f0e12e4d5f2e840803a2547fd1 100644
 --- a/src/main/java/net/minecraft/world/level/BaseSpawner.java
 +++ b/src/main/java/net/minecraft/world/level/BaseSpawner.java
 @@ -19,7 +19,9 @@ import net.minecraft.util.StringUtil;
@@ -18,13 +18,20 @@ index 569cef8fcb1e3e1e8b66dad4fa9b956b44542bf1..765b9d44cf49a21863fbc0d2c37b761c
  import net.minecraft.world.entity.MobSpawnType;
  import net.minecraft.world.entity.SpawnGroupData;
  import net.minecraft.world.entity.SpawnPlacements;
-@@ -64,6 +66,20 @@ public abstract class BaseSpawner {
+@@ -31,6 +33,7 @@ public abstract class BaseSpawner {
+ 
+     private static final Logger LOGGER = LogManager.getLogger();
+     private static final int EVENT_SPAWN = 1;
++    public static List<MobCategory> whitelistedCategories = List.of(MobCategory.CREATURE, MobCategory.MONSTER, MobCategory.WATER_CREATURE, MobCategory.UNDERGROUND_WATER_CREATURE, MobCategory.AMBIENT); // Scissors
+     public static WeightedRandomList<SpawnData> EMPTY_POTENTIALS = WeightedRandomList.create(); // Paper - private->public
+     public int spawnDelay = 20;
+     public WeightedRandomList<SpawnData> spawnPotentials;
+@@ -64,6 +67,19 @@ public abstract class BaseSpawner {
      public ResourceLocation getEntityId(@Nullable Level world, BlockPos pos) {
          String s = this.nextSpawnData.getTag().getString("id");
  
-+        // Scissors start - These entities have been known to cause issues while in spawners
++        // Scissors start
 +
-+        List<MobCategory> whitelistedCategories = List.of(MobCategory.CREATURE, MobCategory.MONSTER, MobCategory.WATER_CREATURE, MobCategory.UNDERGROUND_WATER_CREATURE, MobCategory.AMBIENT);
 +        Optional<EntityType<?>> entityType = EntityType.byString(s);
 +
 +        if (entityType.isPresent()) {
@@ -39,3 +46,17 @@ index 569cef8fcb1e3e1e8b66dad4fa9b956b44542bf1..765b9d44cf49a21863fbc0d2c37b761c
          try {
              return StringUtil.isNullOrEmpty(s) ? null : new ResourceLocation(s);
          } catch (ResourceLocationException resourcekeyinvalidexception) {
+@@ -135,6 +151,13 @@ public abstract class BaseSpawner {
+                     if (world.noCollision(((EntityType) optional.get()).getAABB(d0, d1, d2)) && SpawnPlacements.checkSpawnRules((EntityType) optional.get(), world, MobSpawnType.SPAWNER, new BlockPos(d0, d1, d2), world.getRandom())) {
+                         // Paper start
+                         EntityType<?> entityType = optional.get();
++
++                        // Scissors start
++                        if(!whitelistedCategories.contains(entityType.getCategory())) {
++                            break;
++                        }
++                        // Scissors end
++
+                         String key = EntityType.getKey(entityType).getPath();
+ 
+                         org.bukkit.entity.EntityType type = org.bukkit.entity.EntityType.fromName(key);
