@@ -1,0 +1,61 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Business Goose <arclicious@vivaldi.net>
+Date: Mon, 4 Apr 2022 08:42:30 +0100
+Subject: [PATCH] Patch underflow on heal effects & instant damage affecting
+ invulnerable players
+
+
+diff --git a/src/main/java/net/minecraft/world/effect/MobEffect.java b/src/main/java/net/minecraft/world/effect/MobEffect.java
+index 79e036d79dec2ec4404baf02c23ba5ccad20cdce..7fecffcd8fa0279adc6b42bc529d07dbe79d5ae4 100644
+--- a/src/main/java/net/minecraft/world/effect/MobEffect.java
++++ b/src/main/java/net/minecraft/world/effect/MobEffect.java
+@@ -21,6 +21,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeMap;
+ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+ import net.minecraft.world.entity.player.Player;
+ import org.bukkit.craftbukkit.event.CraftEventFactory;
++import org.bukkit.entity.HumanEntity;
+ import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+ // CraftBukkit end
+ 
+@@ -75,9 +76,29 @@ public class MobEffect {
+                 // CraftBukkit end
+             }
+         } else if ((this != MobEffects.HEAL || entity.isInvertedHealAndHarm()) && (this != MobEffects.HARM || !entity.isInvertedHealAndHarm())) {
+-            if (this == MobEffects.HARM && !entity.isInvertedHealAndHarm() || this == MobEffects.HEAL && entity.isInvertedHealAndHarm()) {
+-                entity.hurt(DamageSource.MAGIC, (float) (6 << amplifier));
++            // Scissors start - 6 << 125 on heal effect causes wraparound & kills player
++
++            float damage = (float) (6 << amplifier);
++
++            if (entity.isInvertedHealAndHarm()) {
++                damage = -damage;
+             }
++
++            if (this == MobEffects.HEAL) {
++                if(damage < 0) {
++                    damage = 0;
++                }
++            } else if (this == MobEffects.HARM) {
++                if (entity instanceof Player playerEntity) {
++                    if (playerEntity.isCreative() || playerEntity.isInvulnerable() || playerEntity.hasEffect(MobEffects.DAMAGE_RESISTANCE)) {
++                        return; // Creative, invulnerable or damage resistant players shouldn't be damaged by harm effect.
++                    }
++                }
++            }
++
++            entity.hurt(DamageSource.MAGIC, damage);
++
++            // Scissors end
+         } else {
+             entity.heal((float) Math.max(4 << amplifier, 0), RegainReason.MAGIC); // CraftBukkit
+         }
+@@ -100,7 +121,8 @@ public class MobEffect {
+             }
+         } else {
+             j = (int) (proximity * (double) (4 << amplifier) + 0.5D);
+-            target.heal((float) j, RegainReason.MAGIC); // CraftBukkit
++
++            target.heal(Math.max((float) j, 0), RegainReason.MAGIC); // CraftBukkit // Scissors
+         }
+ 
+     }
