@@ -3,8 +3,8 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                sh './gradlew applyPatches'
-                sh './gradlew paperclipJar'
+                sh './gradlew applyPatches --no-daemon'
+                sh './gradlew paperclipJar --no-daemon'
             }
         }
     }
