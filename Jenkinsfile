@@ -1,10 +1,16 @@
 pipeline {
     agent any
     stages {
-        stage('build') {
+        stage('applyPatches') {
             steps {
                 withGradle {
                     sh './gradlew applyPatches --no-daemon'
+                }
+            }
+        }
+        stage('paperclipJar') {
+            steps {
+                withGradle {
                     sh './gradlew paperclipJar --no-daemon'
                 }
             }
