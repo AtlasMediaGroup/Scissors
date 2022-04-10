@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    options {
+        properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5')), pipelineTriggers([githubPush()])])
+    }
     stages {
         stage('applyPatches') {
             steps {
