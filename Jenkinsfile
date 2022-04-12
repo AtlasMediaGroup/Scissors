@@ -1,16 +1,28 @@
 pipeline {
     agent any
+    options {
+        buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5')
+    }
     stages {
-        stage('build') {
+        stage('applyPatches') {
             steps {
-                sh './gradlew applyPatches --no-daemon'
-                sh './gradlew paperclipJar --no-daemon'
+                withGradle {
+                    sh './gradlew applyPatches --no-daemon'
+                }
+            }
+        }
+        stage('paperclipJar') {
+            steps {
+                withGradle {
+                    sh './gradlew paperclipJar --no-daemon'
+                }
             }
         }
     }
     post {
         always {
             archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
+            cleanWs()
         }
     }
 }
