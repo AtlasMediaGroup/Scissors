@@ -5,10 +5,10 @@ Subject: [PATCH] Build changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 612c4ed60406a69832609a9bdb3e45a7f3de6b74..4cf8fed3983e43c68b5a366da01d5f39c8829e16 100644
+index c236fe5dc388f8bc0a929f1de04af94c63514208..c7c8b00a34cbc39f1003b618097bc1e2858823a1 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -22,8 +22,8 @@ repositories {
+@@ -13,8 +13,8 @@ plugins {
  }
  
  dependencies {
@@ -19,7 +19,7 @@ index 612c4ed60406a69832609a9bdb3e45a7f3de6b74..4cf8fed3983e43c68b5a366da01d5f39
      // Paper start
      implementation("org.jline:jline-terminal-jansi:3.21.0")
      implementation("net.minecrell:terminalconsoleappender:1.3.0")
-@@ -75,7 +75,7 @@ tasks.jar {
+@@ -66,7 +66,7 @@ tasks.jar {
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",
              "Implementation-Title" to "CraftBukkit",
@@ -28,7 +28,7 @@ index 612c4ed60406a69832609a9bdb3e45a7f3de6b74..4cf8fed3983e43c68b5a366da01d5f39
              "Implementation-Vendor" to date, // Paper
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
-@@ -202,7 +202,7 @@ tasks.test {
+@@ -193,7 +193,7 @@ tasks.test {
  fun TaskContainer.registerRunTask(
      name: String, block: JavaExec.() -> Unit
  ): TaskProvider<JavaExec> = register<JavaExec>(name) {
@@ -38,7 +38,7 @@ index 612c4ed60406a69832609a9bdb3e45a7f3de6b74..4cf8fed3983e43c68b5a366da01d5f39
      workingDir = rootProject.layout.projectDirectory.dir(
          providers.gradleProperty("runWorkDir").forUseAtConfigurationTime().orElse("run")
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 5a4172faaf960d48939d6a485719041987df9242..541963dc93327d8323704fdc0e422b1a24f4baa0 100644
+index 8091a901106a1085da9dfd8627dadcbe50f00872..e6da0f7e755e6b0225afbced2c7a14e9df83b09d 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1729,7 +1729,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
