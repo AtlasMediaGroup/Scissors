@@ -215,14 +215,35 @@ index d02339a07e1da56fd5dc171a5e32b00d63fa555c..fe6cb52573ee50a2c02d7add38b5e841
          processEnchantOrder(this.tag); // Paper
          if (this.getItem().canBeDepleted()) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftItemStack.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftItemStack.java
-index 14da2997b5fff4434b1fe8d5a1b3109dde143740..43fe0eaabdb6c37df31eb805587fc9c00e13789f 100644
+index 14da2997b5fff4434b1fe8d5a1b3109dde143740..a4385cea2d472611cfc7ef43662367bb1d780333 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftItemStack.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftItemStack.java
-@@ -2,6 +2,7 @@ package org.bukkit.craftbukkit.inventory;
+@@ -1,16 +1,12 @@
+ package org.bukkit.craftbukkit.inventory;
  
- import static org.bukkit.craftbukkit.inventory.CraftMetaItem.*;
+-import static org.bukkit.craftbukkit.inventory.CraftMetaItem.*;
  import com.google.common.collect.ImmutableMap;
-+import java.nio.charset.StandardCharsets;
- import java.util.Map;
+-import java.util.Map;
  import net.minecraft.nbt.CompoundTag;
  import net.minecraft.nbt.ListTag;
+ import net.minecraft.world.item.Item;
+ import org.apache.commons.lang.Validate;
+ import org.bukkit.Material;
+-import org.bukkit.NamespacedKey;
+ import org.bukkit.configuration.serialization.DelegateDeserialization;
+-import org.bukkit.craftbukkit.enchantments.CraftEnchantment;
+ import org.bukkit.craftbukkit.util.CraftLegacy;
+ import org.bukkit.craftbukkit.util.CraftMagicNumbers;
+ import org.bukkit.craftbukkit.util.CraftNamespacedKey;
+@@ -19,6 +15,11 @@ import org.bukkit.inventory.ItemStack;
+ import org.bukkit.inventory.meta.ItemMeta;
+ import org.bukkit.material.MaterialData;
+ 
++import java.util.Map;
++
++import static org.bukkit.craftbukkit.inventory.CraftMetaItem.ENCHANTMENTS_ID;
++import static org.bukkit.craftbukkit.inventory.CraftMetaItem.ENCHANTMENTS_LVL;
++
+ @DelegateDeserialization(ItemStack.class)
+ public final class CraftItemStack extends ItemStack {
+ 
