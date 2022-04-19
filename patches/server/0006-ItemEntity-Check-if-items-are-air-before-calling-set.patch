@@ -5,10 +5,10 @@ Subject: [PATCH] ItemEntity - Check if items are air before calling setItem
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/item/ItemEntity.java b/src/main/java/net/minecraft/world/entity/item/ItemEntity.java
-index 063f3e4c67e6716c9a03dbe4b72eafd32e4f0d53..03b8cc0ae12f17cf3a1c57958cf10ca23750b92a 100644
+index f7d29950644a5cf12da0d31246d9f5fcbcc201bb..45866c9905cc607c58c398e675fe879e6e249398 100644
 --- a/src/main/java/net/minecraft/world/entity/item/ItemEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/item/ItemEntity.java
-@@ -377,11 +377,14 @@ public class ItemEntity extends Entity {
+@@ -378,11 +378,14 @@ public class ItemEntity extends Entity {
  
          CompoundTag nbttagcompound1 = nbt.getCompound("Item");
  

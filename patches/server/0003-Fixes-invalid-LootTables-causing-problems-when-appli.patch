@@ -32,7 +32,7 @@ index 94dc68182ec5f6dc1294ad15523427836228086a..07075cea760562c901d4469a7f88271c
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java
-index f57864ce919ef4721cfb5913c636fe8903ce4cc1..d80c7be5b153db4046d0b11c0116c6aa860ea48c 100644
+index 8a07d5d25086d7544757bb86181fbe2b5e743d29..ef50d9747f2a027e356b05ad8d94ffb2fd4a423e 100644
 --- a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java
 +++ b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java
 @@ -219,7 +219,7 @@ public abstract class AbstractMinecartContainer extends AbstractMinecart impleme

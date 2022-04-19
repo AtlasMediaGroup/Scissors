@@ -6,11 +6,11 @@ Subject: [PATCH] Validate String UUIDs during the CompoundTag -> GameProfile
 
 
 diff --git a/src/main/java/net/minecraft/nbt/NbtUtils.java b/src/main/java/net/minecraft/nbt/NbtUtils.java
-index 24f009fa3b84323b4c43e0ed15c224d16a7ede81..1d1876c78f82ce36d45320e4575c79fdc284ce0e 100644
+index fe87de42bc099ce41038f7f49ded9a12898e32eb..07fc1fefcea853ac0aa355312d8c718dc3a4ddd7 100644
 --- a/src/main/java/net/minecraft/nbt/NbtUtils.java
 +++ b/src/main/java/net/minecraft/nbt/NbtUtils.java
-@@ -78,7 +78,12 @@ public final class NbtUtils {
- 
+@@ -77,7 +77,12 @@ public final class NbtUtils {
+         }
          // Paper start - support string UUID's
          if (compound.contains("Id", 8)) {
 -            uUID = UUID.fromString(compound.getString("Id"));
@@ -22,4 +22,4 @@ index 24f009fa3b84323b4c43e0ed15c224d16a7ede81..1d1876c78f82ce36d45320e4575c79fd
 +            // Scissors end
          }
          // Paper end
-         if (compound.hasUUID("Id")) {
+ 

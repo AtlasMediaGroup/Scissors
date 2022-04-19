@@ -5,7 +5,7 @@ Subject: [PATCH] Even more ResourceLocation validation and log spam fixes
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java b/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
-index 02172fdcf587904258387d309938fb379a300524..3c60094119a2b51d5fbab6c559c43293913f6204 100644
+index 7e1885d9cc568a544e934cede32bff05c20b567a..2481c50d8eb58a003e30e2d957b877bce5123a3a 100644
 --- a/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
 +++ b/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
 @@ -420,7 +420,7 @@ public class AreaEffectCloud extends Entity {
@@ -60,7 +60,7 @@ index 0dd0ce9a9b3253e87eda12354249ec2fd2a33cf2..b6920f9432ca1736afbe775186fbbcf1
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
-index 5a43e420f14fa52d71d41ff3694a179e7a1a5be3..488ccdeb867dcd3aaae4bce77da8b7a11d07eddc 100644
+index cf0be5ef01bddaabbfd11f54b2dacd68c68ad16a..b4b86d7448e6659b1d4e034ffcddd7be77dd977f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
 @@ -67,8 +67,14 @@ public abstract class CraftMob extends CraftLivingEntity implements Mob {

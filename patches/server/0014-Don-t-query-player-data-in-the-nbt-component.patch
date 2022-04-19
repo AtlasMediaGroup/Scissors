@@ -5,18 +5,18 @@ Subject: [PATCH] Don't query player data in the `nbt` component
 
 
 diff --git a/src/main/java/net/minecraft/network/chat/NbtComponent.java b/src/main/java/net/minecraft/network/chat/NbtComponent.java
-index f5f2ec1192303bc55a64dce3e0457e4531a35ba7..62613d9fccd74fe16512fe1fe703dc6db0166b28 100644
+index 8e658eeb4edc83db72c187baa52b7ada7b848af8..e3dc56de3f91e03b1543257f72448a734d914ed7 100644
 --- a/src/main/java/net/minecraft/network/chat/NbtComponent.java
 +++ b/src/main/java/net/minecraft/network/chat/NbtComponent.java
-@@ -22,6 +22,7 @@ import net.minecraft.nbt.Tag;
+@@ -23,6 +23,7 @@ import net.minecraft.nbt.Tag;
  import net.minecraft.resources.ResourceLocation;
  import net.minecraft.server.level.ServerLevel;
  import net.minecraft.world.entity.Entity;
 +import net.minecraft.world.entity.player.Player;
  import net.minecraft.world.level.block.entity.BlockEntity;
- import org.apache.logging.log4j.LogManager;
- import org.apache.logging.log4j.Logger;
-@@ -218,7 +219,7 @@ public abstract class NbtComponent extends BaseComponent implements ContextAware
+ import org.slf4j.Logger;
+ 
+@@ -217,7 +218,7 @@ public abstract class NbtComponent extends BaseComponent implements ContextAware
          protected Stream<CompoundTag> getData(CommandSourceStack source) throws CommandSyntaxException {
              if (this.compiledSelector != null) {
                  List<? extends Entity> list = this.compiledSelector.findEntities(source);

@@ -5,10 +5,10 @@ Subject: [PATCH] Return null when a show_entity hover event's UUID isn't valid
 
 
 diff --git a/src/main/java/net/minecraft/network/chat/HoverEvent.java b/src/main/java/net/minecraft/network/chat/HoverEvent.java
-index fda8aad4a394cf331f3421ec07ffe0d605c8da4e..c5711b3d120699ec78f81e9b6ee80d0764552e94 100644
+index b31ff9d237f593e58b42b453632aa2c2af74f986..67feb4e688d049e9f74f0deabb1ec583336a29be 100644
 --- a/src/main/java/net/minecraft/network/chat/HoverEvent.java
 +++ b/src/main/java/net/minecraft/network/chat/HoverEvent.java
-@@ -175,7 +175,14 @@ public class HoverEvent {
+@@ -174,7 +174,14 @@ public class HoverEvent {
              } else {
                  JsonObject jsonObject = json.getAsJsonObject();
                  EntityType<?> entityType = Registry.ENTITY_TYPE.get(new ResourceLocation(GsonHelper.getAsString(jsonObject, "type")));
@@ -24,7 +24,7 @@ index fda8aad4a394cf331f3421ec07ffe0d605c8da4e..c5711b3d120699ec78f81e9b6ee80d07
                  Component component = Component.Serializer.fromJson(jsonObject.get("name"));
                  return new HoverEvent.EntityTooltipInfo(entityType, uUID, component);
              }
-@@ -187,7 +194,14 @@ public class HoverEvent {
+@@ -186,7 +193,14 @@ public class HoverEvent {
                  CompoundTag compoundTag = TagParser.parseTag(text.getString());
                  Component component = Component.Serializer.fromJson(compoundTag.getString("name"));
                  EntityType<?> entityType = Registry.ENTITY_TYPE.get(new ResourceLocation(compoundTag.getString("type")));
@@ -38,5 +38,5 @@ index fda8aad4a394cf331f3421ec07ffe0d605c8da4e..c5711b3d120699ec78f81e9b6ee80d07
 +                }
 +                // Scissors end
                  return new HoverEvent.EntityTooltipInfo(entityType, uUID, component);
-             } catch (CommandSyntaxException | JsonSyntaxException var5) {
+             } catch (Exception var5) {
                  return null;

@@ -5,10 +5,10 @@ Subject: [PATCH] Do not log invalid items in HoverEvent and ItemFrame
 
 
 diff --git a/src/main/java/net/minecraft/network/chat/HoverEvent.java b/src/main/java/net/minecraft/network/chat/HoverEvent.java
-index c5711b3d120699ec78f81e9b6ee80d0764552e94..9c1341803cf892f7f3af11381bd56bc95f31fad0 100644
+index 67feb4e688d049e9f74f0deabb1ec583336a29be..63dbbc0f027ab66d183f81d6a8e0f9e0b85ea562 100644
 --- a/src/main/java/net/minecraft/network/chat/HoverEvent.java
 +++ b/src/main/java/net/minecraft/network/chat/HoverEvent.java
-@@ -315,7 +315,7 @@ public class HoverEvent {
+@@ -314,7 +314,7 @@ public class HoverEvent {
                          CompoundTag compoundTag = TagParser.parseTag(string);
                          return new HoverEvent.ItemStackInfo(item, i, compoundTag);
                      } catch (CommandSyntaxException var6) {
@@ -17,7 +17,7 @@ index c5711b3d120699ec78f81e9b6ee80d0764552e94..9c1341803cf892f7f3af11381bd56bc9
                      }
                  }
  
-@@ -329,7 +329,7 @@ public class HoverEvent {
+@@ -328,7 +328,7 @@ public class HoverEvent {
                  CompoundTag compoundTag = TagParser.parseTag(text.getString());
                  return new HoverEvent.ItemStackInfo(ItemStack.of(compoundTag));
              } catch (CommandSyntaxException var2) {
@@ -27,10 +27,10 @@ index c5711b3d120699ec78f81e9b6ee80d0764552e94..9c1341803cf892f7f3af11381bd56bc9
              }
          }
 diff --git a/src/main/java/net/minecraft/world/entity/decoration/ItemFrame.java b/src/main/java/net/minecraft/world/entity/decoration/ItemFrame.java
-index b829efdb40051a41b3bf1cabb8bf7d7c952797b5..a0f20bd54f713afe17c9b5fea9fdee6c59b6e219 100644
+index f134a2e68d50fba021b19fac4c75fb35d0e252c6..5e79ce09bf8ba48eb7f5dfdcf1511a2964c3281d 100644
 --- a/src/main/java/net/minecraft/world/entity/decoration/ItemFrame.java
 +++ b/src/main/java/net/minecraft/world/entity/decoration/ItemFrame.java
-@@ -388,7 +388,7 @@ public class ItemFrame extends HangingEntity {
+@@ -396,7 +396,7 @@ public class ItemFrame extends HangingEntity {
              ItemStack itemstack = ItemStack.of(nbttagcompound1);
  
              if (itemstack.isEmpty()) {
