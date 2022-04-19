@@ -4,28 +4,20 @@ plugins {
     java
     `maven-publish`
     id("com.github.johnrengelman.shadow") version "7.1.2" apply false
-    id("io.papermc.paperweight.patcher") version "1.2.0"
+    id("io.papermc.paperweight.patcher") version "1.3.4"
 }
-
-val spigotDecompiler: Configuration by configurations.creating
 
 repositories {
     mavenCentral()
     maven("https://papermc.io/repo/repository/maven-public/") {
-        content {
-            onlyForConfigurations(
-                configurations.paperclip.name,
-                spigotDecompiler.name,
-            )
-        }
+        content { onlyForConfigurations(PAPERCLIP_CONFIG) }
     }
 }
 
 dependencies {
     remapper("net.fabricmc:tiny-remapper:0.8.1:fat")
     decompiler("net.minecraftforge:forgeflower:1.5.498.22")
-    spigotDecompiler("io.papermc:patched-spigot-fernflower:0.1+build.4")
-    paperclip("io.papermc:paperclip:2.0.1")
+    paperclip("io.papermc:paperclip:3.0.2")
 }
 
 allprojects {
