@@ -1,0 +1,53 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Telesphoreo <me@telesphoreo.me>
+Date: Tue, 19 Apr 2022 19:03:51 -0500
+Subject: [PATCH] Fix compiling errors
+
+
+diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
+index f92610edcfb724374c69e66443eab60919ee955a..153c06bc00c4619012e77cb496ac57a7f2fc9409 100644
+--- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
++++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
+@@ -18,6 +18,7 @@ import java.io.*;
+ import java.net.HttpURLConnection;
+ import java.net.URL;
+ import java.util.stream.StreamSupport;
++import org.bukkit.Bukkit;
+ 
+ public class PaperVersionFetcher implements VersionFetcher {
+     private static final java.util.regex.Pattern VER_PATTERN = java.util.regex.Pattern.compile("^([0-9\\.]*)\\-.*R"); // R is an anchor, will always give '-R' at end
+@@ -57,14 +58,14 @@ public class PaperVersionFetcher implements VersionFetcher {
+     }
+ 
+     // Scissors start - Allow getting git information
+-    public static String getCommit() {
+-        Map<String, String> attributes = JarManifests.MANIFEST_MAP;
+-        return attributes.get("Git-Commit");
++    private static String getCommit() {
++        final var manifest = JarManifests.manifest(Bukkit.getServer().getClass());
++        return manifest == null ? null : manifest.getMainAttributes().getValue("Git-Commit");
+     }
+ 
+-    public static String getBranch() {
+-        Map<String, String> attributes = JarManifests.MANIFEST_MAP;
+-        return attributes.get("Git-Branch");
++    private static String getBranch() {
++        final var manifest = JarManifests.manifest(Bukkit.getServer().getClass());
++        return manifest == null ? null : manifest.getMainAttributes().getValue("Git-Branch");
+     }
+     // Scissors end
+ 
+diff --git a/src/main/java/net/minecraft/network/chat/NbtComponent.java b/src/main/java/net/minecraft/network/chat/NbtComponent.java
+index e3dc56de3f91e03b1543257f72448a734d914ed7..8bb0544ef08eb0c221f06ddf96b63be5d02dc5ab 100644
+--- a/src/main/java/net/minecraft/network/chat/NbtComponent.java
++++ b/src/main/java/net/minecraft/network/chat/NbtComponent.java
+@@ -95,7 +95,8 @@ public abstract class NbtComponent extends BaseComponent implements ContextAware
+                     return stream.map((string) -> {
+                         return new TextComponent(string);
+                     }).reduce((accumulator, current) -> {
+-                        return accumulator.append(text).append(current);
++                        // Scissors - untested, likely needs fixing
++                        return (TextComponent)accumulator.append(text).append(current);
+                     }).orElseGet(() -> {
+                         return new TextComponent("");
+                     });

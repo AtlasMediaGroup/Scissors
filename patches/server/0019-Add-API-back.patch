@@ -1,0 +1,18 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Telesphoreo <me@telesphoreo.me>
+Date: Tue, 19 Apr 2022 18:54:26 -0500
+Subject: [PATCH] Add API back
+
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index bcada100f0938cfae54734582a86f4c1787e91b5..20120bd0b031d5106968c8bf7516b3db23e74ab7 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -9,6 +9,7 @@ plugins {
+ }
+ 
+ dependencies {
++    implementation(project(":Scissors-API"))
+     implementation("io.papermc.paper:paper-mojangapi:1.18.2-R0.1-SNAPSHOT") // Scissors
+     // Paper start
+     implementation("org.jline:jline-terminal-jansi:3.21.0")

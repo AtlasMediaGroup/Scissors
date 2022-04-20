@@ -5,11 +5,11 @@ Subject: [PATCH] Fix negative death times
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 99a5074adbe2a254ae6115b3548f1fcd30ba2489..68ae4dfe3f4a77605b19607b5f04a2a6d07d6fc8 100644
+index 1521f53ee1bd85ca44a68b2c9d969eaf63fa342e..64cfd7281b909e51321167a7f65d66b3ca8f9bc3 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -623,7 +623,7 @@ public abstract class LivingEntity extends Entity {
-
+@@ -620,7 +620,7 @@ public abstract class LivingEntity extends Entity {
+ 
      protected void tickDeath() {
          ++this.deathTime;
 -        if (this.deathTime >= 20 && !this.isRemoved() && !this.level.isClientSide()) { // CraftBukkit - (this.deathTicks == 20) -> (this.deathTicks >= 20 && !this.dead)

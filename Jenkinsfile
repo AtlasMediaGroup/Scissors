@@ -14,7 +14,7 @@ pipeline {
         stage('paperclipJar') {
             steps {
                 withGradle {
-                    sh './gradlew paperclipJar --no-daemon'
+                    sh './gradlew createReobfPaperclipJar --no-daemon'
                 }
             }
         }
