@@ -5,7 +5,7 @@ Subject: [PATCH] Fix versioning
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index becf61c0adde1c27f3e462a1b8248544ab181797..7ce9705a83c7ba180f2cc831f6cac7ed11f937c0 100644
+index becf61c0adde1c27f3e462a1b8248544ab181797..5e6cce78e7987b4aa1c0052262ab8c4563905372 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -11,7 +11,7 @@ public final class Versioning {
@@ -13,7 +13,7 @@ index becf61c0adde1c27f3e462a1b8248544ab181797..7ce9705a83c7ba180f2cc831f6cac7ed
          String result = "Unknown-Version";
  
 -        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/me.totalfreedom.scissors/scissors-api/pom.properties");
-+        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/libraries/me.totalfreedom.scissors/Scissors-API/pom.properties");
++        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/me.totalfreedom.scissors/Scissors-API/pom.properties");
          Properties properties = new Properties();
  
          if (stream != null) {
