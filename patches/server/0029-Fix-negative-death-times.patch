@@ -9,7 +9,7 @@ index 99a5074adbe2a254ae6115b3548f1fcd30ba2489..68ae4dfe3f4a77605b19607b5f04a2a6
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -623,7 +623,7 @@ public abstract class LivingEntity extends Entity {
-
+ 
      protected void tickDeath() {
          ++this.deathTime;
 -        if (this.deathTime >= 20 && !this.isRemoved() && !this.level.isClientSide()) { // CraftBukkit - (this.deathTicks == 20) -> (this.deathTicks >= 20 && !this.dead)
