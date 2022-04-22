@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        GITHUB_BRANCH = "${GIT_BRANCH.split('/').size() > 1 ? GIT_BRANCH.split('/')[1..-1].join('/') : GIT_BRANCH}"
+        GITHUB_BRANCH = "${BRANCH_NAME}"
     }
     options {
         buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5')
