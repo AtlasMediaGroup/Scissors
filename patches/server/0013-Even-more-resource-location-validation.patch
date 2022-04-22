@@ -1,27 +1,27 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Video <videogamesm12@gmail.com>
-Date: Mon, 14 Mar 2022 00:49:35 -0600
+From: Telesphoreo <me@telesphoreo.me>
+Date: Fri, 22 Apr 2022 01:19:49 -0500
 Subject: [PATCH] Even more resource location validation
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java b/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
-index 4733f74ff028c03a60b73280caf9e4d1e2f0ca30..02172fdcf587904258387d309938fb379a300524 100644
+index 2481c50d8eb58a003e30e2d957b877bce5123a3a..6b284666eae8b7e0ef8f54dfe9311a0979b420fe 100644
 --- a/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
 +++ b/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
 @@ -143,7 +143,7 @@ public class AreaEffectCloud extends Entity {
      }
  
-     public void setType(String string) {
+     public void setPotionType(String string) {
 -        this.setPotion(Registry.POTION.get(new ResourceLocation(string)));
 +        this.setPotion(Registry.POTION.get(ResourceLocation.tryParse(string))); // Scissors - Validate resource locations
      }
      // CraftBukkit end
  
 diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
-index 1c446dba5de89698397041ee38a2e1a00bec8a56..93799eda06c7b699580251f80b641c47643f3615 100644
+index 79abd84696ef099f6b12ddeaa6e398f18c53316a..7070b64c0c66b5c9d09bf7764ce506f4461dbac5 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityType.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityType.java
-@@ -513,7 +513,7 @@ public class EntityType<T extends Entity> implements EntityTypeTest<Entity, T> {
+@@ -514,7 +514,7 @@ public class EntityType<T extends Entity> implements EntityTypeTest<Entity, T> {
          }), (entity) -> {
              entity.load(nbt);
          }, () -> {
@@ -30,7 +30,7 @@ index 1c446dba5de89698397041ee38a2e1a00bec8a56..93799eda06c7b699580251f80b641c47
          });
      }
  
-@@ -537,7 +537,7 @@ public class EntityType<T extends Entity> implements EntityTypeTest<Entity, T> {
+@@ -538,7 +538,7 @@ public class EntityType<T extends Entity> implements EntityTypeTest<Entity, T> {
      }
  
      public static Optional<EntityType<?>> by(CompoundTag nbt) {
@@ -40,10 +40,10 @@ index 1c446dba5de89698397041ee38a2e1a00bec8a56..93799eda06c7b699580251f80b641c47
  
      @Nullable
 diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index 8837fc04a67a656d0e780965ac113d3b28e2369f..11427668a0af28cf638df3574357f696f49af13d 100644
+index b1ae9b0d8b229e2a6797a173cb11ecc0f43e2592..0919fa26ecd974385ed44e50c96439e9019deed7 100644
 --- a/src/main/java/net/minecraft/world/entity/Mob.java
 +++ b/src/main/java/net/minecraft/world/entity/Mob.java
-@@ -570,7 +570,7 @@ public abstract class Mob extends LivingEntity {
+@@ -573,7 +573,7 @@ public abstract class Mob extends LivingEntity {
  
          this.setLeftHanded(nbt.getBoolean("LeftHanded"));
          if (nbt.contains("DeathLootTable", 8)) {
