@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Telesphoreo <me@telesphoreo.me>
-Date: Tue, 19 Apr 2022 19:03:51 -0500
+Date: Fri, 22 Apr 2022 01:27:54 -0500
 Subject: [PATCH] Update for 1.18.2
 
 
@@ -43,16 +43,14 @@ index f92610edcfb724374c69e66443eab60919ee955a..1531d21c6e73ae69ec728d107b917967
      // Scissors end
  
 diff --git a/src/main/java/net/minecraft/network/chat/NbtComponent.java b/src/main/java/net/minecraft/network/chat/NbtComponent.java
-index e3dc56de3f91e03b1543257f72448a734d914ed7..8bb0544ef08eb0c221f06ddf96b63be5d02dc5ab 100644
+index f518e47818a47be0dfd7cccc4845ba9736c6cd8b..218525ba1742d68cde10f6caf09ee30eb2d01d50 100644
 --- a/src/main/java/net/minecraft/network/chat/NbtComponent.java
 +++ b/src/main/java/net/minecraft/network/chat/NbtComponent.java
-@@ -95,7 +95,8 @@ public abstract class NbtComponent extends BaseComponent implements ContextAware
+@@ -96,6 +96,7 @@ public abstract class NbtComponent extends BaseComponent implements ContextAware
                      return stream.map((string) -> {
                          return new TextComponent(string);
                      }).reduce((accumulator, current) -> {
--                        return accumulator.append(text).append(current);
 +                        // Scissors - untested, likely needs fixing
-+                        return (TextComponent)accumulator.append(text).append(current);
+                         return (TextComponent) accumulator.append(text).append(current);
                      }).orElseGet(() -> {
                          return new TextComponent("");
-                     });
