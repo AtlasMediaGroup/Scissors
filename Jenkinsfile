@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        GITHUB_BRANCH = "${BRANCH_NAME}"
+    }
     options {
         buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5')
     }
