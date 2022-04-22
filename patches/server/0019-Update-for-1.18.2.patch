@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Telesphoreo <me@telesphoreo.me>
 Date: Tue, 19 Apr 2022 19:03:51 -0500
-Subject: [PATCH] Fix compiling errors
+Subject: [PATCH] Update for 1.18.2
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
