@@ -5,20 +5,21 @@ Subject: [PATCH] Build changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index dd8f449dddbe0838835ae8f8d5033aa422db403d..bcada100f0938cfae54734582a86f4c1787e91b5 100644
+index dd8f449dddbe0838835ae8f8d5033aa422db403d..20120bd0b031d5106968c8bf7516b3db23e74ab7 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -9,8 +9,7 @@ plugins {
+@@ -9,8 +9,8 @@ plugins {
  }
  
  dependencies {
 -    implementation(project(":paper-api"))
 -    implementation(project(":paper-mojangapi"))
++    implementation(project(":Scissors-API"))
 +    implementation("io.papermc.paper:paper-mojangapi:1.18.2-R0.1-SNAPSHOT") // Scissors
      // Paper start
      implementation("org.jline:jline-terminal-jansi:3.21.0")
      implementation("net.minecrell:terminalconsoleappender:1.3.0")
-@@ -59,7 +58,7 @@ tasks.jar {
+@@ -59,7 +59,7 @@ tasks.jar {
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",
              "Implementation-Title" to "CraftBukkit",
@@ -27,7 +28,7 @@ index dd8f449dddbe0838835ae8f8d5033aa422db403d..bcada100f0938cfae54734582a86f4c1
              "Implementation-Vendor" to date, // Paper
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
-@@ -147,7 +146,7 @@ fun TaskContainer.registerRunTask(
+@@ -147,7 +147,7 @@ fun TaskContainer.registerRunTask(
      name: String,
      block: JavaExec.() -> Unit
  ): TaskProvider<JavaExec> = register<JavaExec>(name) {
@@ -50,7 +51,7 @@ index c8d56947305c981a3268ce4ae3e975db350ceff2..f0ed55e2d9e1c1e3ba27bf675490c57d
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 16d3f2dce44fc374ec3ab5882135d06113681fb6..1eaa831eb543bd5230dbdb59007d7d54ccb3e2b1 100644
+index ba4578fb4a2d861a6ffbb0ec022db31d9d7cc2be..19bd83d1f57f38b356a85dbe9dac421080e5c649 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -249,7 +249,7 @@ import javax.annotation.Nullable; // Paper
@@ -63,7 +64,7 @@ index 16d3f2dce44fc374ec3ab5882135d06113681fb6..1eaa831eb543bd5230dbdb59007d7d54
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 774556a62eb240da42e84db4502e2ed43495be17..becf61c0adde1c27f3e462a1b8248544ab181797 100644
+index 774556a62eb240da42e84db4502e2ed43495be17..5e6cce78e7987b4aa1c0052262ab8c4563905372 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -11,7 +11,7 @@ public final class Versioning {
@@ -71,7 +72,7 @@ index 774556a62eb240da42e84db4502e2ed43495be17..becf61c0adde1c27f3e462a1b8248544
          String result = "Unknown-Version";
  
 -        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/io.papermc.paper/paper-api/pom.properties");
-+        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/me.totalfreedom.scissors/scissors-api/pom.properties");
++        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/me.totalfreedom.scissors/Scissors-API/pom.properties");
          Properties properties = new Properties();
  
          if (stream != null) {
