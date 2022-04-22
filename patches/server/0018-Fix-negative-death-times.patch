@@ -1,19 +1,20 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Business Goose <arclicious@vivaldi.net>
-Date: Mon, 18 Apr 2022 16:55:19 +0100
+From: Telesphoreo <me@telesphoreo.me>
+Date: Fri, 22 Apr 2022 00:49:51 -0500
 Subject: [PATCH] Fix negative death times
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 1521f53ee1bd85ca44a68b2c9d969eaf63fa342e..64cfd7281b909e51321167a7f65d66b3ca8f9bc3 100644
+index 1521f53ee1bd85ca44a68b2c9d969eaf63fa342e..12e5d00bab016e4e46527719045c63c2d10d7ea7 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -620,7 +620,7 @@ public abstract class LivingEntity extends Entity {
+@@ -620,8 +620,7 @@ public abstract class LivingEntity extends Entity {
  
      protected void tickDeath() {
          ++this.deathTime;
 -        if (this.deathTime >= 20 && !this.isRemoved() && !this.level.isClientSide()) { // CraftBukkit - (this.deathTicks == 20) -> (this.deathTicks >= 20 && !this.dead)
-+        if ((this.deathTime >= 20 || this.deathTime <= 0) && !this.isRemoved() && !this.level.isClientSide()) { // CraftBukkit - (this.deathTicks == 20) -> (this.deathTicks >= 20 && !this.dead)
-             this.level.broadcastEntityEvent(this, (byte) 60);
+-            this.level.broadcastEntityEvent(this, (byte) 60);
++        if ((this.deathTime >= 20 || this.deathTime <= 0) && !this.isRemoved() && !this.level.isClientSide()) { // CraftBukkit - (this.deathTicks == 20) -> (this.deathTicks >= 20 && !this.dead)            this.level.broadcastEntityEvent(this, (byte) 60);
              this.remove(Entity.RemovalReason.KILLED);
          }
+ 
