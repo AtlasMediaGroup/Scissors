@@ -5,10 +5,10 @@ Subject: [PATCH] Update for 1.18.2
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index f92610edcfb724374c69e66443eab60919ee955a..1531d21c6e73ae69ec728d107b917967e0c6222b 100644
+index f92610edcfb724374c69e66443eab60919ee955a..69cc277e4b737ff5a7424cd9afc5573e6eaec3d3 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-@@ -18,10 +18,12 @@ import java.io.*;
+@@ -18,6 +18,7 @@ import java.io.*;
  import java.net.HttpURLConnection;
  import java.net.URL;
  import java.util.stream.StreamSupport;
@@ -16,13 +16,7 @@ index f92610edcfb724374c69e66443eab60919ee955a..1531d21c6e73ae69ec728d107b917967
  
  public class PaperVersionFetcher implements VersionFetcher {
      private static final java.util.regex.Pattern VER_PATTERN = java.util.regex.Pattern.compile("^([0-9\\.]*)\\-.*R"); // R is an anchor, will always give '-R' at end
--    private static final String GITHUB_BRANCH_NAME = getBranch();
-+    // Scissors - This must be changed manually for update checking to work
-+    private static final String GITHUB_BRANCH_NAME = "ver/1.18.2";
-     private static final String DOWNLOAD_PAGE = "https://ci.plex.us.org/job/Scissors/job/" + GITHUB_BRANCH_NAME;
-     private static @Nullable String mcVer;
- 
-@@ -56,15 +58,10 @@ public class PaperVersionFetcher implements VersionFetcher {
+@@ -56,15 +57,14 @@ public class PaperVersionFetcher implements VersionFetcher {
          return mcVer;
      }
  
@@ -30,15 +24,18 @@ index f92610edcfb724374c69e66443eab60919ee955a..1531d21c6e73ae69ec728d107b917967
 -    public static String getCommit() {
 -        Map<String, String> attributes = JarManifests.MANIFEST_MAP;
 -        return attributes.get("Git-Commit");
--    }
++    // Scissors start - Allow getting Git information
++    private static String getCommit() {
++        final var manifest = JarManifests.manifest(Bukkit.getServer().getClass());
++        return manifest == null ? null : manifest.getMainAttributes().getValue("Git-Commit");
+     }
 -
 -    public static String getBranch() {
 -        Map<String, String> attributes = JarManifests.MANIFEST_MAP;
 -        return attributes.get("Git-Branch");
-+    // Scissors start - Allow getting Git commit
-+    private static String getCommit() {
++    private static String getBranch() {
 +        final var manifest = JarManifests.manifest(Bukkit.getServer().getClass());
-+        return manifest == null ? null : manifest.getMainAttributes().getValue("Git-Commit");
++        return manifest == null ? null : manifest.getMainAttributes().getValue("Git-Branch");
      }
      // Scissors end
  
