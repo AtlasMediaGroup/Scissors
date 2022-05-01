@@ -5,10 +5,10 @@ Subject: [PATCH] Removes useless spammy error logging
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
-index 1fe46049cc33c24db04fbfcde36ab275c03177bf..65844bb02bd3d9ef566d4779106a1f9ef2a2b7bc 100644
+index 5607dc10dc1c9d2dbf4e3007890e5e89a175605e..bc30df2009cf0d8edf0040f6fe16587d109cebdb 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
-@@ -1766,6 +1766,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
+@@ -1769,6 +1769,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
          try {
              blockParser = blockParser.parse(false);
          } catch (com.mojang.brigadier.exceptions.CommandSyntaxException e) {
@@ -16,7 +16,7 @@ index 1fe46049cc33c24db04fbfcde36ab275c03177bf..65844bb02bd3d9ef566d4779106a1f9e
              return null;
          }
  
-@@ -1791,8 +1792,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
+@@ -1794,8 +1795,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
                  resource = CraftNamespacedKey.fromMinecraft(key);
              }
          } catch (IllegalArgumentException ex) {
