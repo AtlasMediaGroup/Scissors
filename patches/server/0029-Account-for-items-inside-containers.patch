@@ -1,0 +1,267 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Business Goose <arclicious@vivaldi.net>
+Date: Sun, 1 May 2022 01:20:13 +0100
+Subject: [PATCH] Account for items inside containers
+
+
+diff --git a/src/main/java/net/minecraft/world/ContainerHelper.java b/src/main/java/net/minecraft/world/ContainerHelper.java
+index 4092c7a8c2b0d9d26e6f4d97386735236300d132..ad3af6d90b68bc55c29243da8814516575299bf0 100644
+--- a/src/main/java/net/minecraft/world/ContainerHelper.java
++++ b/src/main/java/net/minecraft/world/ContainerHelper.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.world;
+ 
++import com.github.atlasmediagroup.scissors.NbtUtility;
+ import java.util.List;
+ import java.util.function.Predicate;
+ import net.minecraft.core.NonNullList;
+@@ -22,10 +23,14 @@ public class ContainerHelper {
+ 
+     public static CompoundTag saveAllItems(CompoundTag nbt, NonNullList<ItemStack> stacks, boolean setIfEmpty) {
+         ListTag listTag = new ListTag();
++        // Scissors - Account for items inside containers
++        long total = 0;
+ 
+         for(int i = 0; i < stacks.size(); ++i) {
+             ItemStack itemStack = stacks.get(i);
++
+             if (!itemStack.isEmpty()) {
++                total += NbtUtility.getTagSize(itemStack.getTag());
+                 CompoundTag compoundTag = new CompoundTag();
+                 compoundTag.putByte("Slot", (byte)i);
+                 itemStack.save(compoundTag);
+@@ -33,7 +38,7 @@ public class ContainerHelper {
+             }
+         }
+ 
+-        if (!listTag.isEmpty() || setIfEmpty) {
++        if ((!listTag.isEmpty() || setIfEmpty) && !(total > NbtUtility.MAXIMUM_SIZE)) {
+             nbt.put("Items", listTag);
+         }
+ 
+@@ -42,11 +47,18 @@ public class ContainerHelper {
+ 
+     public static void loadAllItems(CompoundTag nbt, NonNullList<ItemStack> stacks) {
+         ListTag listTag = nbt.getList("Items", 10);
++        // Scissors - Account for items inside containers
++        long total = 0;
+ 
+         for(int i = 0; i < listTag.size(); ++i) {
+             CompoundTag compoundTag = listTag.getCompound(i);
+             int j = compoundTag.getByte("Slot") & 255;
+             if (j >= 0 && j < stacks.size()) {
++                total += NbtUtility.getTagSize(compoundTag);
++                if (total >= NbtUtility.MAXIMUM_SIZE) {
++                    stacks.clear();
++                    break;
++                }
+                 stacks.set(j, ItemStack.of(compoundTag));
+             }
+         }
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
+index 888e1f2bc6ea4ddbbcc5466f177233f25b290459..0f19ef250a2f82e49730cb58ea43ee6bf407455a 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.world.level.block.entity;
+ 
++import com.github.atlasmediagroup.scissors.NbtUtility;
+ import com.google.common.collect.Lists;
+ import com.google.common.collect.Maps;
+ import it.unimi.dsi.fastutil.objects.Object2IntMap.Entry;
+@@ -211,6 +212,17 @@ public abstract class AbstractFurnaceBlockEntity extends BaseContainerBlockEntit
+     public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
+ 
+     public List<ItemStack> getContents() {
++        // Scissors - Account for items inside containers
++        long total = 0;
++
++        for (ItemStack item : this.items) {
++            total += NbtUtility.getTagSize(item.getOrCreateTag());
++        }
++
++        if (total > NbtUtility.MAXIMUM_SIZE) {
++            this.items.clear();
++        }
++
+         return this.items;
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/BarrelBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BarrelBlockEntity.java
+index 5a47d58071b83ea911e4cb5e1cc5468801ad0d55..c6f25cb62335fda65596ba3f4a55734a88b75bd4 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/BarrelBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/BarrelBlockEntity.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.world.level.block.entity;
+ 
++import com.github.atlasmediagroup.scissors.NbtUtility;
+ import net.minecraft.core.BlockPos;
+ import net.minecraft.core.Direction;
+ import net.minecraft.core.NonNullList;
+@@ -35,6 +36,17 @@ public class BarrelBlockEntity extends RandomizableContainerBlockEntity {
+ 
+     @Override
+     public List<ItemStack> getContents() {
++        // Scissors - Account for items inside containers
++        long total = 0;
++
++        for (ItemStack item : this.items) {
++            total += NbtUtility.getTagSize(item.getOrCreateTag());
++        }
++
++        if (total > NbtUtility.MAXIMUM_SIZE) {
++            this.items.clear();
++        }
++
+         return this.items;
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java
+index 5c0f1488c8a8100cd39a03adeccded9984722249..d1e1b29298e1e074df1966498d7f3c94b20c77f4 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.world.level.block.entity;
+ 
++import com.github.atlasmediagroup.scissors.NbtUtility;
+ import java.util.Arrays;
+ import java.util.Iterator;
+ import javax.annotation.Nullable;
+@@ -72,6 +73,17 @@ public class BrewingStandBlockEntity extends BaseContainerBlockEntity implements
+     }
+ 
+     public List<ItemStack> getContents() {
++        // Scissors - Account for items inside containers
++        long total = 0;
++
++        for (ItemStack item : this.items) {
++            total += NbtUtility.getTagSize(item.getOrCreateTag());
++        }
++
++        if (total > NbtUtility.MAXIMUM_SIZE) {
++            this.items.clear();
++        }
++
+         return this.items;
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/ChestBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/ChestBlockEntity.java
+index e56f7d76b501dab7d549efd2fafd514a9625c24e..153c70defdd6c25203764035c97ed3d20bc9c17e 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/ChestBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/ChestBlockEntity.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.world.level.block.entity;
+ 
++import com.github.atlasmediagroup.scissors.NbtUtility;
+ import net.minecraft.core.BlockPos;
+ import net.minecraft.core.Direction;
+ import net.minecraft.core.NonNullList;
+@@ -41,6 +42,17 @@ public class ChestBlockEntity extends RandomizableContainerBlockEntity implement
+     private int maxStack = MAX_STACK;
+ 
+     public List<ItemStack> getContents() {
++        // Scissors - Account for items inside containers
++        long total = 0;
++
++        for (ItemStack item : this.items) {
++            total += NbtUtility.getTagSize(item.getOrCreateTag());
++        }
++
++        if (total > NbtUtility.MAXIMUM_SIZE) {
++            this.items.clear();
++        }
++
+         return this.items;
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/DispenserBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/DispenserBlockEntity.java
+index f74c5bb8e1ba42c77c59d481b871fd992483b128..10393d499fa6a5e36750ed9305d22454ef98e6cf 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/DispenserBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/DispenserBlockEntity.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.world.level.block.entity;
+ 
++import com.github.atlasmediagroup.scissors.NbtUtility;
+ import java.util.Random;
+ import net.minecraft.core.BlockPos;
+ import net.minecraft.core.NonNullList;
+@@ -30,6 +31,17 @@ public class DispenserBlockEntity extends RandomizableContainerBlockEntity {
+     private int maxStack = MAX_STACK;
+ 
+     public List<ItemStack> getContents() {
++        // Scissors - Account for items inside containers
++        long total = 0;
++
++        for (ItemStack item : this.items) {
++            total += NbtUtility.getTagSize(item.getOrCreateTag());
++        }
++
++        if (total > NbtUtility.MAXIMUM_SIZE) {
++            this.items.clear();
++        }
++
+         return this.items;
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
+index d241b25acc223982109495542fd17e0fbdf53437..ab952ef090ca5183340b014e0aae3aef553a4803 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.world.level.block.entity;
+ 
++import com.github.atlasmediagroup.scissors.NbtUtility;
+ import java.util.Iterator;
+ import java.util.List;
+ import java.util.function.BooleanSupplier;
+@@ -53,7 +54,19 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+     private int maxStack = MAX_STACK;
+ 
+     public List<ItemStack> getContents() {
++        // Scissors - Account for items inside containers
++        long total = 0;
++
++        for (ItemStack item : this.items) {
++            total += NbtUtility.getTagSize(item.getOrCreateTag());
++        }
++
++        if (total > NbtUtility.MAXIMUM_SIZE) {
++            this.items.clear();
++        }
++
+         return this.items;
++
+     }
+ 
+     public void onOpen(CraftHumanEntity who) {
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java
+index b4d38a9aa8792e979c99bedc20906679ba7991c6..5bdff2d3b13b3dbd0f3f83d9ece5a42173fb7e6c 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.world.level.block.entity;
+ 
++import com.github.atlasmediagroup.scissors.NbtUtility;
+ import java.util.List;
+ import java.util.stream.IntStream;
+ import javax.annotation.Nullable;
+@@ -252,7 +253,19 @@ public class ShulkerBoxBlockEntity extends RandomizableContainerBlockEntity impl
+ 
+     @Override
+     protected NonNullList<ItemStack> getItems() {
++        // Scissors - Account for items inside containers
++        long total = 0;
++
++        for (ItemStack item : this.itemStacks) {
++            total += NbtUtility.getTagSize(item.getOrCreateTag());
++        }
++
++        if (total > NbtUtility.MAXIMUM_SIZE) {
++            this.itemStacks.clear();
++        }
++
+         return this.itemStacks;
++
+     }
+ 
+     @Override
