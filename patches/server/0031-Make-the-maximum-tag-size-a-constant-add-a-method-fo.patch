@@ -1,0 +1,30 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Business Goose <arclicious@vivaldi.net>
+Date: Sun, 1 May 2022 01:19:36 +0100
+Subject: [PATCH] Make the maximum tag size a constant & add a method for
+ getting tag size
+
+
+diff --git a/src/main/java/com/github/atlasmediagroup/scissors/NbtUtility.java b/src/main/java/com/github/atlasmediagroup/scissors/NbtUtility.java
+index 058203440fd071ce5edbe18391ea60f0a5fbee3a..dc09fe007247e832aacc323ddeb3541cfb447069 100644
+--- a/src/main/java/com/github/atlasmediagroup/scissors/NbtUtility.java
++++ b/src/main/java/com/github/atlasmediagroup/scissors/NbtUtility.java
+@@ -7,11 +7,17 @@ import java.nio.charset.StandardCharsets;
+ 
+ public class NbtUtility
+ {
++    public static final long MAXIMUM_SIZE = (256 * 1024);
++
++    public static long getTagSize(@Nullable CompoundTag tag) {
++        if(tag == null) return 0;
++        return tag.toString().getBytes(StandardCharsets.UTF_8).length;
++    }
+ 
+     public static boolean isTooLarge(@Nullable CompoundTag tag)
+     {
+         if (tag == null) return false;
+-        return tag.toString().getBytes(StandardCharsets.UTF_8).length > (256 * 1024);
++        return getTagSize(tag) > MAXIMUM_SIZE;
+     }
+ 
+     public static class Item
