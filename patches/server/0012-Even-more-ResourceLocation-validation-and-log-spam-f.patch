@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Video <videogamesm12@gmail.com>
-Date: Sun, 20 Mar 2022 03:04:33 -0600
+From: Telesphoreo <me@telesphoreo.me>
+Date: Mon, 9 May 2022 23:40:59 -0500
 Subject: [PATCH] Even more ResourceLocation validation and log spam fixes
 
 
@@ -60,18 +60,22 @@ index 0dd0ce9a9b3253e87eda12354249ec2fd2a33cf2..b6920f9432ca1736afbe775186fbbcf1
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
-index cf0be5ef01bddaabbfd11f54b2dacd68c68ad16a..b4b86d7448e6659b1d4e034ffcddd7be77dd977f 100644
+index d775e19402188e35f79affb4ed636b6533f90ab5..29f5ab80ffbc421da911046678427755c6156894 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
-@@ -67,8 +67,14 @@ public abstract class CraftMob extends CraftLivingEntity implements Mob {
-             this.getHandle().lootTable = this.getHandle().getDefaultLootTable();
-         }
+@@ -63,8 +63,18 @@ public abstract class CraftMob extends CraftLivingEntity implements Mob {
  
--        NamespacedKey key = CraftNamespacedKey.fromMinecraft(this.getHandle().lootTable);
+     @Override
+     public LootTable getLootTable() {
+-        NamespacedKey key = CraftNamespacedKey.fromMinecraft(this.getHandle().getLootTable());
 -        return Bukkit.getLootTable(key);
++        if (this.getHandle().lootTable == null) {
++            this.getHandle().lootTable = this.getHandle().getDefaultLootTable();
++        }
++
 +        // Scissors start - Return a null loot table if the specified loot table is not valid
 +        try {
-+            NamespacedKey key = CraftNamespacedKey.fromMinecraft(this.getHandle().lootTable);
++            NamespacedKey key = CraftNamespacedKey.fromMinecraft(this.getHandle().getLootTable());
 +            return Bukkit.getLootTable(key);
 +        } catch (Exception ex) {
 +            return null;
