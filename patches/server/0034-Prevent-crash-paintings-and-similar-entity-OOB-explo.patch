@@ -1,0 +1,437 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Allink <arclicious@vivaldi.net>
+Date: Tue, 17 May 2022 06:31:37 +0100
+Subject: [PATCH] Prevent crash paintings and similar entity OOB exploits
+
+
+diff --git a/src/main/java/com/github/atlasmediagroup/scissors/MathUtility.java b/src/main/java/com/github/atlasmediagroup/scissors/MathUtility.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..7965cf3abd02d415dd0e71a0de73987e5fdf11ec
+--- /dev/null
++++ b/src/main/java/com/github/atlasmediagroup/scissors/MathUtility.java
+@@ -0,0 +1,29 @@
++package com.github.atlasmediagroup.scissors;
++
++public class MathUtility
++{
++    public static int clampInt(int number, int minimum, int maximum)
++    {
++        return Math.min(Math.max(number, minimum), maximum);
++    }
++
++    public static long clampLong(long number, long minimum, long maximum)
++    {
++        return Math.min(Math.max(number, minimum), maximum);
++    }
++
++    public static double clampDouble(double number, double minimum, double maximum)
++    {
++        return Math.min(Math.max(number, minimum), maximum);
++    }
++
++    public static int safeDoubleToInt(double number)
++    {
++        return (int) clampDouble(number, Integer.MIN_VALUE, Integer.MAX_VALUE);
++    }
++
++    public static int safeLongToInt(long number)
++    {
++        return (int) clampLong(number, Integer.MIN_VALUE, Integer.MAX_VALUE);
++    }
++}
+diff --git a/src/main/java/com/github/atlasmediagroup/scissors/PositionUtility.java b/src/main/java/com/github/atlasmediagroup/scissors/PositionUtility.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..b5b2f9af376940dc662cc7b57485e93a9c7ce96d
+--- /dev/null
++++ b/src/main/java/com/github/atlasmediagroup/scissors/PositionUtility.java
+@@ -0,0 +1,84 @@
++package com.github.atlasmediagroup.scissors;
++
++import net.minecraft.core.BlockPos;
++import net.minecraft.world.entity.Entity;
++import net.minecraft.world.level.Level;
++import net.minecraft.world.level.border.WorldBorder;
++import net.minecraft.world.phys.Vec3;
++
++public class PositionUtility
++{
++    public static Vec3 getValidVec3(double x, double y, double z, Entity entity)
++    {
++        final Level level = entity.level;
++
++        try
++        {
++            if (level.isInWorldBounds(new BlockPos(Math.floor(MathUtility.safeDoubleToInt(x)), Math.floor(MathUtility.safeDoubleToInt(y)), Math.floor(MathUtility.safeDoubleToInt(z)))))
++            {
++                return new Vec3(x, y, z);
++            }
++            else
++            {
++                final WorldBorder worldBorder = level.getWorldBorder();
++
++                final double maxX = worldBorder.getMaxX();
++                final double maxY = level.getMaxBuildHeight();
++                final double maxZ = worldBorder.getMaxZ();
++
++                final double minX = worldBorder.getMinX();
++                final double minY = level.getMinBuildHeight();
++                final double minZ = worldBorder.getMinZ();
++
++                return new Vec3(MathUtility.clampDouble(x, minX, maxX), MathUtility.clampDouble(y, minY, maxY), MathUtility.clampDouble(z, minZ, maxZ));
++            }
++        }
++        catch (Exception e)
++        { // If we throw some sort of exception due to the position being crazy, catch it
++            return new Vec3(0, 0, 0);
++        }
++    }
++
++    public static Vec3 getValidVec3FromBlockPos(BlockPos blockPos, Entity entity)
++    {
++        final BlockPos validBlockPos = getValidBlockPos(blockPos, entity);
++
++        return new Vec3(validBlockPos.getX(), validBlockPos.getY(), validBlockPos.getZ());
++    }
++
++    public static BlockPos getValidBlockPos(BlockPos blockPos, Entity entity)
++    {
++        final Level level = entity.level;
++
++        try
++        {
++            if (level.isInWorldBounds(blockPos))
++            {
++                return blockPos;
++            }
++            else
++            {
++                final int x = blockPos.getX();
++                final int y = blockPos.getY();
++                final int z = blockPos.getZ();
++
++                final WorldBorder worldBorder = level.getWorldBorder();
++
++                final int maxX = MathUtility.safeDoubleToInt(worldBorder.getMaxX());
++                final int maxY = level.getMaxBuildHeight();
++                final int maxZ = MathUtility.safeDoubleToInt(worldBorder.getMaxZ());
++
++                final int minX = MathUtility.safeDoubleToInt(worldBorder.getMinX());
++                final int minY = level.getMinBuildHeight();
++                final int minZ = MathUtility.safeDoubleToInt(worldBorder.getMinZ());
++
++                return new BlockPos(MathUtility.clampInt(x, minX, maxX), MathUtility.clampInt(y, minY, maxY), MathUtility.clampInt(z, minZ, maxZ));
++            }
++        }
++        catch (Exception e)
++        { // If we throw some sort of exception due to the position being crazy, catch it
++            return new BlockPos(0, 0, 0);
++        }
++    }
++}
++
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 07f04c1708b118ace3ed73ae2bf88c29b1c80ad2..bc21918595f5ac4a62d96dfb81ed75e9d8000eb0 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -1,30 +1,10 @@
+ package net.minecraft.world.entity;
+ 
+-import com.google.common.collect.ImmutableList;
+-import com.google.common.collect.Iterables;
+-import com.google.common.collect.Lists;
+-import com.google.common.collect.Sets;
+-import com.google.common.collect.UnmodifiableIterator;
++import com.github.atlasmediagroup.scissors.PositionUtility;
++import com.google.common.collect.*;
+ import it.unimi.dsi.fastutil.objects.Object2DoubleArrayMap;
+ import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
+-import java.util.Arrays;
+-import java.util.Collections;
+-import java.util.Iterator;
+-import java.util.List;
+-import java.util.Locale;
+-import java.util.Optional;
+-import java.util.Random;
+-import java.util.Set;
+-import java.util.UUID;
+-import java.util.concurrent.atomic.AtomicInteger;
+-import java.util.function.Predicate;
+-import java.util.stream.Stream;
+-import javax.annotation.Nullable;
+-import net.minecraft.BlockUtil;
+-import net.minecraft.CrashReport;
+-import net.minecraft.CrashReportCategory;
+-import net.minecraft.ReportedException;
+-import net.minecraft.Util;
++import net.minecraft.*;
+ import net.minecraft.advancements.CriteriaTriggers;
+ import net.minecraft.commands.CommandSource;
+ import net.minecraft.commands.CommandSourceStack;
+@@ -34,11 +14,7 @@ import net.minecraft.core.Direction;
+ import net.minecraft.core.Vec3i;
+ import net.minecraft.core.particles.BlockParticleOption;
+ import net.minecraft.core.particles.ParticleTypes;
+-import net.minecraft.nbt.CompoundTag;
+-import net.minecraft.nbt.DoubleTag;
+-import net.minecraft.nbt.FloatTag;
+-import net.minecraft.nbt.ListTag;
+-import net.minecraft.nbt.StringTag;
++import net.minecraft.nbt.*;
+ import net.minecraft.network.chat.ClickEvent;
+ import net.minecraft.network.chat.Component;
+ import net.minecraft.network.chat.HoverEvent;
+@@ -77,22 +53,8 @@ import net.minecraft.world.entity.vehicle.Boat;
+ import net.minecraft.world.item.ItemStack;
+ import net.minecraft.world.item.enchantment.EnchantmentHelper;
+ import net.minecraft.world.item.enchantment.ProtectionEnchantment;
+-import net.minecraft.world.level.BlockGetter;
+-import net.minecraft.world.level.ChunkPos;
+-import net.minecraft.world.level.ClipContext;
+-import net.minecraft.world.level.Explosion;
+-import net.minecraft.world.level.GameRules;
+-import net.minecraft.world.level.ItemLike;
+-import net.minecraft.world.level.Level;
+-import net.minecraft.world.level.LevelReader;
+-import net.minecraft.world.level.block.Block;
+-import net.minecraft.world.level.block.Blocks;
+-import net.minecraft.world.level.block.FenceGateBlock;
+-import net.minecraft.world.level.block.HoneyBlock;
+-import net.minecraft.world.level.block.Mirror;
+-import net.minecraft.world.level.block.RenderShape;
+-import net.minecraft.world.level.block.Rotation;
+-import net.minecraft.world.level.block.SoundType;
++import net.minecraft.world.level.*;
++import net.minecraft.world.level.block.*;
+ import net.minecraft.world.level.block.state.BlockState;
+ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+ import net.minecraft.world.level.border.WorldBorder;
+@@ -119,34 +81,33 @@ import net.minecraft.world.scores.PlayerTeam;
+ import net.minecraft.world.scores.Team;
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+-
+-// CraftBukkit start
+ import org.bukkit.Bukkit;
+ import org.bukkit.Location;
+ import org.bukkit.Server;
+ import org.bukkit.block.BlockFace;
+ import org.bukkit.command.CommandSender;
++import org.bukkit.craftbukkit.CraftWorld;
++import org.bukkit.craftbukkit.entity.CraftEntity;
++import org.bukkit.craftbukkit.entity.CraftPlayer;
++import org.bukkit.craftbukkit.event.CraftEventFactory;
+ import org.bukkit.craftbukkit.event.CraftPortalEvent;
+ import org.bukkit.entity.Hanging;
+ import org.bukkit.entity.LivingEntity;
++import org.bukkit.entity.Pose;
+ import org.bukkit.entity.Vehicle;
+-import org.bukkit.event.entity.EntityCombustByEntityEvent;
++import org.bukkit.event.entity.*;
+ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
++import org.bukkit.event.player.PlayerTeleportEvent;
+ import org.bukkit.event.vehicle.VehicleBlockCollisionEvent;
+ import org.bukkit.event.vehicle.VehicleEnterEvent;
+ import org.bukkit.event.vehicle.VehicleExitEvent;
+-import org.bukkit.craftbukkit.CraftWorld;
+-import org.bukkit.craftbukkit.entity.CraftEntity;
+-import org.bukkit.craftbukkit.entity.CraftPlayer;
+-import org.bukkit.craftbukkit.event.CraftEventFactory;
+-import org.bukkit.entity.Pose;
+-import org.bukkit.event.entity.EntityAirChangeEvent;
+-import org.bukkit.event.entity.EntityCombustEvent;
+-import org.bukkit.event.entity.EntityDropItemEvent;
+-import org.bukkit.event.entity.EntityPortalEvent;
+-import org.bukkit.event.entity.EntityPoseChangeEvent;
+-import org.bukkit.event.player.PlayerTeleportEvent;
+ import org.bukkit.plugin.PluginManager;
++
++import javax.annotation.Nullable;
++import java.util.*;
++import java.util.concurrent.atomic.AtomicInteger;
++import java.util.function.Predicate;
++import java.util.stream.Stream;
+ // CraftBukkit end
+ 
+ public abstract class Entity implements Nameable, EntityAccess, CommandSource, net.minecraft.server.KeyedObject { // Paper
+@@ -1753,26 +1714,41 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+         this.yo = y;
+         this.zo = d4;
+         this.setPos(d3, y, d4);
+-        if (this.valid) this.level.getChunk((int) Math.floor(this.getX()) >> 4, (int) Math.floor(this.getZ()) >> 4); // CraftBukkit
++        if (this.valid)
++            this.level.getChunk((int) Math.floor(this.getX()) >> 4, (int) Math.floor(this.getZ()) >> 4); // CraftBukkit
+     }
+ 
+-    public void moveTo(Vec3 pos) {
++    public void moveTo(Vec3 pos)
++    {
+         this.moveTo(pos.x, pos.y, pos.z);
+     }
+ 
+-    public void moveTo(double x, double y, double z) {
++    public void moveTo(double x, double y, double z)
++    {
+         this.moveTo(x, y, z, this.getYRot(), this.getXRot());
+     }
+ 
+-    public void moveTo(BlockPos pos, float yaw, float pitch) {
++    public void moveTo(BlockPos pos, float yaw, float pitch)
++    {
+         this.moveTo((double) pos.getX() + 0.5D, (double) pos.getY(), (double) pos.getZ() + 0.5D, yaw, pitch);
+     }
+ 
+-    public void moveTo(double x, double y, double z, float yaw, float pitch) {
++    public void moveTo(double x, double y, double z, float yaw, float pitch)
++    {
++        // Scissors start - Reassign x, y & z to make sure entities can't move out of the world border
++        Vec3 vec3 = PositionUtility.getValidVec3(x, y, z, this);
++        x = vec3.x;
++        y = vec3.y;
++        z = vec3.z;
++        // Scissors end
++
+         // Paper - cancel entity velocity if teleported
+-        if (!preserveMotion) {
++        if (!preserveMotion)
++        {
+             this.deltaMovement = Vec3.ZERO;
+-        } else {
++        }
++        else
++        {
+             this.preserveMotion = false;
+         }
+         // Paper end
+@@ -3161,28 +3137,39 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+     }
+ 
+     @Nullable
+-    public Entity teleportTo(ServerLevel worldserver, BlockPos location) {
++    public Entity teleportTo(ServerLevel worldserver, BlockPos location)
++    {
++        // Scissors start - Reassign location to a safe value
++        location = PositionUtility.getValidBlockPos(location, this);
++        // Scissors end
++
+         // CraftBukkit end
+         // Paper start - fix bad state entities causing dupes
+-        if (!isAlive() || !valid) {
++        if (!isAlive() || !valid)
++        {
+             LOGGER.warn("Illegal Entity Teleport " + this + " to " + worldserver + ":" + location, new Throwable());
+             return null;
+         }
+         // Paper end
+-        if (this.level instanceof ServerLevel && !this.isRemoved()) {
++        if (this.level instanceof ServerLevel && !this.isRemoved())
++        {
+             this.level.getProfiler().push("changeDimension");
+             // CraftBukkit start
+             // this.decouple();
+-            if (worldserver == null) {
++            if (worldserver == null)
++            {
+                 return null;
+             }
+             // CraftBukkit end
+             this.level.getProfiler().push("reposition");
+             PortalInfo shapedetectorshape = (location == null) ? this.findDimensionEntryPoint(worldserver) : new PortalInfo(new Vec3(location.getX(), location.getY(), location.getZ()), Vec3.ZERO, this.yRot, this.xRot, worldserver, null); // CraftBukkit
+ 
+-            if (shapedetectorshape == null) {
++            if (shapedetectorshape == null)
++            {
+                 return null;
+-            } else {
++            }
++            else
++            {
+                 // CraftBukkit start
+                 worldserver = shapedetectorshape.world;
+ 
+@@ -4028,11 +4015,20 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+         // Paper start
+         this.setPosRaw(x, y, z, false);
+     }
+-    public final void setPosRaw(double x, double y, double z, boolean forceBoundingBoxUpdate) {
++    public final void setPosRaw(double x, double y, double z, boolean forceBoundingBoxUpdate)
++    {
++        // Scissors start - Reassign x, y & z to prevent entities from moving outside the world border
++        Vec3 vec = PositionUtility.getValidVec3(x, y, z, this);
++        x = vec.x;
++        y = vec.y;
++        z = vec.z;
++
+         // Paper end
+         // Paper start - fix MC-4
+-        if (this instanceof ItemEntity) {
+-            if (com.destroystokyo.paper.PaperConfig.fixEntityPositionDesync) {
++        if (this instanceof ItemEntity)
++        {
++            if (com.destroystokyo.paper.PaperConfig.fixEntityPositionDesync)
++            {
+                 // encode/decode from PacketPlayOutEntity
+                 x = Mth.lfloor(x * 4096.0D) * (1 / 4096.0D);
+                 y = Mth.lfloor(y * 4096.0D) * (1 / 4096.0D);
+diff --git a/src/main/java/net/minecraft/world/entity/decoration/HangingEntity.java b/src/main/java/net/minecraft/world/entity/decoration/HangingEntity.java
+index ca9decf85dd1af0baf0d34a48aa67cbb9f4eb586..53cd0dcb94c2cc2278e719235fb470535b7094e4 100644
+--- a/src/main/java/net/minecraft/world/entity/decoration/HangingEntity.java
++++ b/src/main/java/net/minecraft/world/entity/decoration/HangingEntity.java
+@@ -1,7 +1,6 @@
+ package net.minecraft.world.entity.decoration;
+ 
+-import java.util.function.Predicate;
+-import javax.annotation.Nullable;
++import com.github.atlasmediagroup.scissors.PositionUtility;
+ import net.minecraft.core.BlockPos;
+ import net.minecraft.core.Direction;
+ import net.minecraft.nbt.CompoundTag;
+@@ -16,7 +15,6 @@ import net.minecraft.world.entity.MoverType;
+ import net.minecraft.world.entity.item.ItemEntity;
+ import net.minecraft.world.entity.player.Player;
+ import net.minecraft.world.item.ItemStack;
+-import org.apache.commons.lang3.Validate;
+ import net.minecraft.world.level.Level;
+ import net.minecraft.world.level.block.DiodeBlock;
+ import net.minecraft.world.level.block.Mirror;
+@@ -25,9 +23,13 @@ import net.minecraft.world.level.block.state.BlockState;
+ import net.minecraft.world.level.material.Material;
+ import net.minecraft.world.phys.AABB;
+ import net.minecraft.world.phys.Vec3;
++import org.apache.commons.lang3.Validate;
+ import org.bukkit.entity.Hanging;
+ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+ import org.bukkit.event.hanging.HangingBreakEvent;
++
++import javax.annotation.Nullable;
++import java.util.function.Predicate;
+ // CraftBukkit end
+ 
+ public abstract class HangingEntity extends Entity {
+@@ -264,8 +266,11 @@ public abstract class HangingEntity extends Entity {
+     }
+ 
+     @Override
+-    public void readAdditionalSaveData(CompoundTag nbt) {
+-        this.pos = new BlockPos(nbt.getInt("TileX"), nbt.getInt("TileY"), nbt.getInt("TileZ"));
++    public void readAdditionalSaveData(CompoundTag nbt)
++    {
++        // Scissors start - Stop this stupid bullshit
++        this.pos = PositionUtility.getValidBlockPos(new BlockPos(nbt.getInt("TileX"), nbt.getInt("TileY"), nbt.getInt("TileZ")), this);
++        // Scissors end
+     }
+ 
+     public abstract int getWidth();
+@@ -291,8 +296,11 @@ public abstract class HangingEntity extends Entity {
+     }
+ 
+     @Override
+-    public void setPos(double x, double y, double z) {
+-        this.pos = new BlockPos(x, y, z);
++    public void setPos(double x, double y, double z)
++    {
++        // Scissors start - Fix this stupid bullshit
++        this.pos = PositionUtility.getValidBlockPos(new BlockPos(x, y, z), this);
++        // Scissors end
+         this.recalculateBoundingBox();
+         this.hasImpulse = true;
+     }
