@@ -1,0 +1,231 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Telesphoreo <me@telesphoreo.me>
+Date: Sun, 22 May 2022 21:15:51 -0500
+Subject: [PATCH] Prevent crash paintings and similar entity OOB exploits
+
+
+diff --git a/src/main/java/com/github/atlasmediagroup/scissors/MathUtility.java b/src/main/java/com/github/atlasmediagroup/scissors/MathUtility.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..7965cf3abd02d415dd0e71a0de73987e5fdf11ec
+--- /dev/null
++++ b/src/main/java/com/github/atlasmediagroup/scissors/MathUtility.java
+@@ -0,0 +1,29 @@
++package com.github.atlasmediagroup.scissors;
++
++public class MathUtility
++{
++    public static int clampInt(int number, int minimum, int maximum)
++    {
++        return Math.min(Math.max(number, minimum), maximum);
++    }
++
++    public static long clampLong(long number, long minimum, long maximum)
++    {
++        return Math.min(Math.max(number, minimum), maximum);
++    }
++
++    public static double clampDouble(double number, double minimum, double maximum)
++    {
++        return Math.min(Math.max(number, minimum), maximum);
++    }
++
++    public static int safeDoubleToInt(double number)
++    {
++        return (int) clampDouble(number, Integer.MIN_VALUE, Integer.MAX_VALUE);
++    }
++
++    public static int safeLongToInt(long number)
++    {
++        return (int) clampLong(number, Integer.MIN_VALUE, Integer.MAX_VALUE);
++    }
++}
+diff --git a/src/main/java/com/github/atlasmediagroup/scissors/NbtUtility.java b/src/main/java/com/github/atlasmediagroup/scissors/NbtUtility.java
+index 978cb98c81195640fb3704d2077148f2be0dca36..59a4ff3593e74f72c3843554c2e14b82912c0a54 100644
+--- a/src/main/java/com/github/atlasmediagroup/scissors/NbtUtility.java
++++ b/src/main/java/com/github/atlasmediagroup/scissors/NbtUtility.java
+@@ -1,13 +1,9 @@
+ package com.github.atlasmediagroup.scissors;
+ 
+-import com.google.common.base.Strings;
+-import com.google.common.collect.Lists;
+ import net.minecraft.nbt.*;
+ 
+ import javax.annotation.Nullable;
+ import java.nio.charset.StandardCharsets;
+-import java.util.Collections;
+-import java.util.List;
+ 
+ public class NbtUtility
+ {
+diff --git a/src/main/java/com/github/atlasmediagroup/scissors/PositionUtility.java b/src/main/java/com/github/atlasmediagroup/scissors/PositionUtility.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..fd22a200e070ca5a594802d2f201c6b27d6cddcf
+--- /dev/null
++++ b/src/main/java/com/github/atlasmediagroup/scissors/PositionUtility.java
+@@ -0,0 +1,83 @@
++package com.github.atlasmediagroup.scissors;
++
++import net.minecraft.core.BlockPos;
++import net.minecraft.world.entity.Entity;
++import net.minecraft.world.level.Level;
++import net.minecraft.world.level.border.WorldBorder;
++import net.minecraft.world.phys.Vec3;
++
++public class PositionUtility
++{
++    public static Vec3 getValidVec3(double x, double y, double z, Entity entity)
++    {
++        final Level level = entity.level;
++
++        try
++        {
++            if (level.isInWorldBounds(new BlockPos(Math.floor(MathUtility.safeDoubleToInt(x)), Math.floor(MathUtility.safeDoubleToInt(y)), Math.floor(MathUtility.safeDoubleToInt(z)))))
++            {
++                return new Vec3(x, y, z);
++            }
++            else
++            {
++                final WorldBorder worldBorder = level.getWorldBorder();
++
++                final double maxX = worldBorder.getMaxX();
++                final double maxY = level.getMaxBuildHeight();
++                final double maxZ = worldBorder.getMaxZ();
++
++                final double minX = worldBorder.getMinX();
++                final double minY = level.getMinBuildHeight();
++                final double minZ = worldBorder.getMinZ();
++
++                return new Vec3(MathUtility.clampDouble(x, minX, maxX), MathUtility.clampDouble(y, minY, maxY), MathUtility.clampDouble(z, minZ, maxZ));
++            }
++        }
++        catch (Exception e)
++        { // If we throw some sort of exception due to the position being crazy, catch it
++            return new Vec3(0, 0, 0);
++        }
++    }
++
++    public static Vec3 getValidVec3FromBlockPos(BlockPos blockPos, Entity entity)
++    {
++        final BlockPos validBlockPos = getValidBlockPos(blockPos, entity);
++
++        return new Vec3(validBlockPos.getX(), validBlockPos.getY(), validBlockPos.getZ());
++    }
++
++    public static BlockPos getValidBlockPos(BlockPos blockPos, Entity entity)
++    {
++        final Level level = entity.level;
++
++        try
++        {
++            if (level.isInWorldBounds(blockPos))
++            {
++                return blockPos;
++            }
++            else
++            {
++                final int x = blockPos.getX();
++                final int y = blockPos.getY();
++                final int z = blockPos.getZ();
++
++                final WorldBorder worldBorder = level.getWorldBorder();
++
++                final int maxX = MathUtility.safeDoubleToInt(worldBorder.getMaxX());
++                final int maxY = level.getMaxBuildHeight();
++                final int maxZ = MathUtility.safeDoubleToInt(worldBorder.getMaxZ());
++
++                final int minX = MathUtility.safeDoubleToInt(worldBorder.getMinX());
++                final int minY = level.getMinBuildHeight();
++                final int minZ = MathUtility.safeDoubleToInt(worldBorder.getMinZ());
++
++                return new BlockPos(MathUtility.clampInt(x, minX, maxX), MathUtility.clampInt(y, minY, maxY), MathUtility.clampInt(z, minZ, maxZ));
++            }
++        }
++        catch (Exception e)
++        { // If we throw some sort of exception due to the position being crazy, catch it
++            return new BlockPos(0, 0, 0);
++        }
++    }
++}
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index bc9e6a2403d2e0d174c87f9bcb54dc4af47c610b..5fffd4f1661a20522d1bb85308901826dfaf7dd9 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.world.entity;
+ 
++import com.github.atlasmediagroup.scissors.PositionUtility;
+ import com.google.common.collect.ImmutableList;
+ import com.google.common.collect.ImmutableList.Builder;
+ import com.google.common.collect.Iterables;
+@@ -1774,6 +1775,13 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+     }
+ 
+     public void moveTo(double x, double y, double z, float yaw, float pitch) {
++        // Scissors start - Reassign x, y & z to make sure entities can't move out of the world border
++        Vec3 vec3 = PositionUtility.getValidVec3(x, y, z, this);
++        x = vec3.x;
++        y = vec3.y;
++        z = vec3.z;
++        // Scissors end
++
+         // Paper - cancel entity velocity if teleported
+         if (!preserveMotion) {
+             this.deltaMovement = Vec3.ZERO;
+@@ -3208,6 +3216,10 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+ 
+     @Nullable
+     public Entity teleportTo(ServerLevel worldserver, BlockPos location) {
++        // Scissors start - Reassign location to a safe value
++        location = PositionUtility.getValidBlockPos(location, this);
++        // Scissors end
++
+         // CraftBukkit end
+         // Paper start - fix bad state entities causing dupes
+         if (!isAlive() || !valid) {
+@@ -4102,6 +4114,13 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+         this.setPosRaw(x, y, z, false);
+     }
+     public final void setPosRaw(double x, double y, double z, boolean forceBoundingBoxUpdate) {
++        // Scissors start - Reassign x, y & z to prevent entities from moving outside the world border
++        Vec3 vec = PositionUtility.getValidVec3(x, y, z, this);
++        x = vec.x;
++        y = vec.y;
++        z = vec.z;
++        // Scissors end
++
+         // Paper start - block invalid positions
+         if (!checkPosition(this, x, y, z)) {
+             return;
+diff --git a/src/main/java/net/minecraft/world/entity/decoration/HangingEntity.java b/src/main/java/net/minecraft/world/entity/decoration/HangingEntity.java
+index 2805ebfe4ffe769bcde778a1225b3101c91538d8..7c988395567c170d825af2bd99121f2d4d05cd8d 100644
+--- a/src/main/java/net/minecraft/world/entity/decoration/HangingEntity.java
++++ b/src/main/java/net/minecraft/world/entity/decoration/HangingEntity.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.world.entity.decoration;
+ 
++import com.github.atlasmediagroup.scissors.PositionUtility;
+ import java.util.function.Predicate;
+ import javax.annotation.Nullable;
+ import net.minecraft.core.BlockPos;
+@@ -265,7 +266,9 @@ public abstract class HangingEntity extends Entity {
+ 
+     @Override
+     public void readAdditionalSaveData(CompoundTag nbt) {
+-        this.pos = new BlockPos(nbt.getInt("TileX"), nbt.getInt("TileY"), nbt.getInt("TileZ"));
++        // Scissors start - Stop this stupid bullshit
++        this.pos = PositionUtility.getValidBlockPos(new BlockPos(nbt.getInt("TileX"), nbt.getInt("TileY"), nbt.getInt("TileZ")), this);
++        // Scissors end
+     }
+ 
+     public abstract int getWidth();
+@@ -292,7 +295,9 @@ public abstract class HangingEntity extends Entity {
+ 
+     @Override
+     public void setPos(double x, double y, double z) {
+-        this.pos = new BlockPos(x, y, z);
++        // Scissors start - Fix this stupid bullshit
++        this.pos = PositionUtility.getValidBlockPos(new BlockPos(x, y, z), this);
++        // Scissors end
+         this.recalculateBoundingBox();
+         this.hasImpulse = true;
+     }
