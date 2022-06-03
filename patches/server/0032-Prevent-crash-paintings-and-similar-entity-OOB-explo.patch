@@ -147,7 +147,7 @@ index 0000000000000000000000000000000000000000..fd22a200e070ca5a594802d2f201c6b2
 +    }
 +}
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index bc9e6a2403d2e0d174c87f9bcb54dc4af47c610b..5fffd4f1661a20522d1bb85308901826dfaf7dd9 100644
+index 876e8f83fab4e255959948e59cabf05478446e4d..886451893fbc30576249ca6816c2579127acfe06 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -1,5 +1,6 @@
@@ -157,7 +157,7 @@ index bc9e6a2403d2e0d174c87f9bcb54dc4af47c610b..5fffd4f1661a20522d1bb85308901826
  import com.google.common.collect.ImmutableList;
  import com.google.common.collect.ImmutableList.Builder;
  import com.google.common.collect.Iterables;
-@@ -1774,6 +1775,13 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -1775,6 +1776,13 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
      }
  
      public void moveTo(double x, double y, double z, float yaw, float pitch) {
@@ -171,7 +171,7 @@ index bc9e6a2403d2e0d174c87f9bcb54dc4af47c610b..5fffd4f1661a20522d1bb85308901826
          // Paper - cancel entity velocity if teleported
          if (!preserveMotion) {
              this.deltaMovement = Vec3.ZERO;
-@@ -3208,6 +3216,10 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -3209,6 +3217,10 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
  
      @Nullable
      public Entity teleportTo(ServerLevel worldserver, BlockPos location) {
@@ -182,7 +182,7 @@ index bc9e6a2403d2e0d174c87f9bcb54dc4af47c610b..5fffd4f1661a20522d1bb85308901826
          // CraftBukkit end
          // Paper start - fix bad state entities causing dupes
          if (!isAlive() || !valid) {
-@@ -4102,6 +4114,13 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -4103,6 +4115,13 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
          this.setPosRaw(x, y, z, false);
      }
      public final void setPosRaw(double x, double y, double z, boolean forceBoundingBoxUpdate) {

@@ -6,10 +6,10 @@ Subject: [PATCH] Validate coordinates before attempting to get block entities
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 9df5b678ce4343d0bb54133393f6bbe40fe5366b..4186c5c880e94d858fa7e661a1c795269170cf31 100644
+index 901fa17d0f0a3f66923f68f13f183bc4c17f7748..dc9199c0b1fa9b8779afc51d7af4c516d217ddb3 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -2990,20 +2990,25 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+@@ -2991,20 +2991,25 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
          if (this.player.gameMode.isCreative()) {
              boolean flag = packet.getSlotNum() < 0;
              ItemStack itemstack = packet.getItem();
