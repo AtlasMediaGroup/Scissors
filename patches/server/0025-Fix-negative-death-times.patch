@@ -17,4 +17,3 @@ index d6ef140bcc35b10f78f2ec2f10c8a153395fc9df..d8393887cc98930815864eca28b07ef8
              this.level.broadcastEntityEvent(this, (byte) 60);
              this.remove(Entity.RemovalReason.KILLED);
          }
- 
