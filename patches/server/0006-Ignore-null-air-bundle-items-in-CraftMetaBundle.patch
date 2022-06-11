@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Luna <lunahatesgogle@gmail.com>
+Date: Sun, 13 Mar 2022 11:07:34 -0300
+Subject: [PATCH] Ignore null/air bundle items in CraftMetaBundle
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBundle.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBundle.java
+index 8fd1e392258eba9dbe2194c024ad7e0ca3e43cf8..28be42594857f2d8320a035c1f8b95cdc300ddd5 100644
+--- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBundle.java
++++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBundle.java
+@@ -49,7 +49,11 @@ public class CraftMetaBundle extends CraftMetaItem implements BundleMeta {
+                 for (int i = 0; i < list.size(); i++) {
+                     CompoundTag nbttagcompound1 = list.getCompound(i);
+ 
+-                    this.addItem(CraftItemStack.asCraftMirror(net.minecraft.world.item.ItemStack.of(nbttagcompound1)));
++                    // Scissors start
++                    CraftItemStack item = CraftItemStack.asCraftMirror(net.minecraft.world.item.ItemStack.of(nbttagcompound1));
++                    if(item == null || item.getType().isAir()) continue;
++                    this.addItem(item);
++                    // Scissors end
+                 }
+             }
+         }
