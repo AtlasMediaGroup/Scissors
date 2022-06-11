@@ -1,0 +1,18 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Luna <lunahatesgogle@gmail.com>
+Date: Fri, 8 Apr 2022 23:38:12 -0300
+Subject: [PATCH] Limit ListTags to 1024 elements
+
+
+diff --git a/src/main/java/net/minecraft/nbt/ListTag.java b/src/main/java/net/minecraft/nbt/ListTag.java
+index ea68b26e506e48d8238b7ee4266e61b211d52bd2..10d3a1b31233f884823ee9a4bb27d70eac3914df 100644
+--- a/src/main/java/net/minecraft/nbt/ListTag.java
++++ b/src/main/java/net/minecraft/nbt/ListTag.java
+@@ -33,6 +33,7 @@ public class ListTag extends CollectionTag<Tag> {
+                         list.add(tagType.load(dataInput, i + 1, nbtAccounter));
+                     }
+ 
++                    if(j > 1024) return new ListTag(Lists.newArrayListWithCapacity(0), b);
+                     return new ListTag(list, b);
+                 }
+             }

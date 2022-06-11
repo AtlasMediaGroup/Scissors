@@ -1,0 +1,41 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Telesphoreo <me@telesphoreo.me>
+Date: Fri, 22 Apr 2022 01:24:05 -0500
+Subject: [PATCH] Validate coordinates before attempting to get block entities
+ when handling Creative Inventory packets
+
+
+diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+index 901fa17d0f0a3f66923f68f13f183bc4c17f7748..dc9199c0b1fa9b8779afc51d7af4c516d217ddb3 100644
+--- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+@@ -2991,20 +2991,25 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+         if (this.player.gameMode.isCreative()) {
+             boolean flag = packet.getSlotNum() < 0;
+             ItemStack itemstack = packet.getItem();
+-            CompoundTag nbttagcompound = BlockItem.getBlockEntityData(itemstack);
+ 
++            CompoundTag nbttagcompound = BlockItem.getBlockEntityData(itemstack);
+             if (!itemstack.isEmpty() && nbttagcompound != null && nbttagcompound.contains("x") && nbttagcompound.contains("y") && nbttagcompound.contains("z") && this.player.getBukkitEntity().hasPermission("minecraft.nbt.copy")) { // Spigot
+                 BlockPos blockposition = BlockEntity.getPosFromTag(nbttagcompound);
+                 // Paper start
+-                BlockEntity tileentity = null;
++                // Scissors start - Validate coordinates and whether or not the player can reach them
++                if (Level.isInSpawnableBounds(blockposition) && !isOutsideOfReach(blockposition.getX(), blockposition.getY(), blockposition.getZ())) {
++                    BlockEntity tileentity = null;
+                 if (this.player.distanceToSqr(blockposition.getX(), blockposition.getY(), blockposition.getZ()) < 32 * 32 && this.player.getLevel().isLoadedAndInBounds(blockposition)) {
+                     tileentity = this.player.level.getBlockEntity(blockposition);
+                 }
+                 // Paper end
+ 
+-                if (tileentity != null) {
+-                    tileentity.saveToItem(itemstack);
++                    if (tileentity != null) {
++                        tileentity.saveToItem(
++                        itemstack);
++                    }
+                 }
++                // Scissors end
+             }
+ 
+             boolean flag1 = packet.getSlotNum() >= 1 && packet.getSlotNum() <= 45;
