@@ -5,7 +5,7 @@ Subject: [PATCH] Change version fetcher to AMG
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index bf42969859545a8a520923ef1836ffa4a5cc24a0..05be595d3e451bfbc5471fb3fb44dc704b83f4ac 100644
+index bf42969859545a8a520923ef1836ffa4a5cc24a0..322cd9bce402d5d34c7cb8813d05194826930c97 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 @@ -4,6 +4,8 @@ import com.destroystokyo.paper.util.VersionFetcher;
@@ -17,7 +17,11 @@ index bf42969859545a8a520923ef1836ffa4a5cc24a0..05be595d3e451bfbc5471fb3fb44dc70
  import net.kyori.adventure.text.Component;
  import net.kyori.adventure.text.event.ClickEvent;
  import net.kyori.adventure.text.format.NamedTextColor;
-@@ -19,8 +21,8 @@ import java.util.stream.StreamSupport;
+@@ -16,11 +18,12 @@ import java.io.*;
+ import java.net.HttpURLConnection;
+ import java.net.URL;
+ import java.util.stream.StreamSupport;
++import org.bukkit.Bukkit;
  
  public class PaperVersionFetcher implements VersionFetcher {
      private static final java.util.regex.Pattern VER_PATTERN = java.util.regex.Pattern.compile("^([0-9\\.]*)\\-.*R"); // R is an anchor, will always give '-R' at end
@@ -28,7 +32,7 @@ index bf42969859545a8a520923ef1836ffa4a5cc24a0..05be595d3e451bfbc5471fb3fb44dc70
      private static @Nullable String mcVer;
  
      @Override
-@@ -31,8 +33,8 @@ public class PaperVersionFetcher implements VersionFetcher {
+@@ -31,8 +34,8 @@ public class PaperVersionFetcher implements VersionFetcher {
      @Nonnull
      @Override
      public Component getVersionMessage(@Nonnull String serverVersion) {
@@ -39,19 +43,19 @@ index bf42969859545a8a520923ef1836ffa4a5cc24a0..05be595d3e451bfbc5471fb3fb44dc70
          final Component history = getHistory();
  
          return history != null ? TextComponent.ofChildren(updateMessage, Component.newline(), history) : updateMessage;
-@@ -54,15 +56,24 @@ public class PaperVersionFetcher implements VersionFetcher {
+@@ -54,15 +57,24 @@ public class PaperVersionFetcher implements VersionFetcher {
          return mcVer;
      }
  
 +    // Scissors start - Allow getting git information
 +    public static String getCommit() {
-+        Map<String, String> attributes = JarManifests.MANIFEST_MAP;
-+        return attributes.get("Git-Commit");
++        final var manifest = JarManifests.manifest(Bukkit.getServer().getClass());
++        return manifest.getMainAttributes().getValue("Git-Commit");
 +    }
 +
 +    public static String getBranch() {
-+        Map<String, String> attributes = JarManifests.MANIFEST_MAP;
-+        return attributes.get("Git-Branch");
++        final var manifest = JarManifests.manifest(Bukkit.getServer().getClass());
++        return manifest.getMainAttributes().getValue("Git-Commit");
 +    }
 +    // Scissors end
 +
