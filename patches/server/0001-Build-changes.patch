@@ -49,7 +49,7 @@ index eefbd0a742b5875e0e9826b87c6bd4da66b2d7f7..83005bdd467eb5385c959f7780673810
      standardInput = System.`in`
      workingDir = rootProject.layout.projectDirectory
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 9e1d3a22ed7e34e4968b5fb34cc77b661eb4747d..4fc83abdcbe23a1790fb3958c193915e91354dcd 100644
+index 9e1d3a22ed7e34e4968b5fb34cc77b661eb4747d..199cbfa43a642dfd0b0ed1e6cccfe1c8bcdf1c67 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1654,7 +1654,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -57,7 +57,7 @@ index 9e1d3a22ed7e34e4968b5fb34cc77b661eb4747d..4fc83abdcbe23a1790fb3958c193915e
      @DontObfuscate
      public String getServerModName() {
 -        return "Paper"; // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
-+        return "Scissors"; // Scissors - Scissors // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
++        return "Scissors"; // Scissors - Scissors > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
      }
  
      public SystemReport fillSystemReport(SystemReport details) {
