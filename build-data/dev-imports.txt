@@ -13,3 +13,4 @@
 #minecraft net/minecraft/world/ContainerHelper
 #minecraft net/minecraft/network/chat/contents/NbtContents
 #minecraft net/minecraft/network/chat/ComponentUtils
+#minecraft net/minecraft/network/chat/contents/EntityDataSource
