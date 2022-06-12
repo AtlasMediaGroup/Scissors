@@ -5,7 +5,7 @@ Subject: [PATCH] Reject oversized components from updating
 
 
 diff --git a/src/main/java/net/minecraft/network/chat/ComponentUtils.java b/src/main/java/net/minecraft/network/chat/ComponentUtils.java
-index 9d3449dd92bbbef91b627caba752b87d8209011d..26c0438e8d4ef5ccfc53fbd5233bb6b7b0b1fc60 100644
+index 9d3449dd92bbbef91b627caba752b87d8209011d..e162fb748745ec50189e426c2de5a91ce618be1b 100644
 --- a/src/main/java/net/minecraft/network/chat/ComponentUtils.java
 +++ b/src/main/java/net/minecraft/network/chat/ComponentUtils.java
 @@ -39,8 +39,10 @@ public class ComponentUtils {
@@ -33,3 +33,14 @@ index 9d3449dd92bbbef91b627caba752b87d8209011d..26c0438e8d4ef5ccfc53fbd5233bb6b7
      }
  
      private static Style resolveStyle(@Nullable CommandSourceStack source, Style style, @Nullable Entity sender, int depth) throws CommandSyntaxException {
+@@ -138,8 +143,8 @@ public class ComponentUtils {
+             ComponentContents string = text.getContents();
+             if (string instanceof TranslatableContents) {
+                 TranslatableContents translatableContents = (TranslatableContents)string;
+-                String string = translatableContents.getKey();
+-                return Language.getInstance().has(string);
++                String string1 = translatableContents.getKey();
++                return Language.getInstance().has(string1);
+             }
+         }
+ 
