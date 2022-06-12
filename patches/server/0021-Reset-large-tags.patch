@@ -1,0 +1,87 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Telesphoreo <me@telesphoreo.me>
+Date: Fri, 22 Apr 2022 01:56:03 -0500
+Subject: [PATCH] Reset large tags
+
+
+diff --git a/src/main/java/me/totalfreedom/scissors/NbtUtility.java b/src/main/java/me/totalfreedom/scissors/NbtUtility.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..fd408bd8bb0ad4a96abfbd5721fe4ecd7066297c
+--- /dev/null
++++ b/src/main/java/me/totalfreedom/scissors/NbtUtility.java
+@@ -0,0 +1,28 @@
++package me.totalfreedom.scissors;
++
++import java.nio.charset.StandardCharsets;
++import javax.annotation.Nullable;
++import net.minecraft.nbt.CompoundTag;
++
++public class NbtUtility
++{
++    public static boolean isTooLarge(@Nullable CompoundTag tag)
++    {
++        if (tag == null)
++        {
++            return false;
++        }
++        return tag.toString().getBytes(StandardCharsets.UTF_8).length > (256 * 1024);
++    }
++
++    public static class Item
++    {
++        public static CompoundTag removeItemData(CompoundTag tag)
++        {
++            CompoundTag cleaned = new CompoundTag();
++            cleaned.putString("id", tag.getString("id"));
++            cleaned.putByte("Count", tag.getByte("Count"));
++            return cleaned;
++        }
++    }
++}
+diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
+index 6b3cfc19c4fd1382ddf534265a1114995a4f6b55..10eb3261e215870997784751523e1609360f27ee 100644
+--- a/src/main/java/net/minecraft/world/item/ItemStack.java
++++ b/src/main/java/net/minecraft/world/item/ItemStack.java
+@@ -20,6 +20,7 @@ import java.util.function.Predicate;
+ import java.util.stream.Collectors;
+ import java.util.stream.Stream;
+ import javax.annotation.Nullable;
++import me.totalfreedom.scissors.NbtUtility;
+ import net.minecraft.ChatFormatting;
+ import net.minecraft.Util;
+ import net.minecraft.advancements.CriteriaTriggers;
+@@ -251,6 +252,12 @@ public final class ItemStack {
+ 
+     // CraftBukkit - break into own method
+     private void load(CompoundTag nbttagcompound) {
++        // Scissors start - Reset large tags
++        if (NbtUtility.isTooLarge(nbttagcompound)) {
++            // Reset tag without destroying item
++            nbttagcompound = NbtUtility.Item.removeItemData(nbttagcompound);
++        }
++        // Scissors end
+         this.item = (Item) Registry.ITEM.get(new ResourceLocation(nbttagcompound.getString("id")));
+         this.count = nbttagcompound.getByte("Count");
+         if (nbttagcompound.contains("tag", 10)) {
+@@ -682,6 +689,11 @@ public final class ItemStack {
+ 
+             itemstack.setPopTime(this.getPopTime());
+             if (this.tag != null) {
++                // Scissors start - Don't save large tags
++                if (!NbtUtility.isTooLarge(this.tag)) {
++                    itemstack.tag.put("tag", this.tag.copy());
++                }
++                // Scissors end
+                 itemstack.tag = this.tag.copy();
+             }
+ 
+@@ -839,6 +851,9 @@ public final class ItemStack {
+     // Paper end
+ 
+     public void setTag(@Nullable CompoundTag nbt) {
++        // Scissors start - Ignore large tags
++        if (NbtUtility.isTooLarge(nbt)) return;
++        // Scissors end
+         this.tag = nbt;
+         this.processEnchantOrder(this.tag); // Paper
+         if (this.getItem().canBeDepleted()) {
