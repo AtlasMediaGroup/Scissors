@@ -1,8 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Business Goose <arclicious@vivaldi.net>
-Date: Sun, 1 May 2022 01:19:36 +0100
-Subject: [PATCH] Make the maximum tag size a constant & add a method for
- getting tag size
+From: Allink <arclicious@vivaldi.net>
+Date: Tue, 17 May 2022 05:57:52 +0100
+Subject: [PATCH] Don't log invalid teams to console
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
