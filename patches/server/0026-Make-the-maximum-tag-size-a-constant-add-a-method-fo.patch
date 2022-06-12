@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Business Goose <arclicious@vivaldi.net>
+Date: Sun, 1 May 2022 01:19:36 +0100
+Subject: [PATCH] Make the maximum tag size a constant & add a method for
+ getting tag size
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+index ac85b2444322d1f2bd5ccdc285443bfc1a4855ca..63229d6c61346821ad45997bddcbbfd95fb96de8 100644
+--- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
++++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+@@ -836,7 +836,9 @@ public abstract class LivingEntity extends Entity {
+             boolean flag = scoreboardteam != null && this.level.getScoreboard().addPlayerToTeam(this.getStringUUID(), scoreboardteam);
+ 
+             if (!flag) {
+-                LivingEntity.LOGGER.warn("Unable to add mob to team \"{}\" (that team probably doesn't exist)", s);
++                // Scissors start - Prevent log spam possible with this error message, easily provokable by players in creative.
++                // LivingEntity.LOGGER.warn("Unable to add mob to team \"{}\" (that team probably doesn't exist)", s);
++                // Scissors end
+             }
+         }
+ 
