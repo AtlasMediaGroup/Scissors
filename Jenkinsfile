@@ -6,6 +6,7 @@ pipeline {
     options {
         buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5')
     }
+    stages {
         stage('applyPatches') {
             steps {
                 withGradle {
