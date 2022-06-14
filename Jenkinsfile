@@ -6,32 +6,24 @@ pipeline {
     options {
         buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5')
     }
-    stages {
-        stage('cleanCache') {
-            steps {
-                withGradle {
-                    sh './gradlew cleanCache'
-                }
-            }
-        }
         stage('applyPatches') {
             steps {
                 withGradle {
-                    sh './gradlew applyPatches --refresh-dependencies'
+                    sh './gradlew applyPatches --no-daemon --refresh-dependencies'
                 }
             }
         }
         stage('paperclipJar') {
             steps {
                 withGradle {
-                    sh './gradlew createReobfPaperclipJar --refresh-dependencies'
+                    sh './gradlew createReobfPaperclipJar --no-daemon --refresh-dependencies'
                 }
             }
         }
         stage('test') {
             steps {
                 withGradle {
-                    sh './gradlew test'
+                    sh './gradlew test --no-daemon'
                 }
             }
         }
