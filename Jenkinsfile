@@ -17,14 +17,14 @@ pipeline {
         stage('applyPatches') {
             steps {
                 withGradle {
-                    sh './gradlew applyPatches'
+                    sh './gradlew applyPatches --refresh-dependencies'
                 }
             }
         }
         stage('paperclipJar') {
             steps {
                 withGradle {
-                    sh './gradlew createReobfPaperclipJar'
+                    sh './gradlew createReobfPaperclipJar --refresh-dependencies'
                 }
             }
         }
