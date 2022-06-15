@@ -5,7 +5,7 @@ Subject: [PATCH] Change version fetcher to AMG
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index bf42969859545a8a520923ef1836ffa4a5cc24a0..322cd9bce402d5d34c7cb8813d05194826930c97 100644
+index bf42969859545a8a520923ef1836ffa4a5cc24a0..0aabce6dc5360b316931956b693d3792ead3cb8e 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 @@ -4,6 +4,8 @@ import com.destroystokyo.paper.util.VersionFetcher;
@@ -50,12 +50,12 @@ index bf42969859545a8a520923ef1836ffa4a5cc24a0..322cd9bce402d5d34c7cb8813d051948
 +    // Scissors start - Allow getting git information
 +    public static String getCommit() {
 +        final var manifest = JarManifests.manifest(Bukkit.getServer().getClass());
-+        return manifest.getMainAttributes().getValue("Git-Commit");
++        return manifest == null ? null : manifest.getMainAttributes().getValue("Git-Commit");
 +    }
 +
 +    public static String getBranch() {
 +        final var manifest = JarManifests.manifest(Bukkit.getServer().getClass());
-+        return manifest.getMainAttributes().getValue("Git-Commit");
++        return manifest == null ? null : manifest.getMainAttributes().getValue("Git-Branch");
 +    }
 +    // Scissors end
 +
