@@ -15,5 +15,5 @@ The authors listed below have chosen to release their code under that more permi
 should submit a pull request to this project to add their name.
 
 ```text
-None yet. You may add yourself with the following format: username <email> (keep the < >)
+Allink (allinkdev) <arclicious@vivaldi.net>
 ```
