@@ -1,5 +1,5 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Telesphoreo <me@telesphoreo.me>
+From: Allink <arclicious@vivaldi.net>
 Date: Sun, 22 May 2022 21:15:51 -0500
 Subject: [PATCH] Prevent crash paintings and similar entity OOB exploits
 
