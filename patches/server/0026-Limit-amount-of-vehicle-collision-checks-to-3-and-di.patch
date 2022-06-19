@@ -1,5 +1,5 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Telesphoreo <me@telesphoreo.me>
+From: Business Goose <arclicious@vivaldi.net>
 Date: Sun, 1 May 2022 14:23:35 -0500
 Subject: [PATCH] Limit amount of vehicle collision checks to 3 and discard
  vehicles if they collide with more than 15 other entities
