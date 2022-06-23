@@ -5,7 +5,7 @@ Subject: [PATCH] Change version fetcher to AMG
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index ece77f5ea4b14bbed7c070131b3251ea86764538..f92610edcfb724374c69e66443eab60919ee955a 100644
+index ece77f5ea4b14bbed7c070131b3251ea86764538..74e5c5194580c6b65f3b4e657237fef7ef005ec2 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 @@ -4,6 +4,8 @@ import com.destroystokyo.paper.util.VersionFetcher;
@@ -24,7 +24,7 @@ index ece77f5ea4b14bbed7c070131b3251ea86764538..f92610edcfb724374c69e66443eab609
 -    private static final String GITHUB_BRANCH_NAME = "master";
 -    private static final String DOWNLOAD_PAGE = "https://papermc.io/downloads";
 +    private static final String GITHUB_BRANCH_NAME = getBranch();
-+    private static final String DOWNLOAD_PAGE = "https://ci.plex.us.org/job/Scissors/job/" + GITHUB_BRANCH_NAME;
++    private static final String DOWNLOAD_PAGE = "https://ci.scissors.gg/job/Scissors/job/" + GITHUB_BRANCH_NAME;
      private static @Nullable String mcVer;
  
      @Override
@@ -71,3 +71,16 @@ index ece77f5ea4b14bbed7c070131b3251ea86764538..f92610edcfb724374c69e66443eab609
  
          switch (distance) {
              case -1:
+diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
+index 22e9dd17f62103c5061435099ce96a3d70d54808..d033caf5dabbd2a240286c5623b3d287ae5cbdd9 100644
+--- a/src/main/java/org/bukkit/craftbukkit/Main.java
++++ b/src/main/java/org/bukkit/craftbukkit/Main.java
+@@ -269,7 +269,7 @@ public class Main {
+                     if (buildDate.before(deadline.getTime())) {
+                         // Paper start - This is some stupid bullshit
+                         System.err.println("*** Warning, you've not updated in a while! ***");
+-                        System.err.println("*** Please download a new build as per instructions from https://papermc.io/downloads ***"); // Paper
++                        System.err.println("*** Please download a new build from https://ci.scissors.gg/job/Scissors ***"); // Scissors > // Paper
+                         //System.err.println("*** Server will start in 20 seconds ***");
+                         //Thread.sleep(TimeUnit.SECONDS.toMillis(20));
+                         // Paper End
