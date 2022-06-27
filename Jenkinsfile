@@ -3,9 +3,6 @@ pipeline {
     environment {
         GITHUB_BRANCH = "${BRANCH_NAME}"
     }
-    options {
-        buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5')
-    }
     stages {
         stage('applyPatches') {
             steps {
