@@ -3,21 +3,18 @@ pipeline {
     environment {
         GITHUB_BRANCH = "${BRANCH_NAME}"
     }
-    options {
-        buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5')
-    }
     stages {
         stage('applyPatches') {
             steps {
                 withGradle {
-                    sh './gradlew applyPatches --no-daemon'
+                    sh './gradlew applyPatches --no-daemon --refresh-dependencies'
                 }
             }
         }
         stage('paperclipJar') {
             steps {
                 withGradle {
-                    sh './gradlew createReobfPaperclipJar --no-daemon'
+                    sh './gradlew createReobfPaperclipJar --no-daemon --refresh-dependencies'
                 }
             }
         }
