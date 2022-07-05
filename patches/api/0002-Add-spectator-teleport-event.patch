@@ -1,0 +1,72 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Allink <arclicious@vivaldi.net>
+Date: Tue, 5 Jul 2022 04:10:29 +0100
+Subject: [PATCH] Add spectator teleport event
+
+
+diff --git a/src/main/java/me/totalfreedom/scissors/event/player/SpectatorTeleportEvent.java b/src/main/java/me/totalfreedom/scissors/event/player/SpectatorTeleportEvent.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..d7efa63c316ed99c3eccfeadc1b0873b2ccb5d8a
+--- /dev/null
++++ b/src/main/java/me/totalfreedom/scissors/event/player/SpectatorTeleportEvent.java
+@@ -0,0 +1,60 @@
++package me.totalfreedom.scissors.event.player;
++
++import org.bukkit.entity.Entity;
++import org.bukkit.entity.Player;
++import org.bukkit.event.Cancellable;
++import org.bukkit.event.Event;
++import org.bukkit.event.HandlerList;
++import org.jetbrains.annotations.NotNull;
++
++/**
++ * Called whenever a spectator attempts to teleport to an entity
++ */
++public class SpectatorTeleportEvent extends Event implements Cancellable
++{
++    private static final HandlerList handlerList = new HandlerList();
++    private final Player player;
++    private final Entity target;
++    private boolean cancelled;
++
++    public SpectatorTeleportEvent(@NotNull Player player, @NotNull Entity target)
++    {
++        this.player = player;
++        this.target = target;
++    }
++
++    @NotNull
++    public Player getPlayer() {
++        return this.player;
++    }
++
++    @NotNull
++    public Entity getTarget() {
++        return this.target;
++    }
++
++    @Override
++    public boolean isCancelled()
++    {
++        return cancelled;
++    }
++
++    @Override
++    public void setCancelled(boolean cancelled)
++    {
++        this.cancelled = cancelled;
++    }
++
++    @NotNull
++    @Override
++    public HandlerList getHandlers()
++    {
++        return handlerList;
++    }
++
++    @NotNull
++    public static org.bukkit.event.HandlerList getHandlerList()
++    {
++        return handlerList;
++    }
++}
