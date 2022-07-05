@@ -25,6 +25,18 @@ pipeline {
                 }
             }
         }
+        stage('publish') {
+            when {
+                branch "1.17.1"
+            }
+            steps {
+                withCredentials([usernamePassword(credentialsId: '8150559b-ec1d-41bd-a576-aa668a52c1ba', passwordVariable: 'scissorsPassword', usernameVariable: 'scissorsUser')]) {
+                    withGradle {
+                        sh "./gradlew :Scissors-API:publish --no-daemon"
+                    }
+                }
+            }
+        }
     }
     post {
         always {

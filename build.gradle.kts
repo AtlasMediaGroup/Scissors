@@ -11,7 +11,7 @@ val spigotDecompiler: Configuration by configurations.creating
 
 repositories {
     mavenCentral()
-    maven("https://papermc.io/repo/repository/maven-public/") {
+    maven("https://repo.papermc.io/repository/maven-public/") {
         content {
             onlyForConfigurations(
                 configurations.paperclip.name,
@@ -53,7 +53,7 @@ subprojects {
 
     repositories {
         mavenCentral()
-        maven("https://papermc.io/repo/repository/maven-public/")
+        maven("https://repo.papermc.io/repository/maven-public/")
     }
 }
 
@@ -70,6 +70,35 @@ paperweight {
 
             serverPatchDir.set(layout.projectDirectory.dir("patches/server"))
             serverOutputDir.set(layout.projectDirectory.dir("Scissors-Server"))
+        }
+    }
+}
+
+tasks.generateDevelopmentBundle {
+    apiCoordinates.set("me.totalfreedom.scissors:scissors-api")
+    mojangApiCoordinates.set("io.papermc.paper:paper-mojangapi")
+    libraryRepositories.set(
+        listOf(
+            "https://repo.maven.apache.org/maven2/",
+            "https://repo.papermc.io/repository/maven-public/",
+            "https://repo.scissors.gg/repository/scissors-snapshot/",
+        )
+    )
+}
+
+allprojects {
+    // Publishing API:
+    // ./gradlew :Scissors-API:publish[ToMavenLocal]
+    publishing {
+        repositories {
+            maven {
+                name = "scissors-snapshots"
+                url = uri("https://repo.scissors.gg/repository/scissors-snapshot/")
+                credentials {
+                    username = System.getenv("scissorsUser")
+                    password = System.getenv("scissorsPassword")
+                }
+            }
         }
     }
 }
