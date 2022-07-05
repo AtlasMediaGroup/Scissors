@@ -6,10 +6,10 @@ Subject: [PATCH] Add spectator teleport event
 
 diff --git a/src/main/java/com/github/atlasmediagroup/scissors/event/player/SpectatorTeleportEvent.java b/src/main/java/com/github/atlasmediagroup/scissors/event/player/SpectatorTeleportEvent.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..6941549c8f15177569f9ce7243b73255c7c5988e
+index 0000000000000000000000000000000000000000..504f02ac89ea0ed3569cbc4ff67292041c9f408e
 --- /dev/null
 +++ b/src/main/java/com/github/atlasmediagroup/scissors/event/player/SpectatorTeleportEvent.java
-@@ -0,0 +1,61 @@
+@@ -0,0 +1,60 @@
 +package com.github.atlasmediagroup.scissors.event.player;
 +
 +import org.bukkit.entity.Entity;
@@ -31,7 +31,6 @@ index 0000000000000000000000000000000000000000..6941549c8f15177569f9ce7243b73255
 +
 +    public SpectatorTeleportEvent(@NotNull Player player, @NotNull Entity target)
 +    {
-+        System.out.println("[DEBUG] Spectator teleport event called!");
 +        this.player = player;
 +        this.target = target;
 +    }
