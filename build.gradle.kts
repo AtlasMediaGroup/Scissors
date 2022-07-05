@@ -65,3 +65,32 @@ paperweight {
         }
     }
 }
+
+tasks.generateDevelopmentBundle {
+    apiCoordinates.set("me.totalfreedom.scissors:scissors-api")
+    mojangApiCoordinates.set("io.papermc.paper:paper-mojangapi")
+    libraryRepositories.set(
+        listOf(
+            "https://repo.maven.apache.org/maven2/",
+            paperMavenPublicUrl,
+            "https://repo.scissors.gg/repository/scissors-snapshot/",
+        )
+    )
+}
+
+allprojects {
+    // Publishing API:
+    // ./gradlew :Scissors-API:publish[ToMavenLocal]
+    publishing {
+        repositories {
+            maven {
+                name = "scissors-snapshots"
+                url = uri("https://repo.scissors.gg/repository/scissors-snapshot/")
+                credentials {
+                    username = System.getenv("scissorsUser")
+                    password = System.getenv("scissorsPassword")
+                }
+            }
+        }
+    }
+}
