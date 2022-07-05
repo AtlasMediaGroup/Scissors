@@ -24,6 +24,7 @@ pipeline {
                     sh './gradlew test --no-daemon'
                 }
             }
+        }
         stage('publish') {
             when {
                 branch "1.19"
