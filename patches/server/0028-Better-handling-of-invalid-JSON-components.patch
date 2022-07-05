@@ -110,10 +110,10 @@ index 97a2657bc98d41c3c1e376b266d2c85f685acc88..7b6476455e095eed15c92797ce3a3e11
                      }
                  }).reduce((accumulator, current) -> {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index b0728b66c54dc22a5a98f150910d07f4b38ebd7e..a8181c1c12c822759bcd17d08d47426f3fb11d95 100644
+index 19a64b582bc042e426220e080d9c21b3a82cf3f7..1a38f82eb4650fcc0e0db8cb76f1ea1249703c02 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -2303,12 +2303,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -2304,12 +2304,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
                      this.setRot(this.getYRot(), this.getXRot());
                      if (nbt.contains("CustomName", 8)) {
                          String s = nbt.getString("CustomName");
