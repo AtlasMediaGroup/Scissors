@@ -6,10 +6,10 @@ Subject: [PATCH] Add spectator teleport event
 
 diff --git a/src/main/java/me/totalfreedom/scissors/event/player/SpectatorTeleportEvent.java b/src/main/java/me/totalfreedom/scissors/event/player/SpectatorTeleportEvent.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..0c2129c1508dd44337c35072285fda89d5f294d8
+index 0000000000000000000000000000000000000000..d7efa63c316ed99c3eccfeadc1b0873b2ccb5d8a
 --- /dev/null
 +++ b/src/main/java/me/totalfreedom/scissors/event/player/SpectatorTeleportEvent.java
-@@ -0,0 +1,61 @@
+@@ -0,0 +1,60 @@
 +package me.totalfreedom.scissors.event.player;
 +
 +import org.bukkit.entity.Entity;
@@ -31,7 +31,6 @@ index 0000000000000000000000000000000000000000..0c2129c1508dd44337c35072285fda89
 +
 +    public SpectatorTeleportEvent(@NotNull Player player, @NotNull Entity target)
 +    {
-+        System.out.println("[DEBUG] Spectator teleport event called!");
 +        this.player = player;
 +        this.target = target;
 +    }
