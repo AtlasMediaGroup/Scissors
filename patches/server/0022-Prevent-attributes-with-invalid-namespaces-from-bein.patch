@@ -6,7 +6,7 @@ Subject: [PATCH] Prevent attributes with invalid namespaces from being applied
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
-index 2e3220cbbea5f6cb9acb7f8fbaf2ff8f91b09234..8018709dfce483a9000ada93cf47812fd49458a8 100644
+index 2e3220cbbea5f6cb9acb7f8fbaf2ff8f91b09234..3ea83a093f698a055566f45a7927c289ff9a6955 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 @@ -45,6 +45,7 @@ import net.minecraft.nbt.NbtIo;
@@ -22,7 +22,7 @@ index 2e3220cbbea5f6cb9acb7f8fbaf2ff8f91b09234..8018709dfce483a9000ada93cf47812f
  
              String attributeName = CraftAttributeMap.convertIfNeeded(entry.getString(ATTRIBUTES_IDENTIFIER.NBT)); // Paper
 -            if (attributeName == null || attributeName.isEmpty()) {
-+            if (attributeName == null || attributeName.isEmpty() || attributeName.length() < 256 || !ResourceLocation.isValidResourceLocation(attributeName)) { // Scissors
++            if (attributeName == null || attributeName.isEmpty() || attributeName.length() > 256 || !ResourceLocation.isValidResourceLocation(attributeName)) { // Scissors
                  continue;
              }
  
