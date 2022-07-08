@@ -22,7 +22,7 @@ index 65844bb02bd3d9ef566d4779106a1f9ef2a2b7bc..f856ac2dfe55a1f1f63725ec20e7b8dd
  
              String attributeName = CraftAttributeMap.convertIfNeeded(entry.getString(ATTRIBUTES_IDENTIFIER.NBT)); // Paper
 -            if (attributeName == null || attributeName.isEmpty()) {
-+            if (attributeName == null || attributeName.isEmpty() || attributeName.length() < 256 || !ResourceLocation.isValidResourceLocation(attributeName)) { // Scissors
++            if (attributeName == null || attributeName.isEmpty() || attributeName.length() > 256 || !ResourceLocation.isValidResourceLocation(attributeName)) { // Scissors
                  continue;
              }
  
