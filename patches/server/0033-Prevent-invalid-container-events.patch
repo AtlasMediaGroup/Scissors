@@ -1,0 +1,37 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Allink <arclicious@vivaldi.net>
+Date: Sun, 10 Jul 2022 02:55:01 +0100
+Subject: [PATCH] Prevent invalid container events
+
+
+diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+index d053c7547db965cd103a6edf56916f3c6e98a673..1f5553977de20cc52ba654fbaf56c5002d561bb4 100644
+--- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+@@ -31,6 +31,8 @@ import java.util.function.UnaryOperator;
+ import java.util.stream.Collectors;
+ import java.util.stream.Stream;
+ import javax.annotation.Nullable;
++
++import net.kyori.adventure.text.format.NamedTextColor;
+ import net.minecraft.ChatFormatting;
+ import net.minecraft.CrashReport;
+ import net.minecraft.CrashReportCategory;
+@@ -3034,6 +3036,17 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+                     }
+ 
+                     if (packet.getClickType() != net.minecraft.world.inventory.ClickType.QUICK_CRAFT) {
++                        // Scissors start - Do not call events when the slot/button number is invalid
++                        if(packet.getSlotNum() > 45)
++                        {
++                            this.getCraftPlayer().kick(
++                                net.kyori.adventure.text.Component.text("Invalid container click slot (Hacking?)")
++                                    .color(NamedTextColor.RED)
++                            );
++                            return;
++                        }
++                        // Scissors end
++
+                         if (click == ClickType.NUMBER_KEY) {
+                             event = new InventoryClickEvent(inventory, type, packet.getSlotNum(), click, action, packet.getButtonNum());
+                         } else {
