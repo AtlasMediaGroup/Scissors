@@ -1,0 +1,24 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Allink <arclicious@vivaldi.net>
+Date: Sun, 10 Jul 2022 02:45:15 +0100
+Subject: [PATCH] Do not attempt to cast items to recipes
+
+
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
+index 0f19ef250a2f82e49730cb58ea43ee6bf407455a..764b56c2d5cdf5a57fced106d196ef866f70e885 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
+@@ -634,6 +634,13 @@ public abstract class AbstractFurnaceBlockEntity extends BaseContainerBlockEntit
+             Entry<ResourceLocation> entry = (Entry) objectiterator.next();
+ 
+             worldserver.getRecipeManager().byKey((ResourceLocation) entry.getKey()).ifPresent((irecipe) -> {
++                // Scissors start - Do not attempt to cast items to recipes
++                if (!(irecipe instanceof AbstractCookingRecipe))
++                {
++                    return;
++                }
++                // Scissors end
++
+                 list.add(irecipe);
+                 AbstractFurnaceBlockEntity.createExperience(worldserver, vec3d, entry.getIntValue(), ((AbstractCookingRecipe) irecipe).getExperience(), blockposition, entityplayer, itemstack, amount); // CraftBukkit
+             });
