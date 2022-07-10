@@ -5,7 +5,7 @@ Subject: [PATCH] Prevent invalid container events
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index d053c7547db965cd103a6edf56916f3c6e98a673..1f5553977de20cc52ba654fbaf56c5002d561bb4 100644
+index 7c6fceb410f6b8683795a0a967dfe3305a689e26..5a8d4421c2de0680a3f4880451badcf5c4b46597 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -31,6 +31,8 @@ import java.util.function.UnaryOperator;
@@ -17,21 +17,23 @@ index d053c7547db965cd103a6edf56916f3c6e98a673..1f5553977de20cc52ba654fbaf56c500
  import net.minecraft.ChatFormatting;
  import net.minecraft.CrashReport;
  import net.minecraft.CrashReportCategory;
-@@ -3034,6 +3036,17 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
-                     }
- 
-                     if (packet.getClickType() != net.minecraft.world.inventory.ClickType.QUICK_CRAFT) {
-+                        // Scissors start - Do not call events when the slot/button number is invalid
-+                        if(packet.getSlotNum() > 45)
-+                        {
-+                            this.getCraftPlayer().kick(
-+                                net.kyori.adventure.text.Component.text("Invalid container click slot (Hacking?)")
-+                                    .color(NamedTextColor.RED)
-+                            );
-+                            return;
-+                        }
-+                        // Scissors end
+@@ -2840,6 +2842,19 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+     public void handleContainerClick(ServerboundContainerClickPacket packet) {
+         PacketUtils.ensureRunningOnSameThread(packet, this, this.player.getLevel());
+         if (this.player.isImmobile()) return; // CraftBukkit
 +
-                         if (click == ClickType.NUMBER_KEY) {
-                             event = new InventoryClickEvent(inventory, type, packet.getSlotNum(), click, action, packet.getButtonNum());
-                         } else {
++        // Scissors start - Do not call events when the slot/button number is invalid
++        final int sentSlotNum = packet.getSlotNum();
++        if(Mth.clamp(sentSlotNum, 0, 45) != sentSlotNum)
++        {
++            this.getCraftPlayer().kick(
++                net.kyori.adventure.text.Component.text("Invalid container click slot (Hacking?)")
++                    .color(NamedTextColor.RED)
++            );
++            return;
++        }
++        // Scissors end
++
+         this.player.resetLastActionTime();
+         if (this.player.containerMenu.containerId == packet.getContainerId() && this.player.containerMenu.stillValid(this.player)) { // CraftBukkit
+             boolean cancelled = this.player.isSpectator(); // CraftBukkit - see below if
