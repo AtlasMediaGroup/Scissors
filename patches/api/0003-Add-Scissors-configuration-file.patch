@@ -1,0 +1,24 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Allink <arclicious@vivaldi.net>
+Date: Sun, 10 Jul 2022 09:56:34 +0100
+Subject: [PATCH] Add Scissors configuration file
+
+
+diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
+index 79b26045a68ebb9b01e5bd06abbccaaef5489777..eb66a2cf4785c9f8ef4bdebee59f29777bf9fa50 100644
+--- a/src/main/java/org/bukkit/Server.java
++++ b/src/main/java/org/bukkit/Server.java
+@@ -1897,6 +1897,13 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
+         }
+         // Paper end
+ 
++        // Scissors start
++        @NotNull
++        public org.bukkit.configuration.file.YamlConfiguration getScissorsConfig() {
++            throw new UnsupportedOperationException("Not supported yet.");
++        }
++        // Scissors end
++
+         /**
+          * Sends the component to the player
+          *
