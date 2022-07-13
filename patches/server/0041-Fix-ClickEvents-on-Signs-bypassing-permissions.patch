@@ -1,0 +1,93 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Allink <arclicious@vivaldi.net>
+Date: Wed, 13 Jul 2022 10:16:57 +0100
+Subject: [PATCH] Fix ClickEvents on Signs bypassing permissions
+
+
+diff --git a/src/main/java/com/github/atlasmediagroup/scissors/ScissorsConfig.java b/src/main/java/com/github/atlasmediagroup/scissors/ScissorsConfig.java
+index 6fcbd02c02d70617e4533b450747c918ec3339d5..52b0161711634f9ad8cecf58668737a726278f72 100644
+--- a/src/main/java/com/github/atlasmediagroup/scissors/ScissorsConfig.java
++++ b/src/main/java/com/github/atlasmediagroup/scissors/ScissorsConfig.java
+@@ -65,8 +65,8 @@ public class ScissorsConfig
+         config.options().header(HEADER);
+         config.options().copyDefaults(true);
+ 
+-        version = getInt("config-version", 1);
+-        set("config-version", 1);
++        version = getInt("config-version", 2);
++        set("config-version", 2);
+         readConfig(ScissorsConfig.class, null);
+     }
+ 
+@@ -133,6 +133,13 @@ public class ScissorsConfig
+         runCommandsInBooks = getBoolean("runCommandsInBooks", false);
+     }
+ 
++    // people still may want them to bypass permissions for warps
++    public static boolean commandSignsBypassPermissions = false;
++    public static void commandSignsBypassPermissions()
++    {
++        commandSignsBypassPermissions = getBoolean("commandSignsBypassPermissions", false);
++    }
++
+     private static void set(String path, Object val)
+     {
+         config.set(path, val);
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
+index 344d3a8c1162f1a4ab5fc2b7676680ddace46649..5e526ba120b9e4ba77fa4474730aa180dba5eb56 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
+@@ -1,11 +1,13 @@
+ package net.minecraft.world.level.block.entity;
+ 
++import com.github.atlasmediagroup.scissors.ScissorsConfig;
+ import com.mojang.brigadier.exceptions.CommandSyntaxException;
+ import java.util.UUID;
+ import java.util.function.Function;
+ import javax.annotation.Nullable;
+ import net.minecraft.commands.CommandSource;
+ import net.minecraft.commands.CommandSourceStack;
++import net.minecraft.commands.Commands;
+ import net.minecraft.core.BlockPos;
+ import net.minecraft.core.Vec3i;
+ import net.minecraft.nbt.CompoundTag;
+@@ -16,6 +18,7 @@ import net.minecraft.network.chat.MutableComponent;
+ import net.minecraft.network.chat.Style;
+ import net.minecraft.network.chat.TextComponent;
+ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
++import net.minecraft.server.MinecraftServer;
+ import net.minecraft.server.level.ServerLevel;
+ import net.minecraft.server.level.ServerPlayer;
+ import net.minecraft.util.FormattedCharSequence;
+@@ -24,6 +27,8 @@ import net.minecraft.world.item.DyeColor;
+ import net.minecraft.world.level.block.state.BlockState;
+ import net.minecraft.world.phys.Vec2;
+ import net.minecraft.world.phys.Vec3;
++import org.bukkit.craftbukkit.CraftServer;
++import org.bukkit.craftbukkit.entity.CraftPlayer;
+ 
+ public class SignBlockEntity extends BlockEntity implements CommandSource { // CraftBukkit - implements
+     private static final boolean CONVERT_LEGACY_SIGNS = Boolean.getBoolean("convertLegacySigns"); // Paper
+@@ -237,7 +242,21 @@ public class SignBlockEntity extends BlockEntity implements CommandSource { // C
+                 if (!event.callEvent()) {
+                     return false;
+                 }
+-                player.getServer().getCommands().performCommand(this.createCommandSourceStack(((org.bukkit.craftbukkit.entity.CraftPlayer) event.getPlayer()).getHandle()), event.getMessage());
++
++                // Scissors start - Add optional permissions to command signs
++                final MinecraftServer vanillaServer = player.getServer();
++                final CraftServer craftServer = vanillaServer.server;
++                final CraftPlayer craftPlayer = player.getBukkitEntity();
++                final Commands commands = vanillaServer.getCommands();
++
++                if (ScissorsConfig.commandSignsBypassPermissions)
++                {
++                    commands.performCommand(this.createCommandSourceStack(((org.bukkit.craftbukkit.entity.CraftPlayer) event.getPlayer()).getHandle()), event.getMessage());
++                } else
++                {
++                    craftServer.dispatchCommand(craftPlayer, command.substring(1));
++                }
++                // Scissors end
+                 // Paper end
+             }
+         }
