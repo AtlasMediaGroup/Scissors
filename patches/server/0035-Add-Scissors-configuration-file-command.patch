@@ -176,15 +176,16 @@ index 0000000000000000000000000000000000000000..797677d892d83cf54d9a60af1e277b67
 +}
 diff --git a/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java b/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..7cffc17d6527dc8788453c6040cc7a5e0cbebd2c
+index 0000000000000000000000000000000000000000..e08f502fc7165f9f466217910210edb5059d39a8
 --- /dev/null
 +++ b/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
-@@ -0,0 +1,179 @@
+@@ -0,0 +1,199 @@
 +package me.totalfreedom.scissors;
 +
 +
 +import com.google.common.base.Throwables;
 +import net.minecraft.server.MinecraftServer;
++import net.minecraft.server.dedicated.DedicatedServer;
 +import org.bukkit.Bukkit;
 +import org.bukkit.command.Command;
 +import org.bukkit.configuration.InvalidConfigurationException;
@@ -195,6 +196,8 @@ index 0000000000000000000000000000000000000000..7cffc17d6527dc8788453c6040cc7a5e
 +import java.lang.reflect.InvocationTargetException;
 +import java.lang.reflect.Method;
 +import java.lang.reflect.Modifier;
++import java.nio.file.Files;
++import java.nio.file.Path;
 +import java.util.HashMap;
 +import java.util.List;
 +import java.util.Map;
@@ -228,7 +231,24 @@ index 0000000000000000000000000000000000000000..7cffc17d6527dc8788453c6040cc7a5e
 +
 +    public static void init(File configFile)
 +    {
-+        CONFIG_FILE = configFile;
++        final File configFolder = (File) DedicatedServer.getServer().options.valueOf("scissors-settings" + "-directory");
++        final Path configFolderPath = configFolder.toPath();
++        final Path oldConfigFilePath = configFile.toPath();
++        final Path newConfigFilePath = configFolderPath.resolve(configFile.toPath());
++
++        if (configFile.exists())
++        {
++            try
++            {
++                Files.move(oldConfigFilePath, newConfigFilePath);
++            }
++            catch (IOException e)
++            {
++                throw new RuntimeException("Error migrating configuration file to new directory!", e);
++            }
++        }
++
++        CONFIG_FILE = newConfigFilePath.toFile();
 +        config = new YamlConfiguration();
 +        try
 +        {
@@ -414,13 +434,21 @@ index 23ba68c2af8512b51b635f373551d1bcd649a7f3..8480c44af5660a12f8c2f5fad4469b0a
          this.ignoreVanillaPermissions = this.commandsConfiguration.getBoolean("ignore-vanilla-permissions");
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index 3d624f3c980fa0f8ebcec36474768764265fa7cd..d6bb902d8ad6c4acc9555f3db2c331e991720ae4 100644
+index 3d624f3c980fa0f8ebcec36474768764265fa7cd..ea27620478b1238d14fb3747af2900e9b3de2219 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
-@@ -165,6 +165,14 @@ public class Main {
+@@ -165,6 +165,22 @@ public class Main {
                          .defaultsTo("Unknown Server")
                          .describedAs("Name");
                  // Paper end
++
++                // Scissors start
++                acceptsAll(asList("scissors-dir", "scissors-settings-directory"), "Directory for Scissors settings")
++                    .withRequiredArg()
++                    .ofType(File.class)
++                    .defaultsTo(new File(io.papermc.paper.configuration.PaperConfigurations.CONFIG_DIR))
++                    .describedAs("Config directory");
++                // Scissors end
 +
 +                // Scissors start
 +                acceptsAll(asList("scissors", "scissors-settings"), "File for scissors settings")
