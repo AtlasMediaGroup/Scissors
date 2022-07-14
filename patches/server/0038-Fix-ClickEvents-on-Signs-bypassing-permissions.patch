@@ -5,10 +5,10 @@ Subject: [PATCH] Fix ClickEvents on Signs bypassing permissions
 
 
 diff --git a/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java b/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
-index 7cffc17d6527dc8788453c6040cc7a5e0cbebd2c..c908eda285f478def54506cf65ed1055b3a94371 100644
+index e08f502fc7165f9f466217910210edb5059d39a8..42c833f58656ba80135419e18366f41a08f7d32d 100644
 --- a/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
 +++ b/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
-@@ -67,8 +67,8 @@ public class ScissorsConfig
+@@ -87,8 +87,8 @@ public class ScissorsConfig
          config.options().header(HEADER);
          config.options().copyDefaults(true);
  
@@ -19,7 +19,7 @@ index 7cffc17d6527dc8788453c6040cc7a5e0cbebd2c..c908eda285f478def54506cf65ed1055
          readConfig(ScissorsConfig.class, null);
      }
  
-@@ -135,6 +135,13 @@ public class ScissorsConfig
+@@ -155,6 +155,13 @@ public class ScissorsConfig
          runCommandsInBooks = getBoolean("runCommandsInBooks", false);
      }
  
