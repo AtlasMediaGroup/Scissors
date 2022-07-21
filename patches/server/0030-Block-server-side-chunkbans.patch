@@ -173,7 +173,7 @@ index dbd8b9b09b82c1b75e8be9dc7416d9f0863c8c87..24e0f4ee1dc9b5a46ed063e087d4b7bc
      public ClientboundContainerSetContentPacket(int syncId, int revision, NonNullList<ItemStack> contents, ItemStack cursorStack) {
          this.containerId = syncId;
 diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java
-index 6c30f3bf85ec0e0dfbae1b5ed192b43b1dbd48be..9d5d9e85359030b94d2320aff83377a31858bc28 100644
+index 76b6437a1d807c7e1b673f8feeed1f171ee9a803..3d9b0525f931a684e14a56c368dfb5b452bc7b4a 100644
 --- a/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java
 +++ b/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java
 @@ -33,6 +33,14 @@ public class ClientboundLevelChunkPacketData {
@@ -189,5 +189,5 @@ index 6c30f3bf85ec0e0dfbae1b5ed192b43b1dbd48be..9d5d9e85359030b94d2320aff83377a3
 +    // Scissors end
 +
      // Paper start - Anti-Xray - Add chunk packet info
-     @Deprecated public ClientboundLevelChunkPacketData(LevelChunk chunk) { this(chunk, null); } // Notice for updates: Please make sure this constructor isn't used anywhere
+     @Deprecated @io.papermc.paper.annotation.DoNotUse public ClientboundLevelChunkPacketData(LevelChunk chunk) { this(chunk, null); }
      public ClientboundLevelChunkPacketData(LevelChunk chunk, com.destroystokyo.paper.antixray.ChunkPacketInfo<net.minecraft.world.level.block.state.BlockState> chunkPacketInfo) {
