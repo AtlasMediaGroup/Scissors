@@ -5,16 +5,24 @@ Subject: [PATCH] Add Scissors config & command
 
 
 diff --git a/src/main/java/co/aikar/timings/TimingsExport.java b/src/main/java/co/aikar/timings/TimingsExport.java
-index e29b0a90019b12bd6586ad0f7b5314f307e527ba..02caf0f7d5357e9117397eda1e23cf00c667df57 100644
+index e29b0a90019b12bd6586ad0f7b5314f307e527ba..c6f19e178f8c5a03f9fb8b011f329ef81e4e35d8 100644
 --- a/src/main/java/co/aikar/timings/TimingsExport.java
 +++ b/src/main/java/co/aikar/timings/TimingsExport.java
-@@ -228,7 +228,8 @@ public class TimingsExport extends Thread {
+@@ -23,6 +23,7 @@
+  */
+ package co.aikar.timings;
+ 
++import com.github.atlasmediagroup.scissors.ScissorsConfig;
+ import com.google.common.collect.Sets;
+ import net.minecraft.server.MinecraftServer;
+ import org.apache.commons.lang.StringUtils;
+@@ -228,7 +229,8 @@ public class TimingsExport extends Thread {
          parent.put("config", createObject(
              pair("spigot", mapAsJSON(Bukkit.spigot().getSpigotConfig(), null)),
              pair("bukkit", mapAsJSON(Bukkit.spigot().getBukkitConfig(), null)),
 -            pair("paper", mapAsJSON(Bukkit.spigot().getPaperConfig(), null))
 +            pair("paper", mapAsJSON(Bukkit.spigot().getPaperConfig(), null)),
-+            pair("scissors", mapAsJSON(Bukkit.spigot().getScissorsConfig(), null)) // Scissors
++            pair("scissors", mapAsJSON(ScissorsConfig.config, null)) // Scissors
          ));
  
          new TimingsExport(listeners, parent, history).start();
@@ -384,7 +392,7 @@ index b6ee0e709b0f0529b99567bc9b8fb6bfd99bcd8e..4cd18a681dedea26b98002902a3c3b1f
          this.setFlightAllowed(dedicatedserverproperties.allowFlight);
          this.setResourcePack(dedicatedserverproperties.resourcePack, this.getPackHash());
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index cc797b45674163b5913e20031d110796d78b928b..e8d2cf26596281aafc5d261e46273f1bbef399ea 100644
+index cc797b45674163b5913e20031d110796d78b928b..bb5d6e5405c1781404bfd3d2af9c93026f9c86f0 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -924,6 +924,7 @@ public final class CraftServer implements Server {
@@ -403,6 +411,19 @@ index cc797b45674163b5913e20031d110796d78b928b..e8d2cf26596281aafc5d261e46273f1b
          this.overrideAllCommandBlockCommands = this.commandsConfiguration.getStringList("command-block-overrides").contains("*");
          this.ignoreVanillaPermissions = this.commandsConfiguration.getBoolean("ignore-vanilla-permissions");
  
+@@ -2566,6 +2568,12 @@ public final class CraftServer implements Server {
+             return com.destroystokyo.paper.PaperConfig.config;
+         }
+ 
++        @Override
++        public YamlConfiguration getScissorsConfig()
++        {
++            return com.github.atlasmediagroup.scissors.ScissorsConfig.config;
++        }
++
+         @Override
+         public void restart() {
+             org.spigotmc.RestartCommand.restart();
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
 index d033caf5dabbd2a240286c5623b3d287ae5cbdd9..facfcc3f478a21240fa2938c94de7dc599eeafd3 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
