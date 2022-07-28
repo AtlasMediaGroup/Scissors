@@ -27,7 +27,7 @@ pipeline {
         }
         stage('publish') {
             when {
-                branch "1.19"
+                branch "1.19.1"
             }
             steps {
                 withCredentials([usernamePassword(credentialsId: '8150559b-ec1d-41bd-a576-aa668a52c1ba', passwordVariable: 'scissorsPassword', usernameVariable: 'scissorsUser')]) {
