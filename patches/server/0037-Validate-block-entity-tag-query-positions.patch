@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Luna <lunahatesgogle@gmail.com>
+Date: Mon, 11 Jul 2022 17:29:12 -0300
+Subject: [PATCH] Validate block entity tag query positions
+
+
+diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+index 5a8d4421c2de0680a3f4880451badcf5c4b46597..70b8e04d1b3081381956eaa969cbfbc6c91e1f45 100644
+--- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+@@ -1303,7 +1303,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+     @Override
+     public void handleBlockEntityTagQuery(ServerboundBlockEntityTagQuery packet) {
+         PacketUtils.ensureRunningOnSameThread(packet, this, this.player.getLevel());
+-        if (this.player.hasPermissions(2)) {
++        if (this.player.hasPermissions(2) && Level.isInSpawnableBounds(packet.getPos())) { // Scissors - Validate block entity tag query positions
+             BlockEntity tileentity = this.player.getLevel().getBlockEntity(packet.getPos());
+             CompoundTag nbttagcompound = tileentity != null ? tileentity.saveWithoutMetadata() : null;
+ 

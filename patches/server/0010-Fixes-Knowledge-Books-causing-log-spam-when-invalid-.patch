@@ -1,0 +1,50 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Video <videogamesm12@gmail.com>
+Date: Sun, 13 Mar 2022 18:42:07 -0600
+Subject: [PATCH] Fixes Knowledge Books causing log spam when invalid data is
+ provided
+
+
+diff --git a/src/main/java/net/minecraft/world/item/KnowledgeBookItem.java b/src/main/java/net/minecraft/world/item/KnowledgeBookItem.java
+index b79f4ce38a42e4dba8ebdfc97dadc531b7245c7a..9c49be7c53a1f2a8c203341b8ded9cd222d0c178 100644
+--- a/src/main/java/net/minecraft/world/item/KnowledgeBookItem.java
++++ b/src/main/java/net/minecraft/world/item/KnowledgeBookItem.java
+@@ -40,9 +40,9 @@ public class KnowledgeBookItem extends Item {
+ 
+                 for(int i = 0; i < listTag.size(); ++i) {
+                     String string = listTag.getString(i);
+-                    Optional<? extends Recipe<?>> optional = recipeManager.byKey(new ResourceLocation(string));
++                    Optional<? extends Recipe<?>> optional = recipeManager.byKey(ResourceLocation.tryParse(string)); // Scissors - Validate resource locations
+                     if (!optional.isPresent()) {
+-                        LOGGER.error("Invalid recipe: {}", (Object)string);
++                        // Scissors - Don't log errors caused by invalid recipes being provided
+                         return InteractionResultHolder.fail(itemStack);
+                     }
+ 
+@@ -55,7 +55,7 @@ public class KnowledgeBookItem extends Item {
+ 
+             return InteractionResultHolder.sidedSuccess(itemStack, world.isClientSide());
+         } else {
+-            LOGGER.error("Tag not valid: {}", (Object)compoundTag);
++            // Scissors - Don't throw errors into the logs if an NBT compound isn't present or is missing the Recipes tag.
+             return InteractionResultHolder.fail(itemStack);
+         }
+     }
+diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaKnowledgeBook.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaKnowledgeBook.java
+index e816e505cd292d6c5138dff0aeae0e9592c09de0..0f6438dfe0a6620eb87233b9eefbe2340dfc347b 100644
+--- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaKnowledgeBook.java
++++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaKnowledgeBook.java
+@@ -42,7 +42,12 @@ public class CraftMetaKnowledgeBook extends CraftMetaItem implements KnowledgeBo
+             for (int i = 0; i < pages.size(); i++) {
+                 String recipe = pages.getString(i);
+ 
+-                this.addRecipe(CraftNamespacedKey.fromString(recipe));
++                // Scissors start - Don't add recipes with invalid namespaces
++                try {
++                    this.addRecipe(CraftNamespacedKey.fromString(recipe));
++                } catch (Exception ignored) {
++                }
++                // Scissors end
+             }
+         }
+     }
