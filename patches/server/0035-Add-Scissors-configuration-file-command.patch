@@ -5,16 +5,24 @@ Subject: [PATCH] Add Scissors configuration file & command
 
 
 diff --git a/src/main/java/co/aikar/timings/TimingsExport.java b/src/main/java/co/aikar/timings/TimingsExport.java
-index 06bff37e4c1fddd3be6343049a66787c63fb420c..d00f35538602151bc8eb564541417a5324eefd18 100644
+index 06bff37e4c1fddd3be6343049a66787c63fb420c..1c1cb20190e8edb7f55a60fc662c28e204690223 100644
 --- a/src/main/java/co/aikar/timings/TimingsExport.java
 +++ b/src/main/java/co/aikar/timings/TimingsExport.java
-@@ -241,7 +241,8 @@ public class TimingsExport extends Thread {
+@@ -25,6 +25,7 @@ package co.aikar.timings;
+ 
+ import com.google.common.collect.Sets;
+ import io.papermc.paper.adventure.PaperAdventure;
++import me.totalfreedom.scissors.ScissorsConfig;
+ import net.kyori.adventure.text.event.ClickEvent;
+ import net.kyori.adventure.text.format.NamedTextColor;
+ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+@@ -241,7 +242,8 @@ public class TimingsExport extends Thread {
          parent.put("config", createObject(
              pair("spigot", mapAsJSON(Bukkit.spigot().getSpigotConfig(), null)),
              pair("bukkit", mapAsJSON(Bukkit.spigot().getBukkitConfig(), null)),
 -            pair("paper", mapAsJSON(Bukkit.spigot().getPaperConfig(), null))
 +            pair("paper", mapAsJSON(Bukkit.spigot().getPaperConfig(), null)),
-+            pair("scissors", mapAsJSON(Bukkit.spigot().getScissorsConfig(), null)) // Scissors
++            pair("scissors", mapAsJSON(ScissorsConfig.config, null)) // Scissors
          ));
  
          new TimingsExport(listeners, parent, history).start();
@@ -392,7 +400,7 @@ index 0a843e0afbcb1af8e2641515eb244b791b819b8c..f5c0375b171516c0ae734644b4449db8
  
              Path path1 = Paths.get("eula.txt");
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index aea18838a17fc52e1bf8cd84cd185565e6e2246d..1e62404a42169ca1b02df256f2a88d36ae4e1214 100644
+index b42327dcf0cc9feaf4fdb67de949dd36cf71bbaa..b403405ca6783d1833381cb2b968bdc53743307e 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 @@ -226,7 +226,15 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
@@ -413,7 +421,7 @@ index aea18838a17fc52e1bf8cd84cd185565e6e2246d..1e62404a42169ca1b02df256f2a88d36
          this.setFlightAllowed(dedicatedserverproperties.allowFlight);
          this.setMotd(dedicatedserverproperties.motd);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 23ba68c2af8512b51b635f373551d1bcd649a7f3..8480c44af5660a12f8c2f5fad4469b0a53bba2da 100644
+index 10eecebce5eb8f9f062a10e9cbfbadbc54aec9b7..3c37c3912a0a66809c0bbb0d22590806766bbf9b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -958,6 +958,8 @@ public final class CraftServer implements Server {
@@ -433,6 +441,19 @@ index 23ba68c2af8512b51b635f373551d1bcd649a7f3..8480c44af5660a12f8c2f5fad4469b0a
          this.overrideAllCommandBlockCommands = this.commandsConfiguration.getStringList("command-block-overrides").contains("*");
          this.ignoreVanillaPermissions = this.commandsConfiguration.getBoolean("ignore-vanilla-permissions");
  
+@@ -2724,6 +2727,12 @@ public final class CraftServer implements Server {
+             return CraftServer.this.console.paperConfigurations.createLegacyObject(CraftServer.this.console);
+         }
+ 
++        @Override
++        public YamlConfiguration getScissorsConfig()
++        {
++            return me.totalfreedom.scissors.ScissorsConfig.config;
++        }
++
+         @Override
+         public void restart() {
+             org.spigotmc.RestartCommand.restart();
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
 index 3d624f3c980fa0f8ebcec36474768764265fa7cd..ea27620478b1238d14fb3747af2900e9b3de2219 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
