@@ -5,10 +5,10 @@ Subject: [PATCH] Prevent invalid container events
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 68c9de9121d9e60e509b38b5e866d87d3782bd6a..578568d841174b0d4adfda1916d30ac979df4b62 100644
+index fc5f997f70ee35d666db6941c16e0b34726bb2b2..6928add0c56541addb6e1fbffaa8eeb683bd947e 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -31,6 +31,8 @@ import java.util.function.UnaryOperator;
+@@ -29,6 +29,8 @@ import java.util.function.UnaryOperator;
  import java.util.stream.Collectors;
  import java.util.stream.Stream;
  import javax.annotation.Nullable;
@@ -17,7 +17,7 @@ index 68c9de9121d9e60e509b38b5e866d87d3782bd6a..578568d841174b0d4adfda1916d30ac9
  import net.minecraft.ChatFormatting;
  import net.minecraft.CrashReport;
  import net.minecraft.CrashReportCategory;
-@@ -2846,6 +2848,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+@@ -3065,6 +3067,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
      public void handleContainerClick(ServerboundContainerClickPacket packet) {
          PacketUtils.ensureRunningOnSameThread(packet, this, this.player.getLevel());
          if (this.player.isImmobile()) return; // CraftBukkit
@@ -25,7 +25,7 @@ index 68c9de9121d9e60e509b38b5e866d87d3782bd6a..578568d841174b0d4adfda1916d30ac9
          this.player.resetLastActionTime();
          if (this.player.containerMenu.containerId == packet.getContainerId() && this.player.containerMenu.stillValid(this.player)) { // CraftBukkit
              boolean cancelled = this.player.isSpectator(); // CraftBukkit - see below if
-@@ -2865,6 +2868,18 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+@@ -3086,6 +3089,18 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
                          return;
                      }
  

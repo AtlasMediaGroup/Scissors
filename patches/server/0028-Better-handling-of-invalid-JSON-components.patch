@@ -5,10 +5,10 @@ Subject: [PATCH] Better handling of invalid JSON components
 
 
 diff --git a/src/main/java/net/minecraft/network/chat/Component.java b/src/main/java/net/minecraft/network/chat/Component.java
-index bbfb98618a0b87406cc48465bdda15a0a4974b7e..a38127366c55a2d377727d9a9aec32b0e3ad437a 100644
+index e7d9e2d8c87ddf3658b1c2e0f2a3e98ef8080cec..16192d2af2bd2c3f0bd4376e5fd7d6e46dac897c 100644
 --- a/src/main/java/net/minecraft/network/chat/Component.java
 +++ b/src/main/java/net/minecraft/network/chat/Component.java
-@@ -25,6 +25,7 @@ import java.util.List;
+@@ -26,6 +26,7 @@ import java.util.List;
  import java.util.Map.Entry;
  import java.util.Optional;
  import javax.annotation.Nullable;
@@ -16,7 +16,7 @@ index bbfb98618a0b87406cc48465bdda15a0a4974b7e..a38127366c55a2d377727d9a9aec32b0
  import net.minecraft.Util;
  import net.minecraft.network.chat.contents.BlockDataSource;
  import net.minecraft.network.chat.contents.DataSource;
-@@ -490,6 +491,26 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
+@@ -506,6 +507,26 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
              return GsonHelper.toStableString(Serializer.toJsonTree(text));
          }
  
@@ -110,10 +110,10 @@ index 97a2657bc98d41c3c1e376b266d2c85f685acc88..7b6476455e095eed15c92797ce3a3e11
                      }
                  }).reduce((accumulator, current) -> {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 19a64b582bc042e426220e080d9c21b3a82cf3f7..1a38f82eb4650fcc0e0db8cb76f1ea1249703c02 100644
+index f925a8d550ecbf2044a37bfe58b30d6578c5f6af..ec379f87fafd7c7ffb5139a7c192d562e3f178ad 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -2304,12 +2304,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -2301,12 +2301,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
                      this.setRot(this.getYRot(), this.getXRot());
                      if (nbt.contains("CustomName", 8)) {
                          String s = nbt.getString("CustomName");
