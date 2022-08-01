@@ -4,6 +4,20 @@ Date: Sun, 10 Jul 2022 10:29:03 +0100
 Subject: [PATCH] Disable running commands in books by default
 
 
+diff --git a/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java b/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
+index e08f502fc7165f9f466217910210edb5059d39a8..1aa418ef5e400aabdf17dbe81da6cee6a1f63d96 100644
+--- a/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
++++ b/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
+@@ -151,7 +151,8 @@ public class ScissorsConfig
+ 
+     public static boolean runCommandsInBooks = false;
+ 
+-    private static void runCommandsInBooks() {
++    private static void runCommandsInBooks()
++    {
+         runCommandsInBooks = getBoolean("runCommandsInBooks", false);
+     }
+ 
 diff --git a/src/main/java/net/minecraft/world/item/WrittenBookItem.java b/src/main/java/net/minecraft/world/item/WrittenBookItem.java
 index 31911c09fe15753ae32fa39417bdc9e9de552a88..8ef33e2e2374c456cb9d4aab8ed6f1742951f402 100644
 --- a/src/main/java/net/minecraft/world/item/WrittenBookItem.java
