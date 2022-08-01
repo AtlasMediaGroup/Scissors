@@ -1,0 +1,61 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Allink <arclicious@vivaldi.net>
+Date: Mon, 1 Aug 2022 21:07:28 +0100
+Subject: [PATCH] Add configuration option to disable chat signatures
+
+
+diff --git a/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java b/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
+index 9cd5ffca69df27f794f5a72e687fc6b3ae0f1656..9cf8f5d85a873c1c6c85b45246d01d4b87267623 100644
+--- a/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
++++ b/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
+@@ -87,8 +87,8 @@ public class ScissorsConfig
+         config.options().header(HEADER);
+         config.options().copyDefaults(true);
+ 
+-        version = getInt("config-version", 2);
+-        set("config-version", 2);
++        version = getInt("config-version", 3);
++        set("config-version", 3);
+         readConfig(ScissorsConfig.class, null);
+     }
+ 
+@@ -163,6 +163,12 @@ public class ScissorsConfig
+         commandSignsBypassPermissions = getBoolean("commandSignsBypassPermissions", false);
+     }
+ 
++    public static boolean chatSignaturesEnabled = true;
++    private static void chatSignaturesEnabled()
++    {
++        chatSignaturesEnabled = getBoolean("chatSignaturesEnabled", true);
++    }
++
+     private static void set(String path, Object val)
+     {
+         config.set(path, val);
+diff --git a/src/main/java/net/minecraft/network/chat/OutgoingPlayerChatMessage.java b/src/main/java/net/minecraft/network/chat/OutgoingPlayerChatMessage.java
+index fc43cc6f5bbb3485b9ddcc441a13399e57289586..e1ddf22f1829234b32a549cbe0ca10d7114aafde 100644
+--- a/src/main/java/net/minecraft/network/chat/OutgoingPlayerChatMessage.java
++++ b/src/main/java/net/minecraft/network/chat/OutgoingPlayerChatMessage.java
+@@ -2,6 +2,7 @@ package net.minecraft.network.chat;
+ 
+ import com.google.common.collect.Sets;
+ import java.util.Set;
++import me.totalfreedom.scissors.ScissorsConfig;
+ import net.minecraft.core.RegistryAccess;
+ import net.minecraft.network.PacketSendListener;
+ import net.minecraft.network.protocol.game.ClientboundPlayerChatHeaderPacket;
+@@ -86,6 +87,14 @@ public interface OutgoingPlayerChatMessage {
+             // Paper end
+             PlayerChatMessage playerChatMessage = this.message.filter(bl);
+             playerChatMessage = unsigned != null ? playerChatMessage.withUnsignedContent(unsigned) : playerChatMessage; // Paper
++
++            // Scissors start - Add configuration option to disable chat signatures
++            if (!ScissorsConfig.chatSignaturesEnabled)
++            {
++                playerChatMessage = PlayerChatMessage.unsigned(MessageSigner.system(), new ChatMessageContent(playerChatMessage.serverContent().getString(), playerChatMessage.serverContent()));
++            }
++            // Scissors end
++
+             if (!playerChatMessage.isFullyFiltered()) {
+                 this.playersWithFullMessage.add(serverPlayer);
+                 RegistryAccess registryAccess = serverPlayer.level.registryAccess();
