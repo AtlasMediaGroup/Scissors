@@ -5,7 +5,7 @@ Subject: [PATCH] Fix ClickEvents on Signs bypassing permissions
 
 
 diff --git a/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java b/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
-index e08f502fc7165f9f466217910210edb5059d39a8..42c833f58656ba80135419e18366f41a08f7d32d 100644
+index 1aa418ef5e400aabdf17dbe81da6cee6a1f63d96..9cd5ffca69df27f794f5a72e687fc6b3ae0f1656 100644
 --- a/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
 +++ b/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
 @@ -87,8 +87,8 @@ public class ScissorsConfig
@@ -19,13 +19,13 @@ index e08f502fc7165f9f466217910210edb5059d39a8..42c833f58656ba80135419e18366f41a
          readConfig(ScissorsConfig.class, null);
      }
  
-@@ -155,6 +155,13 @@ public class ScissorsConfig
+@@ -156,6 +156,13 @@ public class ScissorsConfig
          runCommandsInBooks = getBoolean("runCommandsInBooks", false);
      }
  
 +    // people still may want them to bypass permissions for warps
 +    public static boolean commandSignsBypassPermissions = false;
-+    public static void commandSignsBypassPermissions()
++    private static void commandSignsBypassPermissions()
 +    {
 +        commandSignsBypassPermissions = getBoolean("commandSignsBypassPermissions", false);
 +    }
