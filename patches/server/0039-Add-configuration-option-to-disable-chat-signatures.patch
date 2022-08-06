@@ -33,7 +33,7 @@ index 9cd5ffca69df27f794f5a72e687fc6b3ae0f1656..9cf8f5d85a873c1c6c85b45246d01d4b
      {
          config.set(path, val);
 diff --git a/src/main/java/net/minecraft/network/chat/OutgoingPlayerChatMessage.java b/src/main/java/net/minecraft/network/chat/OutgoingPlayerChatMessage.java
-index fc43cc6f5bbb3485b9ddcc441a13399e57289586..e1ddf22f1829234b32a549cbe0ca10d7114aafde 100644
+index bd82f0316df85b621c1970ff30bbbec0d2712ccd..04195891391ebd53f5acf27db15e6a991f554d40 100644
 --- a/src/main/java/net/minecraft/network/chat/OutgoingPlayerChatMessage.java
 +++ b/src/main/java/net/minecraft/network/chat/OutgoingPlayerChatMessage.java
 @@ -2,6 +2,7 @@ package net.minecraft.network.chat;
@@ -44,9 +44,9 @@ index fc43cc6f5bbb3485b9ddcc441a13399e57289586..e1ddf22f1829234b32a549cbe0ca10d7
  import net.minecraft.core.RegistryAccess;
  import net.minecraft.network.PacketSendListener;
  import net.minecraft.network.protocol.game.ClientboundPlayerChatHeaderPacket;
-@@ -86,6 +87,14 @@ public interface OutgoingPlayerChatMessage {
+@@ -87,6 +88,14 @@ public interface OutgoingPlayerChatMessage {
              // Paper end
-             PlayerChatMessage playerChatMessage = this.message.filter(bl);
+             PlayerChatMessage playerChatMessage = this.message.filter(filterMaskEnabled);
              playerChatMessage = unsigned != null ? playerChatMessage.withUnsignedContent(unsigned) : playerChatMessage; // Paper
 +
 +            // Scissors start - Add configuration option to disable chat signatures
@@ -57,5 +57,5 @@ index fc43cc6f5bbb3485b9ddcc441a13399e57289586..e1ddf22f1829234b32a549cbe0ca10d7
 +            // Scissors end
 +
              if (!playerChatMessage.isFullyFiltered()) {
-                 this.playersWithFullMessage.add(serverPlayer);
-                 RegistryAccess registryAccess = serverPlayer.level.registryAccess();
+                 this.playersWithFullMessage.add(sender);
+                 RegistryAccess registryAccess = sender.level.registryAccess();

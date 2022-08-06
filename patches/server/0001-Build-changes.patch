@@ -5,7 +5,7 @@ Subject: [PATCH] Build changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 2374cc9bab5039d0a0dc11d4b2ec573ab75778a7..ba15c2caa525bb56397be65e4393c9135b9caf6f 100644
+index 2374cc9bab5039d0a0dc11d4b2ec573ab75778a7..76295e3fbc7fa51d7f16a48bf2b70af210a87c82 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -9,8 +9,8 @@ plugins {
@@ -15,7 +15,7 @@ index 2374cc9bab5039d0a0dc11d4b2ec573ab75778a7..ba15c2caa525bb56397be65e4393c913
 -    implementation(project(":paper-api"))
 -    implementation(project(":paper-mojangapi"))
 +    implementation(project(":Scissors-API"))
-+    implementation("io.papermc.paper:paper-mojangapi:1.19.1-R0.1-SNAPSHOT")
++    implementation("io.papermc.paper:paper-mojangapi:1.19.2-R0.1-SNAPSHOT")
      // Paper start
      implementation("org.jline:jline-terminal-jansi:3.21.0")
      implementation("net.minecrell:terminalconsoleappender:1.3.0")
@@ -49,7 +49,7 @@ index 2374cc9bab5039d0a0dc11d4b2ec573ab75778a7..ba15c2caa525bb56397be65e4393c913
      standardInput = System.`in`
      workingDir = rootProject.layout.projectDirectory
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 46fcecbfb3f866ba89036a11113c8ad0989b04bc..0c6c6f611c3376b938baa22c196c5b44cdeb1b21 100644
+index f23be38ef96a81ce3867a3b6fdccf632fe285f31..245b713f0a292b04481b767495d6210f0e00b846 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1655,7 +1655,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
