@@ -49,10 +49,10 @@ index 2374cc9bab5039d0a0dc11d4b2ec573ab75778a7..76295e3fbc7fa51d7f16a48bf2b70af2
      standardInput = System.`in`
      workingDir = rootProject.layout.projectDirectory
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index f23be38ef96a81ce3867a3b6fdccf632fe285f31..245b713f0a292b04481b767495d6210f0e00b846 100644
+index 081c7160cf727646cdec4cd551dbc2aad56326f6..f2ac915c14cb30b6a533e6bb7cc48a7c1b982771 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1655,7 +1655,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1656,7 +1656,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
