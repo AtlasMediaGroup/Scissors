@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Allink <arclicious@vivaldi.net>
+Date: Mon, 25 Jul 2022 09:43:20 +0100
+Subject: [PATCH] Fix out of bound chunks crashing server
+
+
+diff --git a/src/main/java/net/minecraft/server/level/WorldGenRegion.java b/src/main/java/net/minecraft/server/level/WorldGenRegion.java
+index cf1cb0996bb06ae7cf56e0ecf0c01f03da7fdd83..57154a7dd88f00ac7cd78f51ead718853e0d2101 100644
+--- a/src/main/java/net/minecraft/server/level/WorldGenRegion.java
++++ b/src/main/java/net/minecraft/server/level/WorldGenRegion.java
+@@ -157,7 +157,10 @@ public class WorldGenRegion implements WorldGenLevel {
+             if (ichunkaccess != null) {
+                 throw (RuntimeException) Util.pauseInIde((Throwable) (new RuntimeException(String.format("Chunk is not of correct status. Expecting %s, got %s | %s %s", leastStatus, ichunkaccess.getStatus(), chunkX, chunkZ))));
+             } else {
+-                throw (RuntimeException) Util.pauseInIde((Throwable) (new RuntimeException(String.format("We are asking a region for a chunk out of bound | %s %s", chunkX, chunkZ))));
++                // Scissors start - Fix out of bound chunks crashing server
++                // throw (RuntimeException) Util.pauseInIde((Throwable) (new RuntimeException(String.format("We are asking a region for a chunk out of bound | %s %s", chunkX, chunkZ))));
++                return null;
++                // Scissors end
+             }
+         }
+     }
