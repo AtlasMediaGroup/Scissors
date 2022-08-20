@@ -5,7 +5,7 @@ Subject: [PATCH] Add spectator teleport event
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 1901a14556b197b70a2e8bb46d07a216d5d6c07e..047eef16aa457757f968e2210dcba03207cf7448 100644
+index 64c438459f150af1cabdd3cea29c2951d42d69a0..b0bd0412010320cc624535d6abffe417a135a4dc 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -1,5 +1,6 @@
