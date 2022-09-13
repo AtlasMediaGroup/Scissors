@@ -40,10 +40,10 @@ index ac0f0a4da4282c13f6e1f37710cb615d66b8ef2c..e789bcb0c426651a48fb3c78e885c6e3
  
      @Nullable
 diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index 3646b969fa51b9683ab4137e530c3a6f6fc6c465..286e9a8d3673be3a7fef2af6402e025d3058f6e7 100644
+index 557e90e54439ce0430075403392b5052d5181feb..2ec4f71fd02bcca5a810cee5d8c7d293599998f7 100644
 --- a/src/main/java/net/minecraft/world/entity/Mob.java
 +++ b/src/main/java/net/minecraft/world/entity/Mob.java
-@@ -579,7 +579,7 @@ public abstract class Mob extends LivingEntity {
+@@ -585,7 +585,7 @@ public abstract class Mob extends LivingEntity {
  
          this.setLeftHanded(nbt.getBoolean("LeftHanded"));
          if (nbt.contains("DeathLootTable", 8)) {

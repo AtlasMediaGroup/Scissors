@@ -388,10 +388,10 @@ index 0000000000000000000000000000000000000000..e08f502fc7165f9f466217910210edb5
 +}
 +
 diff --git a/src/main/java/net/minecraft/server/Main.java b/src/main/java/net/minecraft/server/Main.java
-index 0a843e0afbcb1af8e2641515eb244b791b819b8c..f5c0375b171516c0ae734644b4449db8900143df 100644
+index 5962f7a2b185d7d54a0f9e341a4fdf6e6f1c1ec5..41cc0fe90e10ee53c4fcd49265be02978ab97099 100644
 --- a/src/main/java/net/minecraft/server/Main.java
 +++ b/src/main/java/net/minecraft/server/Main.java
-@@ -114,6 +114,7 @@ public class Main {
+@@ -118,6 +118,7 @@ public class Main {
              // Paper start - load config files for access below if needed
              org.bukkit.configuration.file.YamlConfiguration bukkitConfiguration = io.papermc.paper.configuration.PaperConfigurations.loadLegacyConfigFile((File) optionset.valueOf("bukkit-settings"));
              org.bukkit.configuration.file.YamlConfiguration spigotConfiguration = io.papermc.paper.configuration.PaperConfigurations.loadLegacyConfigFile((File) optionset.valueOf("spigot-settings"));
@@ -421,7 +421,7 @@ index bdd6560fe85950b0a857a949cb38c044da44ca6b..c4894b7022ee5e63135c9463c8faf61e
          this.setFlightAllowed(dedicatedserverproperties.allowFlight);
          this.setMotd(dedicatedserverproperties.motd);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index bf349ab7249c617172522aeaa5d437a496e9acfe..30b3755955a6ee1b6e8f150918ebd8348e1000dd 100644
+index 4017fbe7761ba7eaf4e9b3c047e1ca79042aab8c..bc459fd74701e0aad7a5a1491ca349cba68efd4e 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -960,6 +960,8 @@ public final class CraftServer implements Server {
@@ -455,10 +455,10 @@ index bf349ab7249c617172522aeaa5d437a496e9acfe..30b3755955a6ee1b6e8f150918ebd834
          public void restart() {
              org.spigotmc.RestartCommand.restart();
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index 1503b897794b3cfaf22ab90423d7d4c7c789d1c6..1da8e9570b7f52609cd25b6b6dab8748afc3e457 100644
+index 604662cd3ac1e0a9b956d1a3078afa9e16beb473..96ee05b115d88a60e7953e3f0f7c1b8095ebf360 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
-@@ -171,6 +171,22 @@ public class Main {
+@@ -173,6 +173,22 @@ public class Main {
                          .defaultsTo("Unknown Server")
                          .describedAs("Name");
                  // Paper end

@@ -31,10 +31,10 @@ index b79f4ce38a42e4dba8ebdfc97dadc531b7245c7a..9c49be7c53a1f2a8c203341b8ded9cd2
          }
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaKnowledgeBook.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaKnowledgeBook.java
-index e816e505cd292d6c5138dff0aeae0e9592c09de0..0f6438dfe0a6620eb87233b9eefbe2340dfc347b 100644
+index 50fdb086ffec84edc5138737c95f08ed4757a6f3..bb0f673a619810850df0d78bb4abd9d7c49ecbe4 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaKnowledgeBook.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaKnowledgeBook.java
-@@ -42,7 +42,12 @@ public class CraftMetaKnowledgeBook extends CraftMetaItem implements KnowledgeBo
+@@ -41,7 +41,12 @@ public class CraftMetaKnowledgeBook extends CraftMetaItem implements KnowledgeBo
              for (int i = 0; i < pages.size(); i++) {
                  String recipe = pages.getString(i);
  

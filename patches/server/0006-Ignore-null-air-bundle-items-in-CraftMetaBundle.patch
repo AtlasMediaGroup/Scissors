@@ -5,10 +5,10 @@ Subject: [PATCH] Ignore null/air bundle items in CraftMetaBundle
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBundle.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBundle.java
-index 8fd1e392258eba9dbe2194c024ad7e0ca3e43cf8..28be42594857f2d8320a035c1f8b95cdc300ddd5 100644
+index e14318383403f12e26dd7801a9dbdea854df185f..bd3f516a9e9a47c9f00b681b0b457d308bfd1710 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBundle.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBundle.java
-@@ -49,7 +49,11 @@ public class CraftMetaBundle extends CraftMetaItem implements BundleMeta {
+@@ -47,7 +47,11 @@ public class CraftMetaBundle extends CraftMetaItem implements BundleMeta {
                  for (int i = 0; i < list.size(); i++) {
                      CompoundTag nbttagcompound1 = list.getCompound(i);
  
