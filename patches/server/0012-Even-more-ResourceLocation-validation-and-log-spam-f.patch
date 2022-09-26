@@ -60,10 +60,10 @@ index 0dd0ce9a9b3253e87eda12354249ec2fd2a33cf2..b6920f9432ca1736afbe775186fbbcf1
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
-index 9187f92f1708478dfffcd9de65898fd409a1b0c1..091b9ef3a247132cdd55addf413918ed1901a854 100644
+index 620d918e302a00d5a6640648e3096988d15535a0..ac6831248b7c4f25d48391432afb613f25d7e23a 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
-@@ -72,8 +72,18 @@ public abstract class CraftMob extends CraftLivingEntity implements Mob {
+@@ -80,8 +80,18 @@ public abstract class CraftMob extends CraftLivingEntity implements Mob {
  
      @Override
      public LootTable getLootTable() {
