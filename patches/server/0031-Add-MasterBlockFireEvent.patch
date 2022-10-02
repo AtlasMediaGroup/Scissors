@@ -57,7 +57,7 @@ index a3dac53b07618819b322b48339d850d80a1c55ba..4dd21b7ea247b3ced3d3ee6c67746cc6
  import net.minecraft.server.level.ServerLevel;
  import net.minecraft.world.InteractionHand;
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/JigsawBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/JigsawBlockEntity.java
-index fee4aef1bdae1b1ca57ff0b6c3fd2ec31439c37b..75cdeb8fddbb572b5ccdfcd1c745063b1ca76e80 100644
+index b56e4be3228489b5b910c23bde1717d5d3e2ad9a..e22b91b7ac53ce8d3b7a39bda4525f82e187fc45 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/JigsawBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/JigsawBlockEntity.java
 @@ -2,6 +2,8 @@ package net.minecraft.world.level.block.entity;
@@ -93,7 +93,7 @@ index fee4aef1bdae1b1ca57ff0b6c3fd2ec31439c37b..75cdeb8fddbb572b5ccdfcd1c745063b
 +
          BlockPos blockPos = this.getBlockPos().relative(this.getBlockState().getValue(JigsawBlock.ORIENTATION).front());
          Registry<StructureTemplatePool> registry = world.registryAccess().registryOrThrow(Registry.TEMPLATE_POOL_REGISTRY);
-         Holder<StructureTemplatePool> holder = registry.getHolderOrThrow(this.pool);
+         // Paper start - Replace getHolderOrThrow with a null check
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/StructureBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/StructureBlockEntity.java
 index 9792bf3ee083f571f1f4089d30beb586839f5f6b..e9d584b0ca984f9b7c70f99e1665cdedecb710e1 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/StructureBlockEntity.java
