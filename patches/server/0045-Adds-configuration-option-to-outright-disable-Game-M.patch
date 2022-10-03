@@ -1,0 +1,227 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: VideoGameSmash12 <videogamesm12@gmail.com>
+Date: Sun, 2 Oct 2022 19:43:40 -0600
+Subject: [PATCH] Adds configuration option to outright disable Game Master
+ Blocks and fixes some configuration bugs
+
+
+diff --git a/src/main/java/com/github/atlasmediagroup/scissors/ScissorsConfig.java b/src/main/java/com/github/atlasmediagroup/scissors/ScissorsConfig.java
+index 52b0161711634f9ad8cecf58668737a726278f72..bb58d90e9d676761a43a12cbc1c3b687d00654b1 100644
+--- a/src/main/java/com/github/atlasmediagroup/scissors/ScissorsConfig.java
++++ b/src/main/java/com/github/atlasmediagroup/scissors/ScissorsConfig.java
+@@ -65,8 +65,8 @@ public class ScissorsConfig
+         config.options().header(HEADER);
+         config.options().copyDefaults(true);
+ 
+-        version = getInt("config-version", 2);
+-        set("config-version", 2);
++        version = getInt("config-version", 3);
++        set("config-version", 3);
+         readConfig(ScissorsConfig.class, null);
+     }
+ 
+@@ -135,11 +135,17 @@ public class ScissorsConfig
+ 
+     // people still may want them to bypass permissions for warps
+     public static boolean commandSignsBypassPermissions = false;
+-    public static void commandSignsBypassPermissions()
++    private static void commandSignsBypassPermissions()
+     {
+         commandSignsBypassPermissions = getBoolean("commandSignsBypassPermissions", false);
+     }
+ 
++    public static boolean disableGameMasterBlocks = false;
++    private static void disableGameMasterBlocks()
++    {
++        disableGameMasterBlocks = getBoolean("disableGameMasterBlocks", false);
++    }
++
+     private static void set(String path, Object val)
+     {
+         config.set(path, val);
+diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+index dbf982c85ff361184a34b462bec331ac5b1a472c..8ec188a09dd1d5150a25fdf18f49deac1593fb4d 100644
+--- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.server.network;
+ 
++import com.github.atlasmediagroup.scissors.ScissorsConfig;
+ import com.github.atlasmediagroup.scissors.event.player.SpectatorTeleportEvent;
+ import com.google.common.collect.Lists;
+ import com.google.common.primitives.Floats;
+@@ -987,7 +988,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+     @Override
+     public void handleSetStructureBlock(ServerboundSetStructureBlockPacket packet) {
+         PacketUtils.ensureRunningOnSameThread(packet, this, this.player.getLevel());
+-        if (this.player.canUseGameMasterBlocks()) {
++        if (!ScissorsConfig.disableGameMasterBlocks && this.player.canUseGameMasterBlocks()) {  // Scissors - Add configuration option to completely disable game master blocks
+             BlockPos blockposition = packet.getPos();
+             BlockState iblockdata = this.player.level.getBlockState(blockposition);
+             BlockEntity tileentity = this.player.level.getBlockEntity(blockposition);
+@@ -1045,7 +1046,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+     @Override
+     public void handleSetJigsawBlock(ServerboundSetJigsawBlockPacket packet) {
+         PacketUtils.ensureRunningOnSameThread(packet, this, this.player.getLevel());
+-        if (this.player.canUseGameMasterBlocks()) {
++        if (!ScissorsConfig.disableGameMasterBlocks && this.player.canUseGameMasterBlocks()) {  // Scissors - Add configuration option to completely disable game master blocks
+             BlockPos blockposition = packet.getPos();
+             BlockState iblockdata = this.player.level.getBlockState(blockposition);
+             BlockEntity tileentity = this.player.level.getBlockEntity(blockposition);
+@@ -1068,7 +1069,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+     @Override
+     public void handleJigsawGenerate(ServerboundJigsawGeneratePacket packet) {
+         PacketUtils.ensureRunningOnSameThread(packet, this, this.player.getLevel());
+-        if (this.player.canUseGameMasterBlocks()) {
++        if (!ScissorsConfig.disableGameMasterBlocks && this.player.canUseGameMasterBlocks()) {  // Scissors - Add configuration option to completely disable game master blocks
+             BlockPos blockposition = packet.getPos();
+             BlockEntity tileentity = this.player.level.getBlockEntity(blockposition);
+ 
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/JigsawBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/JigsawBlockEntity.java
+index c93d21142c5f7b2799eeac7a8314ffdb7360162e..2279b7958c837a9616e8de2c2de53950d2f19a59 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/JigsawBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/JigsawBlockEntity.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.world.level.block.entity;
+ 
++import com.github.atlasmediagroup.scissors.ScissorsConfig;  // Scissors
+ import com.github.atlasmediagroup.scissors.event.block.MasterBlockFireEvent;
+ import com.google.common.collect.Lists;
+ import java.util.Arrays;
+@@ -122,6 +123,12 @@ public class JigsawBlockEntity extends BlockEntity {
+     }
+ 
+     public void generate(ServerLevel world, int maxDepth, boolean keepJigsaws) {
++        // Scissors start - Add configuration option to completely disable jigsaw and structure blocks
++        if (ScissorsConfig.disableGameMasterBlocks) {
++            return;
++        }
++        // Scissors end
++
+         // Scissors - Add master block fire event
+         final BlockPos blockPos = this.getBlockPos();
+         final MasterBlockFireEvent event = new MasterBlockFireEvent(new Location(this.getLevel().getWorld(), blockPos.getX(), blockPos.getY(), blockPos.getZ()));
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/StructureBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/StructureBlockEntity.java
+index ed297126ebc05c1eb81e32b7644552d5627b3697..896afd5ce022a4f4d83f2985112bcf0e3fc5f37d 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/StructureBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/StructureBlockEntity.java
+@@ -7,6 +7,7 @@ import java.util.Random;
+ import java.util.stream.Stream;
+ import javax.annotation.Nullable;
+ 
++import com.github.atlasmediagroup.scissors.ScissorsConfig;
+ import com.github.atlasmediagroup.scissors.event.block.MasterBlockFireEvent;
+ import net.minecraft.ResourceLocationException;
+ import net.minecraft.Util;
+@@ -130,6 +131,12 @@ public class StructureBlockEntity extends BlockEntity {
+     }
+ 
+     private void updateBlockState() {
++        // Scissors start - Add configuration option to completely disable jigsaw and structure blocks
++        if (ScissorsConfig.disableGameMasterBlocks) {
++            return;
++        }
++        // Scissors end
++
+         if (this.level != null) {
+             BlockPos blockPos = this.getBlockPos();
+             BlockState blockState = this.level.getBlockState(blockPos);
+@@ -152,6 +159,12 @@ public class StructureBlockEntity extends BlockEntity {
+     }
+ 
+     public boolean usedBy(Player player) {
++        // Scissors start - Add configuration option to completely disable jigsaw and structure blocks
++        if (ScissorsConfig.disableGameMasterBlocks) {
++            return false;
++        }
++        // Scissors end
++
+         if (!player.canUseGameMasterBlocks()) {
+             return false;
+         } else {
+@@ -265,6 +278,12 @@ public class StructureBlockEntity extends BlockEntity {
+     }
+ 
+     public boolean detectSize() {
++        // Scissors start - Add configuration option to completely disable jigsaw and structure blocks
++        if (ScissorsConfig.disableGameMasterBlocks) {
++            return false;
++        }
++        // Scissors end
++
+         if (this.mode != StructureMode.SAVE) {
+             return false;
+         } else {
+@@ -324,13 +343,18 @@ public class StructureBlockEntity extends BlockEntity {
+     }
+ 
+     public boolean saveStructure(boolean bl) {
++        // Scissors - Add option to completely disable structure and jigsaw blocks
++        if (ScissorsConfig.disableGameMasterBlocks) {
++            return false;
++        }
++        // Scissors end
++
+         if (this.mode == StructureMode.SAVE && !this.level.isClientSide && this.structureName != null) {
+             // Scissors - Add master block fire event
+             final BlockPos pos = this.getBlockPos();
+             final MasterBlockFireEvent event = new MasterBlockFireEvent(new Location(this.getLevel().getWorld(), pos.getX(), pos.getY(), pos.getZ()));
+ 
+-            if (!event.callEvent())
+-            {
++            if (!event.callEvent()) {
+                 return false;
+             }
+             // Scissors end
+@@ -371,6 +395,12 @@ public class StructureBlockEntity extends BlockEntity {
+     }
+ 
+     public boolean loadStructure(ServerLevel world, boolean bl) {
++        // Scissors start - Add configuration option to completely disable jigsaw and structure blocks
++        if (ScissorsConfig.disableGameMasterBlocks) {
++            return false;
++        }
++        // Scissors end
++
+         if (this.mode == StructureMode.LOAD && this.structureName != null) {
+             // Scissors - Add master block fire event
+             final BlockPos blockPos = this.getBlockPos();
+@@ -398,6 +428,12 @@ public class StructureBlockEntity extends BlockEntity {
+     }
+ 
+     public boolean loadStructure(ServerLevel world, boolean bl, StructureTemplate structureTemplate) {
++        // Scissors start - Add configuration option to completely disable jigsaw and structure blocks
++        if (ScissorsConfig.disableGameMasterBlocks) {
++            return false;
++        }
++        // Scissors end
++
+         // Scissors - Add master block fire event
+         final BlockPos blockPos = this.getBlockPos();
+         final MasterBlockFireEvent event = new MasterBlockFireEvent(new Location(this.getLevel().getWorld(), blockPos.getX(), blockPos.getY(), blockPos.getZ()));
+@@ -436,6 +472,12 @@ public class StructureBlockEntity extends BlockEntity {
+     }
+ 
+     public void unloadStructure() {
++        // Scissors start - Add configuration option to completely disable jigsaw and structure blocks
++        if (ScissorsConfig.disableGameMasterBlocks) {
++            return;
++        }
++        // Scissors end
++
+         // Scissors - Add master block fire event
+         final BlockPos blockPos = this.getBlockPos();
+         final MasterBlockFireEvent event = new MasterBlockFireEvent(new Location(this.getLevel().getWorld(), blockPos.getX(), blockPos.getY(), blockPos.getZ()));
+@@ -454,6 +496,12 @@ public class StructureBlockEntity extends BlockEntity {
+     }
+ 
+     public boolean isStructureLoadable() {
++        // Scissors start - Add configuration option to completely disable jigsaw and structure blocks
++        if (ScissorsConfig.disableGameMasterBlocks) {
++            return false;
++        }
++        // Scissors end
++
+         if (this.mode == StructureMode.LOAD && !this.level.isClientSide && this.structureName != null) {
+             ServerLevel serverLevel = (ServerLevel)this.level;
+             StructureManager structureManager = serverLevel.getStructureManager();
