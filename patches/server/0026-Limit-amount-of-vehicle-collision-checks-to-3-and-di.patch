@@ -6,7 +6,7 @@ Subject: [PATCH] Limit amount of vehicle collision checks to 3 and discard
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java
-index 3f31a3c17ecca6e93b794478129b95ecff4e1a9c..1db184c47880a3527e6c83666c90b7d9a9bd3ad7 100644
+index c71120fe57a76c4638be5dcbda5a756cc2d62ffc..db2ed9a3603dbb1a0ce05a0d9d6d372474441ffb 100644
 --- a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java
 +++ b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java
 @@ -8,6 +8,7 @@ import com.mojang.datafixers.util.Pair;
@@ -25,7 +25,7 @@ index 3f31a3c17ecca6e93b794478129b95ecff4e1a9c..1db184c47880a3527e6c83666c90b7d9
      public double maxSpeed = 0.4D;
      // CraftBukkit end
  
-@@ -424,8 +426,10 @@ public abstract class AbstractMinecart extends Entity {
+@@ -432,8 +434,10 @@ public abstract class AbstractMinecart extends Entity {
              if (this.getMinecartType() == AbstractMinecart.Type.RIDEABLE && this.getDeltaMovement().horizontalDistanceSqr() > 0.01D) {
                  List<Entity> list = this.level.getEntities((Entity) this, this.getBoundingBox().inflate(0.20000000298023224D, 0.0D, 0.20000000298023224D), EntitySelector.pushableBy(this));
  
@@ -38,7 +38,7 @@ index 3f31a3c17ecca6e93b794478129b95ecff4e1a9c..1db184c47880a3527e6c83666c90b7d9
                          Entity entity = (Entity) list.get(l);
  
                          if (!(entity instanceof Player) && !(entity instanceof IronGolem) && !(entity instanceof AbstractMinecart) && !this.isVehicle() && !entity.isPassenger()) {
-@@ -452,6 +456,16 @@ public abstract class AbstractMinecart extends Entity {
+@@ -460,6 +464,16 @@ public abstract class AbstractMinecart extends Entity {
                              entity.push(this);
                          }
                      }
@@ -56,7 +56,7 @@ index 3f31a3c17ecca6e93b794478129b95ecff4e1a9c..1db184c47880a3527e6c83666c90b7d9
              } else {
                  Iterator iterator = this.level.getEntities(this, this.getBoundingBox().inflate(0.20000000298023224D, 0.0D, 0.20000000298023224D)).iterator();
 diff --git a/src/main/java/net/minecraft/world/entity/vehicle/Boat.java b/src/main/java/net/minecraft/world/entity/vehicle/Boat.java
-index eb753323f67badb1bed28405c07b03078e322b44..8e1855ae99ce0a1c098a67c7e0fead87c061eb4f 100644
+index 29da8a42406feccf7932097b07b1d32a38fa96b7..cc6c192bd821f704a0179007fe10fdcb70aede80 100644
 --- a/src/main/java/net/minecraft/world/entity/vehicle/Boat.java
 +++ b/src/main/java/net/minecraft/world/entity/vehicle/Boat.java
 @@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
