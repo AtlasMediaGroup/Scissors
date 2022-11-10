@@ -5,7 +5,7 @@ Subject: [PATCH] Do not attempt to cast items to recipes
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
-index 2a005e837108d1879da31e8054afbbd6bf7b175e..97bcfb36a37eb7d889d6233e7de9b7b53c8a8a5c 100644
+index 8847a3b3cec47bd36670b77cedab4ef66a8c9270..b07757bbaf61303368763c681b4096f730e17a4c 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 @@ -648,6 +648,13 @@ public abstract class AbstractFurnaceBlockEntity extends BaseContainerBlockEntit

@@ -18,7 +18,7 @@ index 2481c50d8eb58a003e30e2d957b877bce5123a3a..6b284666eae8b7e0ef8f54dfe9311a09
      // CraftBukkit end
  
 diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
-index ac0f0a4da4282c13f6e1f37710cb615d66b8ef2c..e789bcb0c426651a48fb3c78e885c6e3fafb0416 100644
+index 72516335570d7137a62ec8667a6e8f06f024692f..eee1e676f521d22d1de6e0ba1fb89c6c31483554 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityType.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityType.java
 @@ -518,7 +518,7 @@ public class EntityType<T extends Entity> implements EntityTypeTest<Entity, T> {
@@ -40,7 +40,7 @@ index ac0f0a4da4282c13f6e1f37710cb615d66b8ef2c..e789bcb0c426651a48fb3c78e885c6e3
  
      @Nullable
 diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index 557e90e54439ce0430075403392b5052d5181feb..2ec4f71fd02bcca5a810cee5d8c7d293599998f7 100644
+index fffa6ba329b38433a1df51df339df652d3fda828..6eb0794d78ba83fa387749f51283e798161027e4 100644
 --- a/src/main/java/net/minecraft/world/entity/Mob.java
 +++ b/src/main/java/net/minecraft/world/entity/Mob.java
 @@ -585,7 +585,7 @@ public abstract class Mob extends LivingEntity {

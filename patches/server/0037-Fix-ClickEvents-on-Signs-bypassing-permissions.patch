@@ -34,7 +34,7 @@ index 1aa418ef5e400aabdf17dbe81da6cee6a1f63d96..9cd5ffca69df27f794f5a72e687fc6b3
      {
          config.set(path, val);
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
-index def4fdd2c7e4f925fa128692a744e5d10ae0203a..6ea38c4cb62c71e208b64629f8a427a40c062f3c 100644
+index 58599ead28c25a76d9f41d2d29ee8024c9afdccd..a4ea00cbe0cae3664391d3b84a0e6956a3253491 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
 @@ -1,11 +1,13 @@

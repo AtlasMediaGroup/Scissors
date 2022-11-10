@@ -388,7 +388,7 @@ index 0000000000000000000000000000000000000000..e08f502fc7165f9f466217910210edb5
 +}
 +
 diff --git a/src/main/java/net/minecraft/server/Main.java b/src/main/java/net/minecraft/server/Main.java
-index 5962f7a2b185d7d54a0f9e341a4fdf6e6f1c1ec5..41cc0fe90e10ee53c4fcd49265be02978ab97099 100644
+index 88ef769abfa163f923258d1f83d47b28c491eaca..632dfd34829515893a07b35dfa91302188d67a3c 100644
 --- a/src/main/java/net/minecraft/server/Main.java
 +++ b/src/main/java/net/minecraft/server/Main.java
 @@ -118,6 +118,7 @@ public class Main {
@@ -400,7 +400,7 @@ index 5962f7a2b185d7d54a0f9e341a4fdf6e6f1c1ec5..41cc0fe90e10ee53c4fcd49265be0297
  
              Path path1 = Paths.get("eula.txt");
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index 2932d2bb797a49e904cebec4285d24d69b429cd9..25d3949fc39cb463c8190a2c5db6ccb1ef662642 100644
+index ff3eced0e20c39b825586897ee2fed01dd471d88..a991be4e8a9836b50eca5d58e14773134aab9b79 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 @@ -226,7 +226,15 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
@@ -421,7 +421,7 @@ index 2932d2bb797a49e904cebec4285d24d69b429cd9..25d3949fc39cb463c8190a2c5db6ccb1
          this.setFlightAllowed(dedicatedserverproperties.allowFlight);
          this.setMotd(dedicatedserverproperties.motd);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index a09030476eeabe50733d06eb8df20f287a18aecf..6707f27b22fe3cb935cb8f7043914a5ceb0425a3 100644
+index 6042a736a7af975331bcfeeae48529368a3057b1..9863921b98730976fad0da814c4e311bd9fe2a8a 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -965,6 +965,8 @@ public final class CraftServer implements Server {

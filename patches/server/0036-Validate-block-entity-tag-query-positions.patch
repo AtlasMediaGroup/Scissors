@@ -5,7 +5,7 @@ Subject: [PATCH] Validate block entity tag query positions
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 2fdaa6ff9782684b8840d7f76fe08680e53de635..03776df3303e74fa9bf88453180b43a8e30efa54 100644
+index ad44b5b98babdd16fd9cfadb052cb7b6ba963ea1..45de153b74e7d48acf63326407481542a5e22ff9 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -1372,7 +1372,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
