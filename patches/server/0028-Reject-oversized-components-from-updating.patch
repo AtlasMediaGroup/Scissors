@@ -1,11 +1,11 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Video <videogamesm12@gmail.com>
-Date: Sun, 12 Jun 2022 00:33:21 -0500
+From: Telesphoreo <me@telesphoreo.me>
+Date: Fri, 25 Nov 2022 22:25:24 -0600
 Subject: [PATCH] Reject oversized components from updating
 
 
 diff --git a/src/main/java/net/minecraft/network/chat/ComponentUtils.java b/src/main/java/net/minecraft/network/chat/ComponentUtils.java
-index 9d3449dd92bbbef91b627caba752b87d8209011d..e162fb748745ec50189e426c2de5a91ce618be1b 100644
+index 10b133e95dbf2edb87764ea9d07974d8146bbed0..de1c251a0f4301beb2c6fd04dc25145c71887e27 100644
 --- a/src/main/java/net/minecraft/network/chat/ComponentUtils.java
 +++ b/src/main/java/net/minecraft/network/chat/ComponentUtils.java
 @@ -39,8 +39,10 @@ public class ComponentUtils {
@@ -18,9 +18,9 @@ index 9d3449dd92bbbef91b627caba752b87d8209011d..e162fb748745ec50189e426c2de5a91c
 -            return text.copy();
 +            result = text.copy();
          } else {
-             MutableComponent mutableComponent = text.getContents().resolve(source, sender, depth + 1);
- 
-@@ -48,8 +50,11 @@ public class ComponentUtils {
+             // Paper start
+             if (text instanceof io.papermc.paper.adventure.AdventureComponent adventureComponent) {
+@@ -53,8 +55,11 @@ public class ComponentUtils {
                  mutableComponent.append(updateForEntity(source, component, sender, depth + 1));
              }
  
@@ -33,14 +33,3 @@ index 9d3449dd92bbbef91b627caba752b87d8209011d..e162fb748745ec50189e426c2de5a91c
      }
  
      private static Style resolveStyle(@Nullable CommandSourceStack source, Style style, @Nullable Entity sender, int depth) throws CommandSyntaxException {
-@@ -138,8 +143,8 @@ public class ComponentUtils {
-             ComponentContents string = text.getContents();
-             if (string instanceof TranslatableContents) {
-                 TranslatableContents translatableContents = (TranslatableContents)string;
--                String string = translatableContents.getKey();
--                return Language.getInstance().has(string);
-+                String string1 = translatableContents.getKey();
-+                return Language.getInstance().has(string1);
-             }
-         }
- 

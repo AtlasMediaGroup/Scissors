@@ -5,10 +5,10 @@ Subject: [PATCH] Fix negative death times
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 0318c9483a4d96eb39ff4df9054a9e6398186bc3..f3a2e4c356724b4d2ed0b424ae2bf63e9517cc18 100644
+index 11d7c42d65b91bf57b7bba7812aa17e60e018c67..4d179230f712fbf2a8a8af9f0b7861fe2f83cbf7 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -622,7 +622,7 @@ public abstract class LivingEntity extends Entity {
+@@ -623,7 +623,7 @@ public abstract class LivingEntity extends Entity {
  
      protected void tickDeath() {
          ++this.deathTime;
