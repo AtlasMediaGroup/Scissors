@@ -57,7 +57,7 @@ index a3dac53b07618819b322b48339d850d80a1c55ba..4dd21b7ea247b3ced3d3ee6c67746cc6
  import net.minecraft.server.level.ServerLevel;
  import net.minecraft.world.InteractionHand;
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/JigsawBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/JigsawBlockEntity.java
-index b56e4be3228489b5b910c23bde1717d5d3e2ad9a..e22b91b7ac53ce8d3b7a39bda4525f82e187fc45 100644
+index 182e16c1d968707a11329150d71b7d01df6c6e52..fa5cade3f5f2fecc37cc065b96403d0a1c1a2553 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/JigsawBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/JigsawBlockEntity.java
 @@ -2,6 +2,8 @@ package net.minecraft.world.level.block.entity;
@@ -69,7 +69,7 @@ index b56e4be3228489b5b910c23bde1717d5d3e2ad9a..e22b91b7ac53ce8d3b7a39bda4525f82
  import net.minecraft.core.BlockPos;
  import net.minecraft.core.Holder;
  import net.minecraft.core.Registry;
-@@ -16,6 +18,7 @@ import net.minecraft.world.level.block.JigsawBlock;
+@@ -17,6 +19,7 @@ import net.minecraft.world.level.block.JigsawBlock;
  import net.minecraft.world.level.block.state.BlockState;
  import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
  import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
@@ -77,7 +77,7 @@ index b56e4be3228489b5b910c23bde1717d5d3e2ad9a..e22b91b7ac53ce8d3b7a39bda4525f82
  
  public class JigsawBlockEntity extends BlockEntity {
      public static final String TARGET = "target";
-@@ -106,6 +109,16 @@ public class JigsawBlockEntity extends BlockEntity {
+@@ -107,6 +110,16 @@ public class JigsawBlockEntity extends BlockEntity {
      }
  
      public void generate(ServerLevel world, int maxDepth, boolean keepJigsaws) {
@@ -92,7 +92,7 @@ index b56e4be3228489b5b910c23bde1717d5d3e2ad9a..e22b91b7ac53ce8d3b7a39bda4525f82
 +        // Scissors end
 +
          BlockPos blockPos = this.getBlockPos().relative(this.getBlockState().getValue(JigsawBlock.ORIENTATION).front());
-         Registry<StructureTemplatePool> registry = world.registryAccess().registryOrThrow(Registry.TEMPLATE_POOL_REGISTRY);
+         Registry<StructureTemplatePool> registry = world.registryAccess().registryOrThrow(Registries.TEMPLATE_POOL);
          // Paper start - Replace getHolderOrThrow with a null check
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/StructureBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/StructureBlockEntity.java
 index 9792bf3ee083f571f1f4089d30beb586839f5f6b..e9d584b0ca984f9b7c70f99e1665cdedecb710e1 100644

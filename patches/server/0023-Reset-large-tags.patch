@@ -1,11 +1,11 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Business Goose <arclicious@vivaldi.net>
-Date: Sat, 11 Jun 2022 23:16:06 -0500
+From: Telesphoreo <me@telesphoreo.me>
+Date: Sat, 10 Dec 2022 23:38:53 -0600
 Subject: [PATCH] Reset large tags
 
 
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index c18a0bc94d0210396046f4475e49a739088593f3..ee3db7c8b21547ebe941a15de74d9d8d65ea21e7 100644
+index 8450a22b0fc6e8dc5cad0f61ac52a82b3cd3791e..4ed50b7863bdc762775064b777a7d0e733ee52fe 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
 @@ -20,6 +20,7 @@ import java.util.function.Predicate;
@@ -16,7 +16,7 @@ index c18a0bc94d0210396046f4475e49a739088593f3..ee3db7c8b21547ebe941a15de74d9d8d
  import net.minecraft.ChatFormatting;
  import net.minecraft.Util;
  import net.minecraft.advancements.CriteriaTriggers;
-@@ -251,6 +252,12 @@ public final class ItemStack {
+@@ -255,6 +256,12 @@ public final class ItemStack {
  
      // CraftBukkit - break into own method
      private void load(CompoundTag nbttagcompound) {
@@ -26,10 +26,10 @@ index c18a0bc94d0210396046f4475e49a739088593f3..ee3db7c8b21547ebe941a15de74d9d8d
 +            nbttagcompound = NbtUtility.Item.removeItemData(nbttagcompound);
 +        }
 +        // Scissors end
-         this.item = (Item) Registry.ITEM.get(new ResourceLocation(nbttagcompound.getString("id")));
+         this.item = (Item) BuiltInRegistries.ITEM.get(new ResourceLocation(nbttagcompound.getString("id")));
          this.count = nbttagcompound.getByte("Count");
          if (nbttagcompound.contains("tag", 10)) {
-@@ -507,7 +514,11 @@ public final class ItemStack {
+@@ -515,7 +522,11 @@ public final class ItemStack {
          nbt.putString("id", minecraftkey == null ? "minecraft:air" : minecraftkey.toString());
          nbt.putByte("Count", (byte) this.count);
          if (this.tag != null) {
@@ -42,7 +42,7 @@ index c18a0bc94d0210396046f4475e49a739088593f3..ee3db7c8b21547ebe941a15de74d9d8d
          }
  
          return nbt;
-@@ -839,6 +850,9 @@ public final class ItemStack {
+@@ -846,6 +857,9 @@ public final class ItemStack {
      // Paper end
  
      public void setTag(@Nullable CompoundTag nbt) {

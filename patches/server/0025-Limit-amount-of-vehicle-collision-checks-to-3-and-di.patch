@@ -1,12 +1,12 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Business Goose <arclicious@vivaldi.net>
-Date: Sun, 1 May 2022 14:23:35 -0500
+From: Telesphoreo <me@telesphoreo.me>
+Date: Sat, 10 Dec 2022 23:44:05 -0600
 Subject: [PATCH] Limit amount of vehicle collision checks to 3 and discard
  vehicles if they collide with more than 15 other entities
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java
-index c71120fe57a76c4638be5dcbda5a756cc2d62ffc..db2ed9a3603dbb1a0ce05a0d9d6d372474441ffb 100644
+index eec7d7a5b558830111831792c42665724613af23..79f296388a7f86944f33b9a783ab81b3a9e4d4dc 100644
 --- a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java
 +++ b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java
 @@ -8,6 +8,7 @@ import com.mojang.datafixers.util.Pair;
@@ -17,7 +17,7 @@ index c71120fe57a76c4638be5dcbda5a756cc2d62ffc..db2ed9a3603dbb1a0ce05a0d9d6d3724
  import javax.annotation.Nullable;
  import net.minecraft.BlockUtil;
  import net.minecraft.Util;
-@@ -106,6 +107,7 @@ public abstract class AbstractMinecart extends Entity {
+@@ -105,6 +106,7 @@ public abstract class AbstractMinecart extends Entity {
      private double flyingX = 0.949999988079071D; // Paper - restore vanilla precision
      private double flyingY = 0.949999988079071D; // Paper - restore vanilla precision
      private double flyingZ = 0.949999988079071D; // Paper - restore vanilla precision
@@ -25,7 +25,7 @@ index c71120fe57a76c4638be5dcbda5a756cc2d62ffc..db2ed9a3603dbb1a0ce05a0d9d6d3724
      public double maxSpeed = 0.4D;
      // CraftBukkit end
  
-@@ -432,8 +434,10 @@ public abstract class AbstractMinecart extends Entity {
+@@ -431,8 +433,10 @@ public abstract class AbstractMinecart extends Entity {
              if (this.getMinecartType() == AbstractMinecart.Type.RIDEABLE && this.getDeltaMovement().horizontalDistanceSqr() > 0.01D) {
                  List<Entity> list = this.level.getEntities((Entity) this, this.getBoundingBox().inflate(0.20000000298023224D, 0.0D, 0.20000000298023224D), EntitySelector.pushableBy(this));
  
@@ -38,7 +38,7 @@ index c71120fe57a76c4638be5dcbda5a756cc2d62ffc..db2ed9a3603dbb1a0ce05a0d9d6d3724
                          Entity entity = (Entity) list.get(l);
  
                          if (!(entity instanceof Player) && !(entity instanceof IronGolem) && !(entity instanceof AbstractMinecart) && !this.isVehicle() && !entity.isPassenger()) {
-@@ -460,6 +464,16 @@ public abstract class AbstractMinecart extends Entity {
+@@ -459,6 +463,16 @@ public abstract class AbstractMinecart extends Entity {
                              entity.push(this);
                          }
                      }
@@ -56,18 +56,18 @@ index c71120fe57a76c4638be5dcbda5a756cc2d62ffc..db2ed9a3603dbb1a0ce05a0d9d6d3724
              } else {
                  Iterator iterator = this.level.getEntities(this, this.getBoundingBox().inflate(0.20000000298023224D, 0.0D, 0.20000000298023224D)).iterator();
 diff --git a/src/main/java/net/minecraft/world/entity/vehicle/Boat.java b/src/main/java/net/minecraft/world/entity/vehicle/Boat.java
-index 29da8a42406feccf7932097b07b1d32a38fa96b7..cc6c192bd821f704a0179007fe10fdcb70aede80 100644
+index 85e1892866cd2ee0cec1552b8541c1f800bdf68c..2950f60e068cbeb945cfe38972eaf65b79e3a4f1 100644
 --- a/src/main/java/net/minecraft/world/entity/vehicle/Boat.java
 +++ b/src/main/java/net/minecraft/world/entity/vehicle/Boat.java
-@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
- import com.google.common.collect.UnmodifiableIterator;
+@@ -5,6 +5,7 @@ import com.google.common.collect.UnmodifiableIterator;
  import java.util.Iterator;
  import java.util.List;
+ import java.util.function.IntFunction;
 +import java.util.concurrent.TimeUnit;
  import javax.annotation.Nullable;
  import net.minecraft.BlockUtil;
  import net.minecraft.core.BlockPos;
-@@ -106,6 +107,7 @@ public class Boat extends Entity {
+@@ -108,6 +109,7 @@ public class Boat extends Entity implements VariantHolder<Boat.Type> {
      public double unoccupiedDeceleration = -1;
      public boolean landBoats = false;
      // CraftBukkit end
@@ -75,7 +75,7 @@ index 29da8a42406feccf7932097b07b1d32a38fa96b7..cc6c192bd821f704a0179007fe10fdcb
  
      public Boat(EntityType<? extends Boat> type, Level world) {
          super(type, world);
-@@ -403,10 +405,12 @@ public class Boat extends Entity {
+@@ -417,10 +419,12 @@ public class Boat extends Entity implements VariantHolder<Boat.Type> {
          this.checkInsideBlocks();
          List<Entity> list = this.level.getEntities((Entity) this, this.getBoundingBox().inflate(0.20000000298023224D, -0.009999999776482582D, 0.20000000298023224D), EntitySelector.pushableBy(this));
  
@@ -90,7 +90,7 @@ index 29da8a42406feccf7932097b07b1d32a38fa96b7..cc6c192bd821f704a0179007fe10fdcb
                  Entity entity = (Entity) list.get(j);
  
                  if (!entity.hasPassenger((Entity) this)) {
-@@ -417,6 +421,16 @@ public class Boat extends Entity {
+@@ -431,6 +435,16 @@ public class Boat extends Entity implements VariantHolder<Boat.Type> {
                      }
                  }
              }

@@ -6,10 +6,10 @@ Subject: [PATCH] Validate coordinates before attempting to get block entities
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 4ab50df1e4c855587ef030cf3f2a1502798cb721..c7d7711be1bd17a25c98578ad68154255135facd 100644
+index 0c2255b6e2fb7752f85b0f83d4f84732758bd14d..ff72911cca59528f7090533e52450a59ea50a92a 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -1934,6 +1934,18 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -1926,6 +1926,18 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
      }
      // Spigot end
  
@@ -28,7 +28,7 @@ index 4ab50df1e4c855587ef030cf3f2a1502798cb721..c7d7711be1bd17a25c98578ad6815425
      @Override
      public void handleUseItemOn(ServerboundUseItemOnPacket packet) {
          PacketUtils.ensureRunningOnSameThread(packet, this, this.player.getLevel());
-@@ -3451,17 +3463,24 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -3310,17 +3322,24 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
              if (!itemstack.isEmpty() && nbttagcompound != null && nbttagcompound.contains("x") && nbttagcompound.contains("y") && nbttagcompound.contains("z") && this.player.getBukkitEntity().hasPermission("minecraft.nbt.copy")) { // Spigot
                  BlockPos blockposition = BlockEntity.getPosFromTag(nbttagcompound);
  

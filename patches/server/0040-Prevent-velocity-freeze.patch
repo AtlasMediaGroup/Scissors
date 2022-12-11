@@ -5,10 +5,10 @@ Subject: [PATCH] Prevent velocity freeze
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java b/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java
-index a603d99430aedb3c242c2833e0cc8a31aba49205..2be290fac27b0a8dea163f4337fcd19c0ee87168 100644
+index d73c10167c9100615cd5180f5e5d09b00f7bdc2a..569d0eb30f3f8043197254bceaa4a702110d5e7c 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java
-@@ -41,9 +41,13 @@ public abstract class AbstractHurtingProjectile extends Projectile {
+@@ -42,9 +42,13 @@ public abstract class AbstractHurtingProjectile extends Projectile {
          double d6 = Math.sqrt(d3 * d3 + d4 * d4 + d5 * d5);
  
          if (d6 != 0.0D) {
@@ -25,7 +25,7 @@ index a603d99430aedb3c242c2833e0cc8a31aba49205..2be290fac27b0a8dea163f4337fcd19c
          }
  
      }
-@@ -150,6 +154,25 @@ public abstract class AbstractHurtingProjectile extends Projectile {
+@@ -151,6 +155,25 @@ public abstract class AbstractHurtingProjectile extends Projectile {
          nbt.put("power", this.newDoubleList(new double[]{this.xPower, this.yPower, this.zPower}));
      }
  
@@ -51,7 +51,7 @@ index a603d99430aedb3c242c2833e0cc8a31aba49205..2be290fac27b0a8dea163f4337fcd19c
      @Override
      public void readAdditionalSaveData(CompoundTag nbt) {
          super.readAdditionalSaveData(nbt);
-@@ -157,9 +180,13 @@ public abstract class AbstractHurtingProjectile extends Projectile {
+@@ -158,9 +181,13 @@ public abstract class AbstractHurtingProjectile extends Projectile {
              ListTag nbttaglist = nbt.getList("power", 6);
  
              if (nbttaglist.size() == 3) {
@@ -68,7 +68,7 @@ index a603d99430aedb3c242c2833e0cc8a31aba49205..2be290fac27b0a8dea163f4337fcd19c
              }
          }
  
-@@ -193,9 +220,12 @@ public abstract class AbstractHurtingProjectile extends Projectile {
+@@ -194,9 +221,12 @@ public abstract class AbstractHurtingProjectile extends Projectile {
                      Vec3 vec3d = entity.getLookAngle();
  
                      this.setDeltaMovement(vec3d);

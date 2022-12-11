@@ -59,7 +59,7 @@ index 4092c7a8c2b0d9d26e6f4d97386735236300d132..9e0ab51dd7a4f9fed8f9edde962d42d4
              }
          }
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
-index c6aeda6497cb59673b469588142f5f15a338389d..8847a3b3cec47bd36670b77cedab4ef66a8c9270 100644
+index cac2768fe520b591990c7bc943ae7e95f49efb31..f734cba350ed85dbbf52ff527c9bb14b9eb04c86 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 @@ -9,6 +9,7 @@ import java.util.Iterator;
@@ -70,7 +70,7 @@ index c6aeda6497cb59673b469588142f5f15a338389d..8847a3b3cec47bd36670b77cedab4ef6
  import net.minecraft.SharedConstants;
  import net.minecraft.Util;
  import net.minecraft.core.BlockPos;
-@@ -217,6 +218,16 @@ public abstract class AbstractFurnaceBlockEntity extends BaseContainerBlockEntit
+@@ -211,6 +212,16 @@ public abstract class AbstractFurnaceBlockEntity extends BaseContainerBlockEntit
      public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
  
      public List<ItemStack> getContents() {
@@ -88,7 +88,7 @@ index c6aeda6497cb59673b469588142f5f15a338389d..8847a3b3cec47bd36670b77cedab4ef6
      }
  
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BarrelBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BarrelBlockEntity.java
-index f52487e1cfcfab1bf22ab2cb52f998283a86e340..7170c2e4167a102d4abbe69be4b21feec15d600f 100644
+index 416aa989ebb18a8741cc9d605a1180ab830f6643..893cf89dd2b022e2b785318e7e86eb5d75be8ed8 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BarrelBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BarrelBlockEntity.java
 @@ -1,5 +1,6 @@
@@ -230,7 +230,7 @@ index ccad692aba2ed77259f6814d88f01b91ed9d229b..da4fc1027e106fd4e4baedd7b9490c41
      }
  
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java
-index 137bdf1168b9e1d00164471e4e79f56c000c2696..8d3b4ec1f1d717af53240febaca1015f4ce0b39f 100644
+index b7686fd63b7c5d88c3a12ec4ee9bc01a17f997e0..c2904048625bb4439c7f0ba8a2605d3194b66070 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java
 @@ -3,6 +3,7 @@ package net.minecraft.world.level.block.entity;

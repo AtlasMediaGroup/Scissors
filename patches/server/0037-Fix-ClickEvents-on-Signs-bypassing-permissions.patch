@@ -34,7 +34,7 @@ index 1aa418ef5e400aabdf17dbe81da6cee6a1f63d96..9cd5ffca69df27f794f5a72e687fc6b3
      {
          config.set(path, val);
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
-index 58599ead28c25a76d9f41d2d29ee8024c9afdccd..a4ea00cbe0cae3664391d3b84a0e6956a3253491 100644
+index 4da4edae517a0efec6e03a719ec47b700509dab1..1ec83cbfc2860e1153be301eefb628e209bf9186 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
 @@ -1,11 +1,13 @@
@@ -59,7 +59,7 @@ index 58599ead28c25a76d9f41d2d29ee8024c9afdccd..a4ea00cbe0cae3664391d3b84a0e6956
  import net.minecraft.server.level.ServerLevel;
  import net.minecraft.server.level.ServerPlayer;
  import net.minecraft.util.FormattedCharSequence;
-@@ -23,6 +26,8 @@ import net.minecraft.world.item.DyeColor;
+@@ -24,6 +27,8 @@ import net.minecraft.world.item.DyeColor;
  import net.minecraft.world.level.block.state.BlockState;
  import net.minecraft.world.phys.Vec2;
  import net.minecraft.world.phys.Vec3;
@@ -68,7 +68,7 @@ index 58599ead28c25a76d9f41d2d29ee8024c9afdccd..a4ea00cbe0cae3664391d3b84a0e6956
  
  public class SignBlockEntity extends BlockEntity implements CommandSource { // CraftBukkit - implements
      private static final boolean CONVERT_LEGACY_SIGNS = Boolean.getBoolean("convertLegacySigns"); // Paper
-@@ -234,7 +239,21 @@ public class SignBlockEntity extends BlockEntity implements CommandSource { // C
+@@ -270,7 +275,21 @@ public class SignBlockEntity extends BlockEntity implements CommandSource { // C
                  if (!event.callEvent()) {
                      return false;
                  }

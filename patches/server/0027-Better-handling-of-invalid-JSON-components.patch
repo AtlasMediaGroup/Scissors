@@ -1,11 +1,11 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Telesphoreo <me@telesphoreo.me>
-Date: Sun, 30 Oct 2022 18:40:45 -0500
+Date: Sat, 10 Dec 2022 23:48:28 -0600
 Subject: [PATCH] Better handling of invalid JSON components
 
 
 diff --git a/src/main/java/net/minecraft/network/chat/Component.java b/src/main/java/net/minecraft/network/chat/Component.java
-index e7d9e2d8c87ddf3658b1c2e0f2a3e98ef8080cec..16192d2af2bd2c3f0bd4376e5fd7d6e46dac897c 100644
+index 3ca733528acb40354b308019a84436ea67e05751..76932c683153c7dcbf46de78cccc14772babc5fc 100644
 --- a/src/main/java/net/minecraft/network/chat/Component.java
 +++ b/src/main/java/net/minecraft/network/chat/Component.java
 @@ -26,6 +26,7 @@ import java.util.List;
@@ -44,7 +44,7 @@ index e7d9e2d8c87ddf3658b1c2e0f2a3e98ef8080cec..16192d2af2bd2c3f0bd4376e5fd7d6e4
              return Component.Serializer.GSON.toJsonTree(text);
          }
 diff --git a/src/main/java/net/minecraft/network/chat/HoverEvent.java b/src/main/java/net/minecraft/network/chat/HoverEvent.java
-index d38562b518b28ba4617d39e4587c7fa72859ab11..454e73bbcf449561e18bb8565932872c5a62a6e1 100644
+index 7449a024265c42f28a6c9a1ed8d8f4b9e3096aac..487c68abc3eb5c18dc7fee762b2164001283cab7 100644
 --- a/src/main/java/net/minecraft/network/chat/HoverEvent.java
 +++ b/src/main/java/net/minecraft/network/chat/HoverEvent.java
 @@ -79,7 +79,7 @@ public class HoverEvent {
@@ -80,7 +80,7 @@ index d38562b518b28ba4617d39e4587c7fa72859ab11..454e73bbcf449561e18bb8565932872c
                  CompoundTag compoundTag = TagParser.parseTag(text.getString());
 -                Component component = Component.Serializer.fromJson(compoundTag.getString("name"));
 +                Component component = Component.Serializer.fromJsonSafe(compoundTag.getString("name")); // Scissors - Use safer method for getting Components from JSON
-                 EntityType<?> entityType = Registry.ENTITY_TYPE.get(new ResourceLocation(compoundTag.getString("type")));
+                 EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(new ResourceLocation(compoundTag.getString("type")));
                  // Scissors start
                  UUID uUID;
 diff --git a/src/main/java/net/minecraft/network/chat/contents/NbtContents.java b/src/main/java/net/minecraft/network/chat/contents/NbtContents.java
@@ -110,10 +110,10 @@ index 97a2657bc98d41c3c1e376b266d2c85f685acc88..7b6476455e095eed15c92797ce3a3e11
                      }
                  }).reduce((accumulator, current) -> {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 6fa47becd0f83ac4273ef3a10c314aa27b08184b..a931aaa05f3e8c499e7e968f6fa1e908d0f2ea24 100644
+index 7f94da8059147760cbdc2476d0e8beda4a105f40..1f7462cb8d71e703412fc802c54cdf0b85f8054b 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -2315,12 +2315,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -2330,12 +2330,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
                      this.setRot(this.getYRot(), this.getXRot());
                      if (nbt.contains("CustomName", 8)) {
                          String s = nbt.getString("CustomName");
@@ -128,10 +128,10 @@ index 6fa47becd0f83ac4273ef3a10c314aa27b08184b..a931aaa05f3e8c499e7e968f6fa1e908
  
                      this.setCustomNameVisible(nbt.getBoolean("CustomNameVisible"));
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java
-index bb4ab75ec0e7a5d71dafeeb55e26d2204455e7a1..5ae750a2f12917ecddb0c14c23e6b02735385599 100644
+index 49ca1d45bb4b3ddafc1d5952ff9830ba69b745e2..54ef6d8b7144c1872bf137fc9b387641ef99afa9 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java
-@@ -408,7 +408,7 @@ public class BeaconBlockEntity extends BlockEntity implements MenuProvider {
+@@ -410,7 +410,7 @@ public class BeaconBlockEntity extends BlockEntity implements MenuProvider, Name
          this.levels = nbt.getInt("Levels"); // SPIGOT-5053, use where available
          // CraftBukkit end
          if (nbt.contains("CustomName", 8)) {

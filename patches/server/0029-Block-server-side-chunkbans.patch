@@ -138,7 +138,7 @@ index 5fce1177e7198d791d4ab1c64b394c5b1c145782..744d93fac1db1a8cd6d6ce37de717db9
      private static int MAX_PACKET_SIZE = 2097152;
  
 diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundBlockEntityDataPacket.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundBlockEntityDataPacket.java
-index b1e326cf4f7fe447f81b588dcb0eda9a435e59a8..a49b4e711012b6047de113fc1d456a5190406d98 100644
+index 3944852921335c78a04a9dc301882ab5b152b1ed..0d88828bc0bbd68328da4d0e7d3b880006d2c775 100644
 --- a/src/main/java/net/minecraft/network/protocol/game/ClientboundBlockEntityDataPacket.java
 +++ b/src/main/java/net/minecraft/network/protocol/game/ClientboundBlockEntityDataPacket.java
 @@ -24,7 +24,8 @@ public class ClientboundBlockEntityDataPacket implements Packet<ClientGamePacket
@@ -173,7 +173,7 @@ index dbd8b9b09b82c1b75e8be9dc7416d9f0863c8c87..24e0f4ee1dc9b5a46ed063e087d4b7bc
      public ClientboundContainerSetContentPacket(int syncId, int revision, NonNullList<ItemStack> contents, ItemStack cursorStack) {
          this.containerId = syncId;
 diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java
-index 76b6437a1d807c7e1b673f8feeed1f171ee9a803..3d9b0525f931a684e14a56c368dfb5b452bc7b4a 100644
+index f3fa2678796c33f3a408a02a1995ad117eac9169..c8dd976240aa4f640bb2d223d472f81fdd8dcf7c 100644
 --- a/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java
 +++ b/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java
 @@ -33,6 +33,14 @@ public class ClientboundLevelChunkPacketData {
