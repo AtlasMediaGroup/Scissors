@@ -1,46 +1,46 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Video <videogamesm12@gmail.com>
-Date: Fri, 22 Apr 2022 01:19:49 -0500
+From: Telesphoreo <me@telesphoreo.me>
+Date: Sat, 10 Dec 2022 23:02:48 -0600
 Subject: [PATCH] Even more resource location validation
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java b/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
-index 2481c50d8eb58a003e30e2d957b877bce5123a3a..6b284666eae8b7e0ef8f54dfe9311a0979b420fe 100644
+index c4810371c00eb92dc8574841c74a89203d586c78..929f05c8692223959282f68bf68c4467e4167a80 100644
 --- a/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
 +++ b/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
-@@ -143,7 +143,7 @@ public class AreaEffectCloud extends Entity {
+@@ -145,7 +145,7 @@ public class AreaEffectCloud extends Entity {
      }
  
      public void setPotionType(String string) {
--        this.setPotion(Registry.POTION.get(new ResourceLocation(string)));
-+        this.setPotion(Registry.POTION.get(ResourceLocation.tryParse(string))); // Scissors - Validate resource locations
+-        this.setPotion(BuiltInRegistries.POTION.get(new ResourceLocation(string)));
++        this.setPotion(BuiltInRegistries.POTION.get(ResourceLocation.tryParse(string))); // Scissors - Validate resource locations
      }
      // CraftBukkit end
  
 diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
-index 72516335570d7137a62ec8667a6e8f06f024692f..eee1e676f521d22d1de6e0ba1fb89c6c31483554 100644
+index e5cd4b7609243669c9d84ff8a4988c209e6101aa..7c73d523eab9dcc8b641db918353faac08aa5e9b 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityType.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityType.java
-@@ -518,7 +518,7 @@ public class EntityType<T extends Entity> implements EntityTypeTest<Entity, T> {
+@@ -573,7 +573,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
          }), (entity) -> {
              entity.load(nbt);
          }, () -> {
 -            EntityType.LOGGER.warn("Skipping Entity with id {}", nbt.getString("id"));
-+            // Scissors - Don't log invalid entities
++            /*EntityType.LOGGER.warn("Skipping Entity with id {}", nbt.getString("id"));*/ // Scissors - Don't log invalid entities
          });
      }
  
-@@ -537,7 +537,7 @@ public class EntityType<T extends Entity> implements EntityTypeTest<Entity, T> {
+@@ -592,7 +592,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
      }
  
      public static Optional<EntityType<?>> by(CompoundTag nbt) {
--        return Registry.ENTITY_TYPE.getOptional(new ResourceLocation(nbt.getString("id")));
-+        return Registry.ENTITY_TYPE.getOptional(ResourceLocation.tryParse(nbt.getString("id"))); // Scissors - Validate resource locations
+-        return BuiltInRegistries.ENTITY_TYPE.getOptional(new ResourceLocation(nbt.getString("id")));
++        return BuiltInRegistries.ENTITY_TYPE.getOptional(ResourceLocation.tryParse(nbt.getString("id")));
      }
  
      @Nullable
 diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index fffa6ba329b38433a1df51df339df652d3fda828..6eb0794d78ba83fa387749f51283e798161027e4 100644
+index 49b983064ea810382b6112f5dc7f93ba4e5710bd..4dd32f38ebf06d868a37c8e4ae667ac14a774b8d 100644
 --- a/src/main/java/net/minecraft/world/entity/Mob.java
 +++ b/src/main/java/net/minecraft/world/entity/Mob.java
 @@ -585,7 +585,7 @@ public abstract class Mob extends LivingEntity {
@@ -48,7 +48,7 @@ index fffa6ba329b38433a1df51df339df652d3fda828..6eb0794d78ba83fa387749f51283e798
          this.setLeftHanded(nbt.getBoolean("LeftHanded"));
          if (nbt.contains("DeathLootTable", 8)) {
 -            this.lootTable = new ResourceLocation(nbt.getString("DeathLootTable"));
-+            this.lootTable = ResourceLocation.tryParse(nbt.getString("DeathLootTable")); // Scissors - Validate resource locations
++            this.lootTable = ResourceLocation.tryParse(nbt.getString("DeathLootTable"));
              this.lootTableSeed = nbt.getLong("DeathLootTableSeed");
          }
  

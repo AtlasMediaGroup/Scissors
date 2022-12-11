@@ -5,12 +5,12 @@ Subject: [PATCH] Even more ResourceLocation validation and log spam fixes
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java b/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
-index 7e1885d9cc568a544e934cede32bff05c20b567a..2481c50d8eb58a003e30e2d957b877bce5123a3a 100644
+index 11a6f5b9e726453979d4c718c32a44024e1b8a08..c4810371c00eb92dc8574841c74a89203d586c78 100644
 --- a/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
 +++ b/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
-@@ -420,7 +420,7 @@ public class AreaEffectCloud extends Entity {
+@@ -422,7 +422,7 @@ public class AreaEffectCloud extends Entity {
              try {
-                 this.setParticle(ParticleArgument.readParticle(new StringReader(nbt.getString("Particle"))));
+                 this.setParticle(ParticleArgument.readParticle(new StringReader(nbt.getString("Particle")), (HolderLookup) BuiltInRegistries.PARTICLE_TYPE.asLookup()));
              } catch (CommandSyntaxException commandsyntaxexception) {
 -                AreaEffectCloud.LOGGER.warn("Couldn't load custom particle {}", nbt.getString("Particle"), commandsyntaxexception);
 +                // Scissors - Don't log custom particle errors

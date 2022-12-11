@@ -5,7 +5,7 @@ Subject: [PATCH] Do not log invalid items in HoverEvent and ItemFrame
 
 
 diff --git a/src/main/java/net/minecraft/network/chat/HoverEvent.java b/src/main/java/net/minecraft/network/chat/HoverEvent.java
-index b50cd7a39c077dcbabdfea1b9290bf5b144d4384..d38562b518b28ba4617d39e4587c7fa72859ab11 100644
+index c0633f9553fb5aa52e8ffc863159521d09cb3bd5..7449a024265c42f28a6c9a1ed8d8f4b9e3096aac 100644
 --- a/src/main/java/net/minecraft/network/chat/HoverEvent.java
 +++ b/src/main/java/net/minecraft/network/chat/HoverEvent.java
 @@ -314,7 +314,7 @@ public class HoverEvent {
@@ -27,10 +27,10 @@ index b50cd7a39c077dcbabdfea1b9290bf5b144d4384..d38562b518b28ba4617d39e4587c7fa7
              }
          }
 diff --git a/src/main/java/net/minecraft/world/entity/decoration/ItemFrame.java b/src/main/java/net/minecraft/world/entity/decoration/ItemFrame.java
-index b9cb39efe14a877ddedc5a5e4141ee5199ea8daf..1450a3ca71a73dd7c73cb9ba15ce98727b87dc20 100644
+index 428523feaa4f30260e32ba03937e88200246c693..21e6053a62409784c175ea6cf1ada6b5557097a8 100644
 --- a/src/main/java/net/minecraft/world/entity/decoration/ItemFrame.java
 +++ b/src/main/java/net/minecraft/world/entity/decoration/ItemFrame.java
-@@ -427,7 +427,7 @@ public class ItemFrame extends HangingEntity {
+@@ -428,7 +428,7 @@ public class ItemFrame extends HangingEntity {
              ItemStack itemstack = ItemStack.of(nbttagcompound1);
  
              if (itemstack.isEmpty()) {

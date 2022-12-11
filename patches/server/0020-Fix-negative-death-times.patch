@@ -1,19 +1,19 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Business Goose <arclicious@vivaldi.net>
-Date: Fri, 3 Jun 2022 19:30:14 -0500
+From: Telesphoreo <me@telesphoreo.me>
+Date: Sat, 10 Dec 2022 23:23:52 -0600
 Subject: [PATCH] Fix negative death times
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 11d7c42d65b91bf57b7bba7812aa17e60e018c67..4d179230f712fbf2a8a8af9f0b7861fe2f83cbf7 100644
+index 9e075de3542bda8ae086c9ca68bcd00b16d565d0..2012c147f60f39ae7dbae74641fd00b3b282a991 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -623,7 +623,7 @@ public abstract class LivingEntity extends Entity {
+@@ -622,7 +622,7 @@ public abstract class LivingEntity extends Entity {
  
      protected void tickDeath() {
          ++this.deathTime;
--        if (this.deathTime == 20 && !this.level.isClientSide()) {
-+        if ((this.deathTime >= 20 || this.deathTime <= 0) && !this.level.isClientSide()) {
+-        if (this.deathTime >= 20 && !this.level.isClientSide() && !this.isRemoved()) {
++        if ((this.deathTime >= 20 || this.deathTime <= 0) && !this.level.isClientSide() && !this.isRemoved()) {
              this.level.broadcastEntityEvent(this, (byte) 60);
              this.remove(Entity.RemovalReason.KILLED);
          }
