@@ -1,0 +1,32 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Telesphoreo <me@telesphoreo.me>
+Date: Sat, 10 Dec 2022 22:46:24 -0600
+Subject: [PATCH] Validate BlockState and SoundEvent values
+
+
+diff --git a/src/main/java/net/minecraft/nbt/NbtUtils.java b/src/main/java/net/minecraft/nbt/NbtUtils.java
+index c33a6d3d5700a7ec1dae2434d00cf0f480a5f0e5..1ccf1d22ac77b669fffd2a1bd7b1331cf0fa281a 100644
+--- a/src/main/java/net/minecraft/nbt/NbtUtils.java
++++ b/src/main/java/net/minecraft/nbt/NbtUtils.java
+@@ -234,7 +234,7 @@ public final class NbtUtils {
+         if (!nbt.contains("Name", 8)) {
+             return Blocks.AIR.defaultBlockState();
+         } else {
+-            ResourceLocation resourceLocation = new ResourceLocation(nbt.getString("Name"));
++            ResourceLocation resourceLocation = ResourceLocation.tryParse(nbt.getString("Name")); // Scissors - Validate BlockState
+             Optional<? extends Holder<Block>> optional = blockLookup.get(ResourceKey.create(Registries.BLOCK, resourceLocation));
+             if (optional.isEmpty()) {
+                 return Blocks.AIR.defaultBlockState();
+diff --git a/src/main/java/net/minecraft/world/entity/projectile/AbstractArrow.java b/src/main/java/net/minecraft/world/entity/projectile/AbstractArrow.java
+index e7ef36dac559d03d127cf45373a7e0dc935b80a8..9e6ef0c4aae1439bedddc317f05bf7f267c6c372 100644
+--- a/src/main/java/net/minecraft/world/entity/projectile/AbstractArrow.java
++++ b/src/main/java/net/minecraft/world/entity/projectile/AbstractArrow.java
+@@ -552,7 +552,7 @@ public abstract class AbstractArrow extends Projectile {
+         this.setCritArrow(nbt.getBoolean("crit"));
+         this.setPierceLevel(nbt.getByte("PierceLevel"));
+         if (nbt.contains("SoundEvent", 8)) {
+-            this.soundEvent = (SoundEvent) BuiltInRegistries.SOUND_EVENT.getOptional(new ResourceLocation(nbt.getString("SoundEvent"))).orElse(this.getDefaultHitGroundSoundEvent());
++            this.soundEvent = (SoundEvent) BuiltInRegistries.SOUND_EVENT.getOptional(ResourceLocation.tryParse(nbt.getString("SoundEvent"))).orElse(this.getDefaultHitGroundSoundEvent()); // Scissors - Validate SoundEvents before trying to play them
+         }
+ 
+         this.setShotFromCrossbow(nbt.getBoolean("ShotFromCrossbow"));
