@@ -27,7 +27,7 @@ pipeline {
         }
         stage('publish') {
             when {
-                branch "skip"
+                branch "1.19.3"
             }
             steps {
                 withCredentials([usernamePassword(credentialsId: '8150559b-ec1d-41bd-a576-aa668a52c1ba', passwordVariable: 'scissorsPassword', usernameVariable: 'scissorsUser')]) {
@@ -40,7 +40,7 @@ pipeline {
     }
     post {
         always {
-            // archiveArtifacts artifacts: 'build/libs/Scissors-paperclip-*.jar', fingerprint: true
+            archiveArtifacts artifacts: 'build/libs/Scissors-paperclip-*.jar', fingerprint: true
             junit 'Scissors-Server/build/test-results/test/*.xml'
             junit 'Scissors-API/build/test-results/test/*.xml'
             cleanWs()
