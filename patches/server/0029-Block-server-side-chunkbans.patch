@@ -5,7 +5,7 @@ Subject: [PATCH] Block server side chunkbans
 
 
 diff --git a/src/main/java/net/minecraft/network/PacketEncoder.java b/src/main/java/net/minecraft/network/PacketEncoder.java
-index 5fce1177e7198d791d4ab1c64b394c5b1c145782..744d93fac1db1a8cd6d6ce37de717db97ccf73a1 100644
+index 5fce1177e7198d791d4ab1c64b394c5b1c145782..25d483a4792cf159ff691521cd32382d0f7fe931 100644
 --- a/src/main/java/net/minecraft/network/PacketEncoder.java
 +++ b/src/main/java/net/minecraft/network/PacketEncoder.java
 @@ -6,9 +6,18 @@ import io.netty.channel.ChannelHandlerContext;
@@ -84,7 +84,7 @@ index 5fce1177e7198d791d4ab1c64b394c5b1c145782..744d93fac1db1a8cd6d6ce37de717db9
 +        }
 +        else if (packet instanceof ClientboundSetEntityDataPacket entityDataPacket)
 +        {
-+            friendlyByteBuf.writeVarInt(entityDataPacket.getId());
++            friendlyByteBuf.writeVarInt(entityDataPacket.id());
 +            friendlyByteBuf.writeByte(255);
 +            didIt = false;//prevent default packet writing
 +        }
