@@ -19,7 +19,7 @@ index d4a8c1bbb8fef27ac42bdf27dde495b4c649e6cb..865c61accf211d28be3c82dcf158fec9
  
      @Override
 diff --git a/src/main/java/com/destroystokyo/paper/loottable/PaperTileEntityLootableInventory.java b/src/main/java/com/destroystokyo/paper/loottable/PaperTileEntityLootableInventory.java
-index 94dc68182ec5f6dc1294ad15523427836228086a..07075cea760562c901d4469a7f88271c3ffa30bb 100644
+index 2ee4ee14ab3345486dad6b24fd9a4fcc6c746b99..c5ac6cda91a81d3075f5c763e30dc009b6be7936 100644
 --- a/src/main/java/com/destroystokyo/paper/loottable/PaperTileEntityLootableInventory.java
 +++ b/src/main/java/com/destroystokyo/paper/loottable/PaperTileEntityLootableInventory.java
 @@ -15,7 +15,7 @@ public class PaperTileEntityLootableInventory implements PaperLootableBlockInven
