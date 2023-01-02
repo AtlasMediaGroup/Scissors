@@ -18,10 +18,10 @@ index c4810371c00eb92dc8574841c74a89203d586c78..929f05c8692223959282f68bf68c4467
      // CraftBukkit end
  
 diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
-index e5cd4b7609243669c9d84ff8a4988c209e6101aa..7c73d523eab9dcc8b641db918353faac08aa5e9b 100644
+index 4589f7db68f7a72065c85c0a50216c6d02658f1e..5c23608e20e243eb844c73f713c39bf3e5ab05dd 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityType.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityType.java
-@@ -573,7 +573,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+@@ -580,7 +580,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
          }), (entity) -> {
              entity.load(nbt);
          }, () -> {
@@ -30,7 +30,7 @@ index e5cd4b7609243669c9d84ff8a4988c209e6101aa..7c73d523eab9dcc8b641db918353faac
          });
      }
  
-@@ -592,7 +592,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+@@ -599,7 +599,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
      }
  
      public static Optional<EntityType<?>> by(CompoundTag nbt) {
