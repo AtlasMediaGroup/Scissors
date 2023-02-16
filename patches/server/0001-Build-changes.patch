@@ -5,7 +5,7 @@ Subject: [PATCH] Build changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index d5d49bb2b47c889e12d17dc87b8c439a60b3fe67..936341d202df27fca75109b3e9a2b5ffffdbe47b 100644
+index 6a1853f3d988820f357c11371e32d50682e60401..fb72feb5878ae07c76754ab0e213f9797fcd88c2 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -7,8 +7,10 @@ plugins {
@@ -21,7 +21,7 @@ index d5d49bb2b47c889e12d17dc87b8c439a60b3fe67..936341d202df27fca75109b3e9a2b5ff
      // Paper start
      implementation("org.jline:jline-terminal-jansi:3.21.0")
      implementation("net.minecrell:terminalconsoleappender:1.3.0")
-@@ -57,11 +59,17 @@ tasks.jar {
+@@ -58,11 +60,17 @@ tasks.jar {
          val gitHash = git("rev-parse", "--short=7", "HEAD").getText().trim()
          val implementationVersion = System.getenv("BUILD_NUMBER") ?: "\"$gitHash\""
          val date = git("show", "-s", "--format=%ci", gitHash).getText().trim() // Paper
@@ -41,7 +41,7 @@ index d5d49bb2b47c889e12d17dc87b8c439a60b3fe67..936341d202df27fca75109b3e9a2b5ff
              "Implementation-Vendor" to date, // Paper
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
-@@ -133,7 +141,7 @@ fun TaskContainer.registerRunTask(
+@@ -134,7 +142,7 @@ fun TaskContainer.registerRunTask(
      name: String,
      block: JavaExec.() -> Unit
  ): TaskProvider<JavaExec> = register<JavaExec>(name) {
@@ -64,7 +64,7 @@ index 710ca7d3a5659953f64bc6dccdd93b43300961cc..ad9cd0987098c8969fdf002969188458
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 47df6f4268a63118da8187f4102c876bd37d1680..653c34ae4a5f55773f0c4af54c8cbb426ddb7d7b 100644
+index f938095d999412d88fa3fcf76b87253034124cb9..83fa0d27e72261fe7bcec2ae58a61f431963b36e 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -261,7 +261,7 @@ import javax.annotation.Nullable; // Paper

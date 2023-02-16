@@ -116,7 +116,7 @@ index 416aa989ebb18a8741cc9d605a1180ab830f6643..893cf89dd2b022e2b785318e7e86eb5d
      }
  
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java
-index 55006724ccec9f3de828ec18693728e9741ff65f..e6e59b2cfa1ced3756bf350905c0350ac7fd34f9 100644
+index 0bab2693b91d5bab222c7db8bc6965ccde954003..4a02d8f4d99d2d0e6cac4e40cd0e6350d03c0cd0 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java
 @@ -3,6 +3,7 @@ package net.minecraft.world.level.block.entity;
@@ -127,7 +127,7 @@ index 55006724ccec9f3de828ec18693728e9741ff65f..e6e59b2cfa1ced3756bf350905c0350a
  import net.minecraft.core.BlockPos;
  import net.minecraft.core.Direction;
  import net.minecraft.core.NonNullList;
-@@ -71,6 +72,16 @@ public class BrewingStandBlockEntity extends BaseContainerBlockEntity implements
+@@ -72,6 +73,16 @@ public class BrewingStandBlockEntity extends BaseContainerBlockEntity implements
      }
  
      public List<ItemStack> getContents() {

@@ -400,7 +400,7 @@ index 31faf2d6492696f7d0c99a48edbc0d6f15db1209..d6d3e802648eaf001f6e8143a361053a
  
              Path path1 = Paths.get("eula.txt");
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index 51b3db0b6c2cede95b584268e035c0fb36d38094..f8e49559657c1a2788a3aa8a15df6da7491c3fda 100644
+index a7e133f3495e9132a5fdae2c24f225e7b026295a..d4f0d596d30ef20d70c9f86d33288c78bdb5e6a0 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 @@ -221,7 +221,15 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
@@ -421,10 +421,10 @@ index 51b3db0b6c2cede95b584268e035c0fb36d38094..f8e49559657c1a2788a3aa8a15df6da7
          this.setFlightAllowed(dedicatedserverproperties.allowFlight);
          this.setMotd(dedicatedserverproperties.motd);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index fe38e40c07523da1016f4802eb4763a631fb57ab..a385fc49a36c444b071871be9bca2e9d0f68f258 100644
+index 83fa0d27e72261fe7bcec2ae58a61f431963b36e..2934df817c2a1e10cc30de47e33b9eaf2a82e252 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -978,6 +978,8 @@ public final class CraftServer implements Server {
+@@ -979,6 +979,8 @@ public final class CraftServer implements Server {
          }
  
          org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
@@ -433,7 +433,7 @@ index fe38e40c07523da1016f4802eb4763a631fb57ab..a385fc49a36c444b071871be9bca2e9d
          this.console.paperConfigurations.reloadConfigs(this.console);
          for (ServerLevel world : this.console.getAllLevels()) {
              // world.serverLevelData.setDifficulty(config.difficulty); // Paper - per level difficulty
-@@ -1009,6 +1011,7 @@ public final class CraftServer implements Server {
+@@ -1010,6 +1012,7 @@ public final class CraftServer implements Server {
          this.reloadData();
          org.spigotmc.SpigotConfig.registerCommands(); // Spigot
          io.papermc.paper.command.PaperCommands.registerCommands(this.console); // Paper
@@ -441,7 +441,7 @@ index fe38e40c07523da1016f4802eb4763a631fb57ab..a385fc49a36c444b071871be9bca2e9d
          this.overrideAllCommandBlockCommands = this.commandsConfiguration.getStringList("command-block-overrides").contains("*");
          this.ignoreVanillaPermissions = this.commandsConfiguration.getBoolean("ignore-vanilla-permissions");
  
-@@ -2763,6 +2766,12 @@ public final class CraftServer implements Server {
+@@ -2764,6 +2767,12 @@ public final class CraftServer implements Server {
              return CraftServer.this.console.paperConfigurations.createLegacyObject(CraftServer.this.console);
          }
  
@@ -455,7 +455,7 @@ index fe38e40c07523da1016f4802eb4763a631fb57ab..a385fc49a36c444b071871be9bca2e9d
          public void restart() {
              org.spigotmc.RestartCommand.restart();
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index 1e62d975e5df8da96e4ebbf163cab5032a9521aa..c7f633d61ce65e34baca51593791e3023977084b 100644
+index a4bb8e91302e6dfdfa35a7d6a62c9e36a9043bcb..ebf71612ddc17074e7956cf6becbe81ba8c80e30 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -173,6 +173,22 @@ public class Main {
