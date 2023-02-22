@@ -44,7 +44,7 @@ subprojects {
     }
     tasks.withType<Test> {
         minHeapSize = "2g"
-        maxHeapSize = "2g"
+        maxHeapSize = "4g"
     }
     repositories {
         mavenCentral()
