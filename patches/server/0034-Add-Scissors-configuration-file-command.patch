@@ -388,10 +388,10 @@ index 0000000000000000000000000000000000000000..b14ecf820880dca72f55cadfba337f72
 +}
 +
 diff --git a/src/main/java/net/minecraft/server/Main.java b/src/main/java/net/minecraft/server/Main.java
-index a821cb33fbc29109aec68f9d6a0eb2efc121ee13..69344f5caf001dcd557d29a3635cdd2dc0617116 100644
+index 781b72fd88149642c9fceaecfbfe7546273fb749..7eb60d218a55cea6723955c8cad62af7acc10eb1 100644
 --- a/src/main/java/net/minecraft/server/Main.java
 +++ b/src/main/java/net/minecraft/server/Main.java
-@@ -132,6 +132,7 @@ public class Main {
+@@ -122,6 +122,7 @@ public class Main {
              // Paper start - load config files for access below if needed
              org.bukkit.configuration.file.YamlConfiguration bukkitConfiguration = io.papermc.paper.configuration.PaperConfigurations.loadLegacyConfigFile((File) optionset.valueOf("bukkit-settings"));
              org.bukkit.configuration.file.YamlConfiguration spigotConfiguration = io.papermc.paper.configuration.PaperConfigurations.loadLegacyConfigFile((File) optionset.valueOf("spigot-settings"));
@@ -421,7 +421,7 @@ index a7e133f3495e9132a5fdae2c24f225e7b026295a..d4f0d596d30ef20d70c9f86d33288c78
          this.setFlightAllowed(dedicatedserverproperties.allowFlight);
          this.setMotd(dedicatedserverproperties.motd);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 473037da34d8f3ca891117fbb5404b350bf01480..f60f509ac659dec6dd1446b6dbbdf0f69d77ed46 100644
+index cb8c3bc667f9d8e33656a2151a26d55e0be9d05c..5348eef7306f579ae5119775c3cd6c1a4dba33da 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -961,6 +961,8 @@ public final class CraftServer implements Server {
@@ -441,7 +441,7 @@ index 473037da34d8f3ca891117fbb5404b350bf01480..f60f509ac659dec6dd1446b6dbbdf0f6
          this.overrideAllCommandBlockCommands = this.commandsConfiguration.getStringList("command-block-overrides").contains("*");
          this.ignoreVanillaPermissions = this.commandsConfiguration.getBoolean("ignore-vanilla-permissions");
  
-@@ -2746,6 +2749,12 @@ public final class CraftServer implements Server {
+@@ -2747,6 +2750,12 @@ public final class CraftServer implements Server {
              return CraftServer.this.console.paperConfigurations.createLegacyObject(CraftServer.this.console);
          }
  
