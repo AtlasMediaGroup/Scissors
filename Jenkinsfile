@@ -30,17 +30,19 @@ pipeline {
                 branch "1.19.3"
             }
             steps {
-                try {
-                    withCredentials([usernamePassword(credentialsId: 'scissors-ci', passwordVariable: 'scissorsPassword', usernameVariable: 'scissorsUser')]) {
-                        withGradle {
-                            sh "./gradlew :Scissors-API:publish --no-daemon"
-                        }
-                    }
-					true
-                } catch (_) {
-				false
+				script {
+					try {
+						withCredentials([usernamePassword(credentialsId: 'scissors-ci', passwordVariable: 'scissorsPassword', usernameVariable: 'scissorsUser')]) {
+							withGradle {
+								sh "./gradlew :Scissors-API:publish --no-daemon"
+							}
+						}
+						true
+					} catch (_) {
+					false
+					}
 				}
-            }
+			}
         }
     }
     post {
