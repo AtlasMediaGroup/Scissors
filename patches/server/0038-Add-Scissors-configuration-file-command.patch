@@ -5,10 +5,18 @@ Subject: [PATCH] Add Scissors configuration file & command
 
 
 diff --git a/src/main/java/co/aikar/timings/TimingsExport.java b/src/main/java/co/aikar/timings/TimingsExport.java
-index 06bff37e4c1fddd3be6343049a66787c63fb420c..f6667c193e1c52dd954acb90d09748251976dd42 100644
+index 06bff37e4c1fddd3be6343049a66787c63fb420c..1c1cb20190e8edb7f55a60fc662c28e204690223 100644
 --- a/src/main/java/co/aikar/timings/TimingsExport.java
 +++ b/src/main/java/co/aikar/timings/TimingsExport.java
-@@ -241,7 +241,8 @@ public class TimingsExport extends Thread {
+@@ -25,6 +25,7 @@ package co.aikar.timings;
+ 
+ import com.google.common.collect.Sets;
+ import io.papermc.paper.adventure.PaperAdventure;
++import me.totalfreedom.scissors.ScissorsConfig;
+ import net.kyori.adventure.text.event.ClickEvent;
+ import net.kyori.adventure.text.format.NamedTextColor;
+ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+@@ -241,7 +242,8 @@ public class TimingsExport extends Thread {
          parent.put("config", createObject(
              pair("spigot", mapAsJSON(Bukkit.spigot().getSpigotConfig(), null)),
              pair("bukkit", mapAsJSON(Bukkit.spigot().getBukkitConfig(), null)),
@@ -18,6 +26,28 @@ index 06bff37e4c1fddd3be6343049a66787c63fb420c..f6667c193e1c52dd954acb90d0974825
          ));
  
          new TimingsExport(listeners, parent, history).start();
+diff --git a/src/main/java/me/totalfreedom/scissors/PositionUtility.java b/src/main/java/me/totalfreedom/scissors/PositionUtility.java
+index 9e33ad84e50c7e2491aa883f905323f3ad2b070c..b085035794c91074205cb6994c73343283d274d5 100644
+--- a/src/main/java/me/totalfreedom/scissors/PositionUtility.java
++++ b/src/main/java/me/totalfreedom/scissors/PositionUtility.java
+@@ -8,7 +8,7 @@ import net.minecraft.world.phys.Vec3;
+ 
+ public class PositionUtility
+ {
+-    public static Vec3 getValidVec3(double x, double y, double z, Entity entity)
++    /*public static Vec3 getValidVec3(double x, double y, double z, Entity entity)
+     {
+         final Level level = entity.level;
+ 
+@@ -37,7 +37,7 @@ public class PositionUtility
+         { // If we throw some sort of exception due to the position being crazy, catch it
+             return new Vec3(0, 0, 0);
+         }
+-    }
++    }*/
+ 
+     public static Vec3 getValidVec3FromBlockPos(BlockPos blockPos, Entity entity)
+     {
 diff --git a/src/main/java/me/totalfreedom/scissors/ScissorsCommand.java b/src/main/java/me/totalfreedom/scissors/ScissorsCommand.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..797677d892d83cf54d9a60af1e277b67ed3d6e95
