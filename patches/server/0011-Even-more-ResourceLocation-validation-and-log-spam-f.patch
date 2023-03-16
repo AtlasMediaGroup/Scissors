@@ -5,10 +5,10 @@ Subject: [PATCH] Even more ResourceLocation validation and log spam fixes
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java b/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
-index 11a6f5b9e726453979d4c718c32a44024e1b8a08..c4810371c00eb92dc8574841c74a89203d586c78 100644
+index fa724cd34a7c469ca12068e64295cd00ad215a3c..168b60fda38a7172f4473017ccc42447b36faab2 100644
 --- a/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
 +++ b/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
-@@ -422,7 +422,7 @@ public class AreaEffectCloud extends Entity {
+@@ -425,7 +425,7 @@ public class AreaEffectCloud extends Entity implements TraceableEntity {
              try {
                  this.setParticle(ParticleArgument.readParticle(new StringReader(nbt.getString("Particle")), (HolderLookup) BuiltInRegistries.PARTICLE_TYPE.asLookup()));
              } catch (CommandSyntaxException commandsyntaxexception) {

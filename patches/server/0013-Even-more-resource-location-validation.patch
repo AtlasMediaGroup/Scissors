@@ -5,10 +5,10 @@ Subject: [PATCH] Even more resource location validation
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java b/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
-index c4810371c00eb92dc8574841c74a89203d586c78..929f05c8692223959282f68bf68c4467e4167a80 100644
+index 168b60fda38a7172f4473017ccc42447b36faab2..9f01b0f18bf656a7ab62f07cc98aaded96432665 100644
 --- a/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
 +++ b/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
-@@ -145,7 +145,7 @@ public class AreaEffectCloud extends Entity {
+@@ -145,7 +145,7 @@ public class AreaEffectCloud extends Entity implements TraceableEntity {
      }
  
      public void setPotionType(String string) {
@@ -18,10 +18,10 @@ index c4810371c00eb92dc8574841c74a89203d586c78..929f05c8692223959282f68bf68c4467
      // CraftBukkit end
  
 diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
-index 4589f7db68f7a72065c85c0a50216c6d02658f1e..5c23608e20e243eb844c73f713c39bf3e5ab05dd 100644
+index ceacc0d383e2ee674783d3c0a7df0a951595faca..32b2558fca4642373f7794449e89bfe275c5cf0d 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityType.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityType.java
-@@ -580,7 +580,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+@@ -588,7 +588,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
          }), (entity) -> {
              entity.load(nbt);
          }, () -> {
@@ -30,7 +30,7 @@ index 4589f7db68f7a72065c85c0a50216c6d02658f1e..5c23608e20e243eb844c73f713c39bf3
          });
      }
  
-@@ -599,7 +599,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+@@ -607,7 +607,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
      }
  
      public static Optional<EntityType<?>> by(CompoundTag nbt) {
@@ -40,10 +40,10 @@ index 4589f7db68f7a72065c85c0a50216c6d02658f1e..5c23608e20e243eb844c73f713c39bf3
  
      @Nullable
 diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index 49b983064ea810382b6112f5dc7f93ba4e5710bd..4dd32f38ebf06d868a37c8e4ae667ac14a774b8d 100644
+index 02cb6b8c1d59855ff4a8aad3024fe12007eca0ee..9a64944c6769ced4d82b8edbbc045b870a256cb9 100644
 --- a/src/main/java/net/minecraft/world/entity/Mob.java
 +++ b/src/main/java/net/minecraft/world/entity/Mob.java
-@@ -585,7 +585,7 @@ public abstract class Mob extends LivingEntity {
+@@ -615,7 +615,7 @@ public abstract class Mob extends LivingEntity implements Targeting {
  
          this.setLeftHanded(nbt.getBoolean("LeftHanded"));
          if (nbt.contains("DeathLootTable", 8)) {

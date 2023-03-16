@@ -5,7 +5,7 @@ Subject: [PATCH] Better handling of invalid JSON components
 
 
 diff --git a/src/main/java/net/minecraft/network/chat/Component.java b/src/main/java/net/minecraft/network/chat/Component.java
-index 3ca733528acb40354b308019a84436ea67e05751..76932c683153c7dcbf46de78cccc14772babc5fc 100644
+index 37fc353c3e59dd5af2fd6c58ac084fb0e6e155d7..3c0ee4e1f42f6056ca86a6f9f129d467e29a2fbc 100644
 --- a/src/main/java/net/minecraft/network/chat/Component.java
 +++ b/src/main/java/net/minecraft/network/chat/Component.java
 @@ -26,6 +26,7 @@ import java.util.List;
@@ -16,7 +16,7 @@ index 3ca733528acb40354b308019a84436ea67e05751..76932c683153c7dcbf46de78cccc1477
  import net.minecraft.Util;
  import net.minecraft.network.chat.contents.BlockDataSource;
  import net.minecraft.network.chat.contents.DataSource;
-@@ -506,6 +507,26 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
+@@ -522,6 +523,26 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
              return GsonHelper.toStableString(Serializer.toJsonTree(text));
          }
  
@@ -110,10 +110,10 @@ index 97a2657bc98d41c3c1e376b266d2c85f685acc88..7b6476455e095eed15c92797ce3a3e11
                      }
                  }).reduce((accumulator, current) -> {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 7555b04dcf274bb624b89f2eb9ff80da0056de4e..f052ebb7758017dabc7e336898065231a6e4e4fb 100644
+index 9a1e8589e6b371869b2199650172d61ae186c907..c0aa5f450b5398c267569066d9aedfbb14f6559a 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -2340,12 +2340,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -2352,12 +2352,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
                      this.setRot(this.getYRot(), this.getXRot());
                      if (nbt.contains("CustomName", 8)) {
                          String s = nbt.getString("CustomName");
@@ -128,7 +128,7 @@ index 7555b04dcf274bb624b89f2eb9ff80da0056de4e..f052ebb7758017dabc7e336898065231
  
                      this.setCustomNameVisible(nbt.getBoolean("CustomNameVisible"));
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java
-index 928625b5ab054ffa412be8a438f58291cc7a3cc0..54e74f39c960daa1f7ebd1d435281b5cc93e59c0 100644
+index ef740d1ad6352ca4af299001a081b720bc472d2e..f2325c0c475bb465f5275f78c71949648a860d0c 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java
 @@ -410,7 +410,7 @@ public class BeaconBlockEntity extends BlockEntity implements MenuProvider, Name

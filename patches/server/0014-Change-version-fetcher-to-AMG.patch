@@ -76,10 +76,10 @@ index bf42969859545a8a520923ef1836ffa4a5cc24a0..31d0624fcaf1998383eebde7fbd3a103
          switch (distance) {
              case -1:
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index e072a5475a64d110f25ebcc871aa7703c2fc1e70..21db4153a9eb5e52ff357b4146ae4302029d5cd5 100644
+index d51650d3e37eb76a0cf991e95d28a552aa567af9..cd87e192ff09e77538521bbde38416c52daa22b8 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
-@@ -278,7 +278,7 @@ public class Main {
+@@ -285,7 +285,7 @@ public class Main {
                      if (buildDate.before(deadline.getTime())) {
                          // Paper start - This is some stupid bullshit
                          System.err.println("*** Warning, you've not updated in a while! ***");

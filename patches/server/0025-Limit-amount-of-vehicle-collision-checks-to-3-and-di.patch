@@ -6,7 +6,7 @@ Subject: [PATCH] Limit amount of vehicle collision checks to 3 and discard
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java
-index eec7d7a5b558830111831792c42665724613af23..79f296388a7f86944f33b9a783ab81b3a9e4d4dc 100644
+index 9a80cf593bbdd7681bc9395daf4545a98e07636f..9c50f8f917f1d0f795f88493cf0177266942f680 100644
 --- a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java
 +++ b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java
 @@ -8,6 +8,7 @@ import com.mojang.datafixers.util.Pair;
@@ -56,7 +56,7 @@ index eec7d7a5b558830111831792c42665724613af23..79f296388a7f86944f33b9a783ab81b3
              } else {
                  Iterator iterator = this.level.getEntities(this, this.getBoundingBox().inflate(0.20000000298023224D, 0.0D, 0.20000000298023224D)).iterator();
 diff --git a/src/main/java/net/minecraft/world/entity/vehicle/Boat.java b/src/main/java/net/minecraft/world/entity/vehicle/Boat.java
-index 85e1892866cd2ee0cec1552b8541c1f800bdf68c..2950f60e068cbeb945cfe38972eaf65b79e3a4f1 100644
+index 5095e47b4910167235afdd8f1a7e9c45124ecadb..119888c529aa681cb97d01e80ee0f74644dc0577 100644
 --- a/src/main/java/net/minecraft/world/entity/vehicle/Boat.java
 +++ b/src/main/java/net/minecraft/world/entity/vehicle/Boat.java
 @@ -5,6 +5,7 @@ import com.google.common.collect.UnmodifiableIterator;
@@ -75,7 +75,7 @@ index 85e1892866cd2ee0cec1552b8541c1f800bdf68c..2950f60e068cbeb945cfe38972eaf65b
  
      public Boat(EntityType<? extends Boat> type, Level world) {
          super(type, world);
-@@ -417,10 +419,12 @@ public class Boat extends Entity implements VariantHolder<Boat.Type> {
+@@ -420,10 +422,12 @@ public class Boat extends Entity implements VariantHolder<Boat.Type> {
          this.checkInsideBlocks();
          List<Entity> list = this.level.getEntities((Entity) this, this.getBoundingBox().inflate(0.20000000298023224D, -0.009999999776482582D, 0.20000000298023224D), EntitySelector.pushableBy(this));
  
@@ -90,7 +90,7 @@ index 85e1892866cd2ee0cec1552b8541c1f800bdf68c..2950f60e068cbeb945cfe38972eaf65b
                  Entity entity = (Entity) list.get(j);
  
                  if (!entity.hasPassenger((Entity) this)) {
-@@ -431,6 +435,16 @@ public class Boat extends Entity implements VariantHolder<Boat.Type> {
+@@ -434,6 +438,16 @@ public class Boat extends Entity implements VariantHolder<Boat.Type> {
                      }
                  }
              }

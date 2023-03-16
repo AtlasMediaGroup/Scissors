@@ -32,10 +32,10 @@ index 2ee4ee14ab3345486dad6b24fd9a4fcc6c746b99..c5ac6cda91a81d3075f5c763e30dc009
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
-index d559f93a9a09bac414dd5d58afccad42c127f09b..8ac4e76bf9acf2f99539c4f874ac5c8605573604 100644
+index b9f0dae1ec96194fe78c086b63d8a18b1d0cfcf7..bdc49a9965fd3add3dfca31fb0517c14597fb076 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
-@@ -45,7 +45,7 @@ public abstract class RandomizableContainerBlockEntity extends BaseContainerBloc
+@@ -46,7 +46,7 @@ public abstract class RandomizableContainerBlockEntity extends BaseContainerBloc
      protected boolean tryLoadLootTable(CompoundTag nbt) {
          this.lootableData.loadNbt(nbt); // Paper
          if (nbt.contains("LootTable", 8)) {

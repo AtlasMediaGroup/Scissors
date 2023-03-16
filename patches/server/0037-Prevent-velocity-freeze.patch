@@ -5,7 +5,7 @@ Subject: [PATCH] Prevent velocity freeze
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java b/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java
-index 97231f7328f0eebffcacdae5469027be8aeec3ae..cca792cfabedcc72be99a334f1c2a303217484d7 100644
+index 2096e8a0bdbcfc865f175f3a01ab688542481531..1c31e2c457c416a970b6ff4913c63195ff19443a 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java
 @@ -41,9 +41,13 @@ public abstract class AbstractHurtingProjectile extends Projectile {

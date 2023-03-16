@@ -6,10 +6,10 @@ Subject: [PATCH] Fixes creative-killing potion effects and certain potion
 
 
 diff --git a/src/main/java/net/minecraft/world/effect/MobEffect.java b/src/main/java/net/minecraft/world/effect/MobEffect.java
-index e708b2c987fac150c22b3367cec2e3e2bcb9914c..06872ee2d0eb9ea847568d328a95f60db7373be8 100644
+index 2cc714585fc3790b70a7ad1ab8034543462e2b3b..2d3706d8d0dbed3b3588066eaa6b9ce1b266294f 100644
 --- a/src/main/java/net/minecraft/world/effect/MobEffect.java
 +++ b/src/main/java/net/minecraft/world/effect/MobEffect.java
-@@ -59,6 +59,7 @@ public class MobEffect {
+@@ -58,6 +58,7 @@ public class MobEffect {
      }
  
      public void applyEffectTick(LivingEntity entity, int amplifier) {
@@ -17,7 +17,7 @@ index e708b2c987fac150c22b3367cec2e3e2bcb9914c..06872ee2d0eb9ea847568d328a95f60d
          if (this == MobEffects.REGENERATION) {
              if (entity.getHealth() < entity.getMaxHealth()) {
                  entity.heal(1.0F, RegainReason.MAGIC_REGEN); // CraftBukkit
-@@ -87,17 +88,31 @@ public class MobEffect {
+@@ -86,17 +87,31 @@ public class MobEffect {
                  // CraftBukkit end
              }
          } else if ((this != MobEffects.HEAL || entity.isInvertedHealAndHarm()) && (this != MobEffects.HARM || !entity.isInvertedHealAndHarm())) {
@@ -25,7 +25,7 @@ index e708b2c987fac150c22b3367cec2e3e2bcb9914c..06872ee2d0eb9ea847568d328a95f60d
 +            // Scissors start
 +            amplifier = Math.min(Math.abs(amplifier), 124);
 +            if (!god && (this == MobEffects.HARM && !entity.isInvertedHealAndHarm() || this == MobEffects.HEAL && entity.isInvertedHealAndHarm())) {
-                 entity.hurt(DamageSource.MAGIC, (float) (6 << amplifier));
+                 entity.hurt(entity.damageSources().magic(), (float) (6 << amplifier));
              }
 +            // Scissors end
          } else {

@@ -5,7 +5,7 @@ Subject: [PATCH] Block server side chunkbans
 
 
 diff --git a/src/main/java/net/minecraft/network/PacketEncoder.java b/src/main/java/net/minecraft/network/PacketEncoder.java
-index 5fce1177e7198d791d4ab1c64b394c5b1c145782..25d483a4792cf159ff691521cd32382d0f7fe931 100644
+index ebee957fb048da6ffcd2a5ba2ed989ed1a6634e9..8da0f951b271e332f441852853f4a21d7ab6cf48 100644
 --- a/src/main/java/net/minecraft/network/PacketEncoder.java
 +++ b/src/main/java/net/minecraft/network/PacketEncoder.java
 @@ -6,9 +6,18 @@ import io.netty.channel.ChannelHandlerContext;
@@ -29,24 +29,24 @@ index 5fce1177e7198d791d4ab1c64b394c5b1c145782..25d483a4792cf159ff691521cd32382d
  public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
 @@ -41,30 +50,101 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
                      packet.write(friendlyByteBuf);
-                     int j = friendlyByteBuf.writerIndex() - i;
-                     if (j > 8388608) {
--                        throw new IllegalArgumentException("Packet too big (is " + j + ", should be less than 8388608): " + packet);
+                     int k = friendlyByteBuf.writerIndex() - j;
+                     if (k > 8388608) {
+-                        throw new IllegalArgumentException("Packet too big (is " + k + ", should be less than 8388608): " + packet);
 +                        // Scissors start
-+                        noKicking(friendlyByteBuf, packet, integer, channelHandlerContext);
++                        noKicking(friendlyByteBuf, packet, i, channelHandlerContext);
 +                        // Scissors end
                      } else {
-                         int k = channelHandlerContext.channel().attr(Connection.ATTRIBUTE_PROTOCOL).get().getId();
-                         JvmProfiler.INSTANCE.onPacketSent(k, integer, channelHandlerContext.channel().remoteAddress(), j);
+                         int l = channelHandlerContext.channel().attr(Connection.ATTRIBUTE_PROTOCOL).get().getId();
+                         JvmProfiler.INSTANCE.onPacketSent(l, i, channelHandlerContext.channel().remoteAddress(), k);
                      }
                  } catch (Throwable var10) {
--                    LOGGER.error("Packet encoding of packet ID {} threw (skippable? {})", integer, packet.isSkippable(), var10); // Paper - Give proper error message
+-                    LOGGER.error("Packet encoding of packet ID {} threw (skippable? {})", i, packet.isSkippable(), var10); // Paper - Give proper error message
 -                    if (packet.isSkippable()) {
 -                        throw new SkipPacketException(var10);
 -                    } else {
 -                        throw var10;
 -                    }
-+                    noKicking(friendlyByteBuf, packet, integer, channelHandlerContext);
++                    noKicking(friendlyByteBuf, packet, i, channelHandlerContext);
                  }
  
                  // Paper start

@@ -5,10 +5,10 @@ Subject: [PATCH] Do not attempt to cast items to recipes
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
-index f734cba350ed85dbbf52ff527c9bb14b9eb04c86..68912cc2bd670944465e6819d82c4aad6b7b324a 100644
+index dbdc66620ae4284cfe96f633b1f4db46866b597b..b95c3a74be46a539ccb90774023fa506d0a7e962 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
-@@ -642,6 +642,13 @@ public abstract class AbstractFurnaceBlockEntity extends BaseContainerBlockEntit
+@@ -643,6 +643,13 @@ public abstract class AbstractFurnaceBlockEntity extends BaseContainerBlockEntit
              Entry<ResourceLocation> entry = (Entry) objectiterator.next();
  
              worldserver.getRecipeManager().byKey((ResourceLocation) entry.getKey()).ifPresent((irecipe) -> {

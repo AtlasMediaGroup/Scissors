@@ -59,7 +59,7 @@ index 4092c7a8c2b0d9d26e6f4d97386735236300d132..9e0ab51dd7a4f9fed8f9edde962d42d4
              }
          }
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
-index cac2768fe520b591990c7bc943ae7e95f49efb31..f734cba350ed85dbbf52ff527c9bb14b9eb04c86 100644
+index 2a786c9fd29dc2139cf487fa645cd43345d60167..dbdc66620ae4284cfe96f633b1f4db46866b597b 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 @@ -9,6 +9,7 @@ import java.util.Iterator;
@@ -70,7 +70,7 @@ index cac2768fe520b591990c7bc943ae7e95f49efb31..f734cba350ed85dbbf52ff527c9bb14b
  import net.minecraft.SharedConstants;
  import net.minecraft.Util;
  import net.minecraft.core.BlockPos;
-@@ -211,6 +212,16 @@ public abstract class AbstractFurnaceBlockEntity extends BaseContainerBlockEntit
+@@ -212,6 +213,16 @@ public abstract class AbstractFurnaceBlockEntity extends BaseContainerBlockEntit
      public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
  
      public List<ItemStack> getContents() {
@@ -116,7 +116,7 @@ index 416aa989ebb18a8741cc9d605a1180ab830f6643..893cf89dd2b022e2b785318e7e86eb5d
      }
  
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java
-index 0bab2693b91d5bab222c7db8bc6965ccde954003..4a02d8f4d99d2d0e6cac4e40cd0e6350d03c0cd0 100644
+index c57efcb9a79337ec791e4e8f6671612f0a82b441..2963b72061a9ede734842d6fb46a67a1c41d4740 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java
 @@ -3,6 +3,7 @@ package net.minecraft.world.level.block.entity;
@@ -127,7 +127,7 @@ index 0bab2693b91d5bab222c7db8bc6965ccde954003..4a02d8f4d99d2d0e6cac4e40cd0e6350
  import net.minecraft.core.BlockPos;
  import net.minecraft.core.Direction;
  import net.minecraft.core.NonNullList;
-@@ -72,6 +73,16 @@ public class BrewingStandBlockEntity extends BaseContainerBlockEntity implements
+@@ -73,6 +74,16 @@ public class BrewingStandBlockEntity extends BaseContainerBlockEntity implements
      }
  
      public List<ItemStack> getContents() {
@@ -201,7 +201,7 @@ index 881379681c39230a00b3a1f11cd87498984396c7..1be5d600573f7632e6630224530dd765
      }
  
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
-index d76603c4172aa10889949c6c2acff05fee02a13d..b82fde14db232e63748dddd74d85f5a41359ae41 100644
+index 789e5458f4a137694563a22612455506807de51b..84c721da46b7786857677b56f439c2b9448ba4b8 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 @@ -6,6 +6,7 @@ import java.util.function.BooleanSupplier;
@@ -212,7 +212,7 @@ index d76603c4172aa10889949c6c2acff05fee02a13d..b82fde14db232e63748dddd74d85f5a4
  import net.minecraft.core.BlockPos;
  import net.minecraft.core.Direction;
  import net.minecraft.core.NonNullList;
-@@ -54,6 +55,16 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+@@ -56,6 +57,16 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
      private int maxStack = MAX_STACK;
  
      public List<ItemStack> getContents() {
