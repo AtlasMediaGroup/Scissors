@@ -6,6 +6,7 @@ pipeline {
     stages {
         stage('applyPatches') {
             steps {
+                scmSkip(deleteBuild: true)
                 withGradle {
                     sh './gradlew applyPatches --no-daemon --refresh-dependencies'
                 }
@@ -30,19 +31,19 @@ pipeline {
                 branch "1.18.2"
             }
             steps {
-				script {
-					try {
-						withCredentials([usernamePassword(credentialsId: 'scissors-ci', passwordVariable: 'scissorsPassword', usernameVariable: 'scissorsUser')]) {
-							withGradle {
-								sh "./gradlew :Scissors-API:publish --no-daemon"
-							}
-						}
-						true
-					} catch (_) {
-					false
-					}
-				}
-			}
+                script {
+                    try {
+                        withCredentials([usernamePassword(credentialsId: 'scissors-ci', passwordVariable: 'scissorsPassword', usernameVariable: 'scissorsUser')]) {
+                            withGradle {
+                                sh "./gradlew :Scissors-API:publish --no-daemon"
+                            }
+                        }
+                        true
+                    } catch (_) {
+                        false
+                    }
+                }
+            }
         }
     }
     post {
