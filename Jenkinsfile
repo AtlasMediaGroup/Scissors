@@ -27,7 +27,7 @@ pipeline {
         }
         stage('publish') {
             when {
-                branch "1.19.3"
+                branch "skip"
             }
             steps {
 				script {
