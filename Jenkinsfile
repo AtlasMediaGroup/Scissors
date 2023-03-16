@@ -47,7 +47,7 @@ pipeline {
     }
     post {
         always {
-            archiveArtifacts artifacts: 'build/libs/Scissors-paperclip-*.jar', fingerprint: true
+            // archiveArtifacts artifacts: 'build/libs/Scissors-paperclip-*.jar', fingerprint: true
             junit 'Scissors-Server/build/test-results/test/*.xml'
             junit 'Scissors-API/build/test-results/test/*.xml'
             cleanWs()
