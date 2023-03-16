@@ -1,0 +1,103 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: VideoGameSmash12 <videogamesm12@gmail.com>
+Date: Thu, 16 Mar 2023 01:42:08 -0500
+Subject: [PATCH] Reject translatable components with more than 32 placeholders
+
+
+diff --git a/src/main/java/net/minecraft/network/chat/Component.java b/src/main/java/net/minecraft/network/chat/Component.java
+index 3c0ee4e1f42f6056ca86a6f9f129d467e29a2fbc..273a19d0297982dedf4450a8656435abaab29d28 100644
+--- a/src/main/java/net/minecraft/network/chat/Component.java
++++ b/src/main/java/net/minecraft/network/chat/Component.java
+@@ -26,6 +26,8 @@ import java.util.List;
+ import java.util.Map.Entry;
+ import java.util.Optional;
+ import javax.annotation.Nullable;
++
++import net.kyori.adventure.text.TextComponent;
+ import net.minecraft.ChatFormatting;
+ import net.minecraft.Util;
+ import net.minecraft.network.chat.contents.BlockDataSource;
+@@ -44,6 +46,9 @@ import net.minecraft.util.GsonHelper;
+ import net.minecraft.util.LowerCaseEnumTypeAdapterFactory;
+ // CraftBukkit start
+ import com.google.common.collect.Streams;
++
++import java.util.regex.Matcher;
++import java.util.regex.Pattern;
+ import java.util.stream.Stream;
+ // CraftBukkit end
+ 
+@@ -255,6 +260,58 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
+             }
+         });
+ 
++        private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("%[0-9]{1,}\\$s");
++
++        // Scissors start - Calculate number of placeholders in translatable components before serializing them
++        private long calculatePlaceholderCount(JsonElement element)
++        {
++            long amount = 0;
++
++            if (!element.isJsonObject())
++            {
++                return amount;
++            }
++
++            JsonObject from = element.getAsJsonObject();
++
++            // Figure out how many placeholders are in a single translatable component
++            if (from.has("translate") && from.get("translate").isJsonPrimitive())
++            {
++                String key = GsonHelper.getAsString(from, "translate");
++                Matcher matcher = PLACEHOLDER_PATTERN.matcher(key);
++                amount += matcher.results().count();
++
++                // Recursively figure out how many placeholders the component has in the "with" shit
++                if (from.has("with") && from.get("with").isJsonArray())
++                {
++                    JsonArray array = GsonHelper.getAsJsonArray(from, "with");
++
++                    for (JsonElement within : array)
++                    {
++                        long amountWithin = calculatePlaceholderCount(within);
++
++                        if (amountWithin == 1)
++                        {
++                            amount++;
++                        }
++                        else if (amountWithin > 1)
++                        {
++                            amount = amount * amountWithin;
++                        }
++                    }
++                }
++            }
++            // Also applies to keybind components, but to a lesser extent
++            else if (from.has("keybind") && from.get("keybind").isJsonPrimitive())
++            {
++                String key = GsonHelper.getAsString(from, "keybind");
++                Matcher matcher = PLACEHOLDER_PATTERN.matcher(key);
++                amount += matcher.results().count();
++            }
++            return amount;
++        }
++        // Scissors end
++
+         public Serializer() {}
+ 
+         public MutableComponent deserialize(JsonElement jsonelement, Type type, JsonDeserializationContext jsondeserializationcontext) throws JsonParseException {
+@@ -287,6 +344,14 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
+                     }
+                 } else {
+                     JsonObject jsonobject = jsonelement.getAsJsonObject();
++
++                    // Scissors start - Reject translatable components with more than 32 placeholders in them
++                    if (calculatePlaceholderCount(jsonobject) > 32)
++                    {
++                        return Component.empty().append("*** Component has too many placeholders ***").withStyle(ChatFormatting.RED);
++                    }
++                    // Scissors end
++
+                     String s;
+ 
+                     if (jsonobject.has("text")) {
