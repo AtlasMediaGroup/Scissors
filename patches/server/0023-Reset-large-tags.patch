@@ -5,7 +5,7 @@ Subject: [PATCH] Reset large tags
 
 
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index 75ee1abaadabbe8add0972c48780f5e7b85df069..437f0e2fe381cf0b82c2f7e6fdd13eb91ebab1db 100644
+index a6253272205337b3b855679b3057c2519a807a4c..86c809041ce31d5d2bc789be848ec0f1ef12b564 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
 @@ -20,6 +20,7 @@ import java.util.function.Predicate;
@@ -42,7 +42,7 @@ index 75ee1abaadabbe8add0972c48780f5e7b85df069..437f0e2fe381cf0b82c2f7e6fdd13eb9
          }
  
          return nbt;
-@@ -860,6 +871,9 @@ public final class ItemStack {
+@@ -866,6 +877,9 @@ public final class ItemStack {
      // Paper end
  
      public void setTag(@Nullable CompoundTag nbt) {
