@@ -1,0 +1,32 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Allink <arclicious@vivaldi.net>
+Date: Mon, 20 Mar 2023 07:04:50 +0000
+Subject: [PATCH] Patch invalid entity rotation log spam
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index c0aa5f450b5398c267569066d9aedfbb14f6559a..7191424aaba8144368e79341fb8897408d8b95d9 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -4474,7 +4474,9 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+ 
+     public void setYRot(float yaw) {
+         if (!Float.isFinite(yaw)) {
+-            Util.logAndPauseIfInIde("Invalid entity rotation: " + yaw + ", discarding.");
++            // Scissors start - Patch invalid entity rotation log spam
++            //Util.logAndPauseIfInIde("Invalid entity rotation: " + yaw + ", discarding.");
++            // Scissors end
+         } else {
+             this.yRot = yaw;
+         }
+@@ -4486,7 +4488,9 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+ 
+     public void setXRot(float pitch) {
+         if (!Float.isFinite(pitch)) {
+-            Util.logAndPauseIfInIde("Invalid entity rotation: " + pitch + ", discarding.");
++            // Scissors start - Patch invalid entity rotation log spam
++            //Util.logAndPauseIfInIde("Invalid entity rotation: " + pitch + ", discarding.");
++            // Scissors end
+         } else {
+             this.xRot = pitch;
+         }
