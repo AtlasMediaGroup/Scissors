@@ -5,7 +5,7 @@ Subject: [PATCH] Reset large tags
 
 
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index a6253272205337b3b855679b3057c2519a807a4c..86c809041ce31d5d2bc789be848ec0f1ef12b564 100644
+index d690b8d0c1da1f56b226376df8c76c34375e3c73..3fd92abc2852651b448bfd2f7c171097bfdf9bf5 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
 @@ -20,6 +20,7 @@ import java.util.function.Predicate;
@@ -29,7 +29,7 @@ index a6253272205337b3b855679b3057c2519a807a4c..86c809041ce31d5d2bc789be848ec0f1
          this.item = (Item) BuiltInRegistries.ITEM.get(new ResourceLocation(nbttagcompound.getString("id")));
          this.count = nbttagcompound.getByte("Count");
          if (nbttagcompound.contains("tag", 10)) {
-@@ -530,7 +537,11 @@ public final class ItemStack {
+@@ -531,7 +538,11 @@ public final class ItemStack {
          nbt.putString("id", minecraftkey == null ? "minecraft:air" : minecraftkey.toString());
          nbt.putByte("Count", (byte) this.count);
          if (this.tag != null) {
@@ -42,7 +42,7 @@ index a6253272205337b3b855679b3057c2519a807a4c..86c809041ce31d5d2bc789be848ec0f1
          }
  
          return nbt;
-@@ -866,6 +877,9 @@ public final class ItemStack {
+@@ -867,6 +878,9 @@ public final class ItemStack {
      // Paper end
  
      public void setTag(@Nullable CompoundTag nbt) {
