@@ -5,7 +5,7 @@ Subject: [PATCH] Add Scissors configuration file & command
 
 
 diff --git a/src/main/java/co/aikar/timings/TimingsExport.java b/src/main/java/co/aikar/timings/TimingsExport.java
-index 06bff37e4c1fddd3be6343049a66787c63fb420c..1c1cb20190e8edb7f55a60fc662c28e204690223 100644
+index c07eb451a576811a39021f6f97103c77488fd001..b91d3ddf586a103770d63cdcf7ec590f95ee388f 100644
 --- a/src/main/java/co/aikar/timings/TimingsExport.java
 +++ b/src/main/java/co/aikar/timings/TimingsExport.java
 @@ -25,6 +25,7 @@ package co.aikar.timings;
@@ -16,7 +16,7 @@ index 06bff37e4c1fddd3be6343049a66787c63fb420c..1c1cb20190e8edb7f55a60fc662c28e2
  import net.kyori.adventure.text.event.ClickEvent;
  import net.kyori.adventure.text.format.NamedTextColor;
  import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-@@ -241,7 +242,8 @@ public class TimingsExport extends Thread {
+@@ -242,7 +243,8 @@ public class TimingsExport extends Thread {
          parent.put("config", createObject(
              pair("spigot", mapAsJSON(Bukkit.spigot().getSpigotConfig(), null)),
              pair("bukkit", mapAsJSON(Bukkit.spigot().getBukkitConfig(), null)),
@@ -696,7 +696,7 @@ index ccc578bf2d7edfe866a5892978ce9e116787c4b4..4cb94d9e1f4ec56e01289b25c952c00d
          public void restart() {
              org.spigotmc.RestartCommand.restart();
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index cd87e192ff09e77538521bbde38416c52daa22b8..1bc7a99a457d0dd8befecfcd11da39a6b76291f1 100644
+index e9714552bd57b8f65c2b5b209a72bfdd735b0dd3..681b4c4dee006e4ac7fdf879a0e2c528557c5a93 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -180,9 +180,27 @@ public class Main {
