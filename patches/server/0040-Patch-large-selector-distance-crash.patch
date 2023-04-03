@@ -1,0 +1,61 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Luna <lunahatesgogle@gmail.com>
+Date: Sun, 2 Apr 2023 16:29:51 -0300
+Subject: [PATCH] Patch large selector distance crash
+
+
+diff --git a/src/main/java/net/minecraft/advancements/critereon/MinMaxBounds.java b/src/main/java/net/minecraft/advancements/critereon/MinMaxBounds.java
+index 60d32afe2eecdfebdc91531ca3672f8f130ac30e..73b0f516f80ef810379860ea74697a3429c646e5 100644
+--- a/src/main/java/net/minecraft/advancements/critereon/MinMaxBounds.java
++++ b/src/main/java/net/minecraft/advancements/critereon/MinMaxBounds.java
+@@ -177,7 +177,7 @@ public abstract class MinMaxBounds<T extends Number> {
+             return value == null ? null : value * value;
+         }
+ 
+-        private Doubles(@Nullable Double min, @Nullable Double max) {
++        public Doubles(@Nullable Double min, @Nullable Double max) { // Scissors - private -> public
+             super(min, max);
+             this.minSq = squareOpt(min);
+             this.maxSq = squareOpt(max);
+diff --git a/src/main/java/net/minecraft/commands/arguments/selector/EntitySelector.java b/src/main/java/net/minecraft/commands/arguments/selector/EntitySelector.java
+index f25b9330e068c7d9e12cb57a7761cfef9ebaf7bc..ba549e6e5da75413ae3b4083f8b7a5527672de4e 100644
+--- a/src/main/java/net/minecraft/commands/arguments/selector/EntitySelector.java
++++ b/src/main/java/net/minecraft/commands/arguments/selector/EntitySelector.java
+@@ -10,6 +10,7 @@ import java.util.function.BiConsumer;
+ import java.util.function.Function;
+ import java.util.function.Predicate;
+ import javax.annotation.Nullable;
++import me.totalfreedom.scissors.MathUtility;
+ import net.minecraft.advancements.critereon.MinMaxBounds;
+ import net.minecraft.commands.CommandSourceStack;
+ import net.minecraft.commands.arguments.EntityArgument;
+@@ -60,9 +61,27 @@ public class EntitySelector {
+         this.includesEntities = includesNonPlayers;
+         this.worldLimited = localWorldOnly;
+         this.predicate = basePredicate;
+-        this.range = distance;
++
++        // Scissors start - Patch large selector distance crash
++        this.range = new MinMaxBounds.Doubles(
++            distance.getMin() != null ? Math.min(distance.getMin(), 1024) : null,
++            distance.getMax() != null ? Math.min(distance.getMax(), 1024) : null
++        );
+         this.position = positionOffset;
+-        this.aabb = box;
++        if (box != null) {
++            this.aabb = new AABB(
++                MathUtility.clampDouble(box.minX, -1024, 1025),
++                MathUtility.clampDouble(box.minY, -1024, 1025),
++                MathUtility.clampDouble(box.minZ, -1024, 1025),
++                MathUtility.clampDouble(box.maxX, -1024, 1025),
++                MathUtility.clampDouble(box.maxY, -1024, 1025),
++                MathUtility.clampDouble(box.maxZ, -1024, 1025),
++                false
++            );
++        } else {
++            this.aabb = null;
++        }
++        // Scissors end
+         this.order = sorter;
+         this.currentEntity = senderOnly;
+         this.playerName = playerName;
