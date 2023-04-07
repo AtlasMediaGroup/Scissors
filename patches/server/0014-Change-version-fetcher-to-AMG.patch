@@ -1,38 +1,39 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Telesphoreo <me@telesphoreo.me>
-Date: Sat, 26 Mar 2022 21:51:07 -0500
+Date: Fri, 7 Apr 2023 15:35:35 -0500
 Subject: [PATCH] Change version fetcher to AMG
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index bf42969859545a8a520923ef1836ffa4a5cc24a0..31d0624fcaf1998383eebde7fbd3a1033e6c80aa 100644
+index 9d687da5bdf398bb3f6c84cdf1249a7213d09f2e..0a8fda6939152d393f07e5d2812409ad38855646 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-@@ -4,6 +4,8 @@ import com.destroystokyo.paper.util.VersionFetcher;
+@@ -4,11 +4,13 @@ import com.destroystokyo.paper.util.VersionFetcher;
  import com.google.common.base.Charsets;
  import com.google.common.io.Resources;
  import com.google.gson.*;
 +import io.papermc.paper.util.JarManifests;
-+import java.util.Map;
  import net.kyori.adventure.text.Component;
  import net.kyori.adventure.text.event.ClickEvent;
  import net.kyori.adventure.text.format.NamedTextColor;
-@@ -16,11 +18,12 @@ import java.io.*;
- import java.net.HttpURLConnection;
- import java.net.URL;
- import java.util.stream.StreamSupport;
+ import net.kyori.adventure.text.format.TextDecoration;
+ import net.kyori.adventure.text.TextComponent;
 +import org.bukkit.Bukkit;
+ 
+ import javax.annotation.Nonnull;
+ import javax.annotation.Nullable;
+@@ -19,8 +21,8 @@ import java.util.stream.StreamSupport;
  
  public class PaperVersionFetcher implements VersionFetcher {
      private static final java.util.regex.Pattern VER_PATTERN = java.util.regex.Pattern.compile("^([0-9\\.]*)\\-.*R"); // R is an anchor, will always give '-R' at end
 -    private static final String GITHUB_BRANCH_NAME = "master";
--    private static final String DOWNLOAD_PAGE = "https://papermc.io/downloads";
+-    private static final String DOWNLOAD_PAGE = "https://papermc.io/downloads/paper";
 +    private static final String GITHUB_BRANCH_NAME = getBranch();
 +    private static final String DOWNLOAD_PAGE = "https://ci.scissors.gg/job/Scissors/job/" + GITHUB_BRANCH_NAME;
      private static @Nullable String mcVer;
  
      @Override
-@@ -31,8 +34,8 @@ public class PaperVersionFetcher implements VersionFetcher {
+@@ -31,8 +33,8 @@ public class PaperVersionFetcher implements VersionFetcher {
      @Nonnull
      @Override
      public Component getVersionMessage(@Nonnull String serverVersion) {
@@ -43,7 +44,7 @@ index bf42969859545a8a520923ef1836ffa4a5cc24a0..31d0624fcaf1998383eebde7fbd3a103
          final Component history = getHistory();
  
          return history != null ? TextComponent.ofChildren(updateMessage, Component.newline(), history) : updateMessage;
-@@ -54,15 +57,24 @@ public class PaperVersionFetcher implements VersionFetcher {
+@@ -54,15 +56,24 @@ public class PaperVersionFetcher implements VersionFetcher {
          return mcVer;
      }
  
@@ -76,14 +77,14 @@ index bf42969859545a8a520923ef1836ffa4a5cc24a0..31d0624fcaf1998383eebde7fbd3a103
          switch (distance) {
              case -1:
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index d51650d3e37eb76a0cf991e95d28a552aa567af9..cd87e192ff09e77538521bbde38416c52daa22b8 100644
+index 755c223ab2a046285eb9916b6195093714f4c5ba..e9714552bd57b8f65c2b5b209a72bfdd735b0dd3 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -285,7 +285,7 @@ public class Main {
                      if (buildDate.before(deadline.getTime())) {
                          // Paper start - This is some stupid bullshit
                          System.err.println("*** Warning, you've not updated in a while! ***");
--                        System.err.println("*** Please download a new build as per instructions from https://papermc.io/downloads ***"); // Paper
+-                        System.err.println("*** Please download a new build as per instructions from https://papermc.io/downloads/paper ***"); // Paper
 +                        System.err.println("*** Please download a new build from https://ci.scissors.gg/job/Scissors ***"); // Scissors > // Paper
                          //System.err.println("*** Server will start in 20 seconds ***");
                          //Thread.sleep(TimeUnit.SECONDS.toMillis(20));
