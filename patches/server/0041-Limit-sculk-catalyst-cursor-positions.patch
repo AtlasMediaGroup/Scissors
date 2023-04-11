@@ -1,0 +1,24 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Luna <lunahatesgogle@gmail.com>
+Date: Mon, 10 Apr 2023 13:56:18 -0300
+Subject: [PATCH] Limit sculk catalyst cursor positions
+
+
+diff --git a/src/main/java/net/minecraft/world/level/block/SculkSpreader.java b/src/main/java/net/minecraft/world/level/block/SculkSpreader.java
+index ab732f0e52ef3c3d3be6ddc827d693fe294e4167..761c8cfb98e05a3c500599520e26e4323725fc85 100644
+--- a/src/main/java/net/minecraft/world/level/block/SculkSpreader.java
++++ b/src/main/java/net/minecraft/world/level/block/SculkSpreader.java
+@@ -141,6 +141,13 @@ public class SculkSpreader {
+             Object2IntMap<BlockPos> object2IntMap = new Object2IntOpenHashMap<>();
+ 
+             for(SculkSpreader.ChargeCursor chargeCursor : this.cursors) {
++                // Scissors start
++                if (!world.getMinecraftWorld().isLoadedAndInBounds(chargeCursor.getPos()))
++                {
++                    continue;
++                }
++                // Scissors end
++
+                 chargeCursor.update(world, pos, random, this, shouldConvertToBlock);
+                 if (chargeCursor.charge <= 0) {
+                     world.levelEvent(3006, chargeCursor.getPos(), 0);
