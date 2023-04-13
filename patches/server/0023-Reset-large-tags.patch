@@ -5,7 +5,7 @@ Subject: [PATCH] Reset large tags
 
 
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index 3bfef8ed7dd73f603aef06172f362bb0ed0a5c83..3c5b4d57004c04fbeaef3e916113db5e18a9d1b2 100644
+index a7533d18fe6148d7bfd3106b9cdcb6fa3347cf7c..135c1c3013bd75673a8352b9386679195eb681d3 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
 @@ -20,6 +20,7 @@ import java.util.function.Predicate;
@@ -16,7 +16,7 @@ index 3bfef8ed7dd73f603aef06172f362bb0ed0a5c83..3c5b4d57004c04fbeaef3e916113db5e
  import net.minecraft.ChatFormatting;
  import net.minecraft.Util;
  import net.minecraft.advancements.CriteriaTriggers;
-@@ -256,6 +257,12 @@ public final class ItemStack {
+@@ -258,6 +259,12 @@ public final class ItemStack {
  
      // CraftBukkit - break into own method
      private void load(CompoundTag nbttagcompound) {
@@ -29,7 +29,7 @@ index 3bfef8ed7dd73f603aef06172f362bb0ed0a5c83..3c5b4d57004c04fbeaef3e916113db5e
          this.item = (Item) BuiltInRegistries.ITEM.get(new ResourceLocation(nbttagcompound.getString("id")));
          this.count = nbttagcompound.getByte("Count");
          if (nbttagcompound.contains("tag", 10)) {
-@@ -525,7 +532,11 @@ public final class ItemStack {
+@@ -538,7 +545,11 @@ public final class ItemStack {
          nbt.putString("id", minecraftkey == null ? "minecraft:air" : minecraftkey.toString());
          nbt.putByte("Count", (byte) this.count);
          if (this.tag != null) {
@@ -42,7 +42,7 @@ index 3bfef8ed7dd73f603aef06172f362bb0ed0a5c83..3c5b4d57004c04fbeaef3e916113db5e
          }
  
          return nbt;
-@@ -861,6 +872,9 @@ public final class ItemStack {
+@@ -874,6 +885,9 @@ public final class ItemStack {
      // Paper end
  
      public void setTag(@Nullable CompoundTag nbt) {
