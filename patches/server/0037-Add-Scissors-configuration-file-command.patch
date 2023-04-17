@@ -453,7 +453,7 @@ index 74cf1c043beef03cfd5adf481414a5ee78bef2a6..182f68359a7a8c0b331acd103ed3952e
      }
  }
 diff --git a/src/main/java/net/minecraft/server/Main.java b/src/main/java/net/minecraft/server/Main.java
-index c6fa6bcd66d61359124a8426b919493c6ec43f06..0b44304fa7f6c2856f9dd18ffc1239058c1de0a8 100644
+index cdbf10339a8e8846a8c364de483a0ccd95cd225a..3863684cdf3d613c39935e9f46fd4e7066f95eab 100644
 --- a/src/main/java/net/minecraft/server/Main.java
 +++ b/src/main/java/net/minecraft/server/Main.java
 @@ -136,6 +136,7 @@ public class Main {
@@ -663,7 +663,7 @@ index 4da4edae517a0efec6e03a719ec47b700509dab1..837b20be528bc33f62c0c675d90afebd
          }
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index a6877783bcbb04b0070af8630f1e3db520d8186f..a3c9196fbf5bc895aa076849f7d36a52269d7678 100644
+index e1f92c153bb7b616a9c2a77aa07c1c20cf80a94a..8076460b9b307152191df0cd1b523ea8cbfa1bbe 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -955,6 +955,7 @@ public final class CraftServer implements Server {
@@ -682,7 +682,7 @@ index a6877783bcbb04b0070af8630f1e3db520d8186f..a3c9196fbf5bc895aa076849f7d36a52
          this.overrideAllCommandBlockCommands = this.commandsConfiguration.getStringList("command-block-overrides").contains("*");
          this.ignoreVanillaPermissions = this.commandsConfiguration.getBoolean("ignore-vanilla-permissions");
  
-@@ -2744,6 +2746,12 @@ public final class CraftServer implements Server {
+@@ -2740,6 +2742,12 @@ public final class CraftServer implements Server {
              return CraftServer.this.console.paperConfigurations.createLegacyObject(CraftServer.this.console);
          }
  
