@@ -5,7 +5,7 @@ Subject: [PATCH] Prevent velocity freeze
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java b/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java
-index 3a088afd8269606543ebc9fb2074eb70431fcd39..3376fee37fdf06563f7305c44bd1529254890bcb 100644
+index 3a088afd8269606543ebc9fb2074eb70431fcd39..561e68806b50c417f08a20bcf87c44d117b9f41c 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java
 @@ -41,9 +41,13 @@ public abstract class AbstractHurtingProjectile extends Projectile {
@@ -42,9 +42,9 @@ index 3a088afd8269606543ebc9fb2074eb70431fcd39..3376fee37fdf06563f7305c44bd15292
 +            return;
 +        }
 +
-+        this.xPower = xPower;
-+        this.yPower = yPower;
-+        this.zPower = zPower;
++        this.xPower = Math.min(Math.max(xPower, -1024), 1024);
++        this.yPower = Math.min(Math.max(yPower, -1024), 1024);
++        this.zPower = Math.min(Math.max(zPower, -1024), 1024);
 +    }
 +    // Scissors end
 +
