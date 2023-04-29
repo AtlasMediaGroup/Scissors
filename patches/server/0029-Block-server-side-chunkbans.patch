@@ -5,7 +5,7 @@ Subject: [PATCH] Block server side chunkbans
 
 
 diff --git a/src/main/java/net/minecraft/network/PacketEncoder.java b/src/main/java/net/minecraft/network/PacketEncoder.java
-index ebee957fb048da6ffcd2a5ba2ed989ed1a6634e9..889342fac2903f16846e9303631a64df6fcfc589 100644
+index fbfadeb83719b81f42724e79c59e92ed88fdece7..d9ed02aa0dcec82bdf9d42c224694773b9307cfe 100644
 --- a/src/main/java/net/minecraft/network/PacketEncoder.java
 +++ b/src/main/java/net/minecraft/network/PacketEncoder.java
 @@ -6,9 +6,26 @@ import io.netty.channel.ChannelHandlerContext;
@@ -48,7 +48,7 @@ index ebee957fb048da6ffcd2a5ba2ed989ed1a6634e9..889342fac2903f16846e9303631a64df
 +        packet.write(friendlyByteBuf);
 +        int k = friendlyByteBuf.writerIndex() - j;
 +        int packetLength = friendlyByteBuf.readableBytes();
-+        if (k > 8388608 || packetLength > MAX_PACKET_SIZE) {   
++        if (k > 8388608 || packetLength > MAX_PACKET_SIZE) {
 +            throw new SkipPacketException(new IllegalArgumentException("Packet too big (is " + k + "): " + packet));
 +        }
 +
@@ -72,7 +72,7 @@ index ebee957fb048da6ffcd2a5ba2ed989ed1a6634e9..889342fac2903f16846e9303631a64df
 -                    int j = friendlyByteBuf.writerIndex();
 -                    packet.write(friendlyByteBuf);
 -                    int k = friendlyByteBuf.writerIndex() - j;
--                    if (k > 8388608) {
+-                    if (false && k > 8388608) { // Paper - disable
 -                        throw new IllegalArgumentException("Packet too big (is " + k + ", should be less than 8388608): " + packet);
 -                    } else {
 -                        int l = channelHandlerContext.channel().attr(Connection.ATTRIBUTE_PROTOCOL).get().getId();
@@ -168,7 +168,7 @@ index ebee957fb048da6ffcd2a5ba2ed989ed1a6634e9..889342fac2903f16846e9303631a64df
 +    // Scissors end
 +
      // Paper start
-     private static int MAX_PACKET_SIZE = 2097152;
+     private static int MAX_PACKET_SIZE = 8388608;
  
 diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundBlockEntityDataPacket.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundBlockEntityDataPacket.java
 index 3944852921335c78a04a9dc301882ab5b152b1ed..96ee53c7cc862e059328c5cdf5e07f309df6a79e 100644
