@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Luna <lunahatesgogle@gmail.com>
+Date: Fri, 28 Apr 2023 18:24:09 -0300
+Subject: [PATCH] Limit map decoration text length
+
+
+diff --git a/src/main/java/net/minecraft/world/level/saveddata/maps/MapDecoration.java b/src/main/java/net/minecraft/world/level/saveddata/maps/MapDecoration.java
+index 3d9c3e3ec56bc1bf5719e31d169015eaf598bde3..1233c8904f6a4f91931b42a08c514d783267a4c8 100644
+--- a/src/main/java/net/minecraft/world/level/saveddata/maps/MapDecoration.java
++++ b/src/main/java/net/minecraft/world/level/saveddata/maps/MapDecoration.java
+@@ -14,6 +14,12 @@ public class MapDecoration {
+     private final Component name;
+ 
+     public MapDecoration(MapDecoration.Type type, byte x, byte z, byte rotation, @Nullable Component text) {
++        // Scissors start - Limit decoration text length
++        if (text != null && text.getString().length() > 32) {
++            text = null;
++        }
++        // Scissors end
++
+         this.type = type;
+         this.x = x;
+         this.y = z;
