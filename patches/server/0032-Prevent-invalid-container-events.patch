@@ -5,7 +5,7 @@ Subject: [PATCH] Prevent invalid container events
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 1ec6a72dce3856f474e31398275d9a14fc31c517..970606ba9e5a590acce39aead4a5490a335a4149 100644
+index cf0bd9aba6de16e8061d5f8b4268969fe812fa37..f5f94b7a7f7055dd9dfeb0da161de3553b8e7d38 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -30,6 +30,8 @@ import java.util.function.UnaryOperator;
@@ -17,7 +17,7 @@ index 1ec6a72dce3856f474e31398275d9a14fc31c517..970606ba9e5a590acce39aead4a5490a
  import net.minecraft.ChatFormatting;
  import net.minecraft.CrashReport;
  import net.minecraft.CrashReportCategory;
-@@ -2981,6 +2983,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -2987,6 +2989,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
      public void handleContainerClick(ServerboundContainerClickPacket packet) {
          PacketUtils.ensureRunningOnSameThread(packet, this, this.player.getLevel());
          if (this.player.isImmobile()) return; // CraftBukkit
@@ -25,7 +25,7 @@ index 1ec6a72dce3856f474e31398275d9a14fc31c517..970606ba9e5a590acce39aead4a5490a
          this.player.resetLastActionTime();
          if (this.player.containerMenu.containerId == packet.getContainerId() && this.player.containerMenu.stillValid(this.player)) { // CraftBukkit
              boolean cancelled = this.player.isSpectator(); // CraftBukkit - see below if
-@@ -3002,6 +3005,18 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -3008,6 +3011,18 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
                          return;
                      }
  

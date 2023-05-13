@@ -5,10 +5,10 @@ Subject: [PATCH] Validate block entity tag query positions
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index acdf0f705649a7569cb81a96c848a286d60bc44e..ef21a5eed89f9a4883a19ade4093bbb7a3b5b594 100644
+index f5f94b7a7f7055dd9dfeb0da161de3553b8e7d38..5c347c8ff0eb3eb500a7bd49d61fb19925d780ce 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -1371,7 +1371,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -1372,7 +1372,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
      @Override
      public void handleBlockEntityTagQuery(ServerboundBlockEntityTagQuery packet) {
          PacketUtils.ensureRunningOnSameThread(packet, this, this.player.getLevel());
