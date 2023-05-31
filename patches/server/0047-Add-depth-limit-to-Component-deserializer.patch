@@ -4,11 +4,47 @@ Date: Wed, 31 May 2023 18:14:00 -0300
 Subject: [PATCH] Add depth limit to Component deserializer
 
 
+diff --git a/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java b/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
+index 39b56ca496ed7369ead21805d476c2b813fcdd1d..9659cff6412584190ff0c32e01f602de4ff7d3b3 100644
+--- a/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
++++ b/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
+@@ -87,8 +87,8 @@ public class ScissorsConfig
+         config.options().header(HEADER);
+         config.options().copyDefaults(true);
+ 
+-        version = getInt("config-version", 4);
+-        set("config-version", 4);
++        version = getInt("config-version", 5);
++        set("config-version", 5);
+         readConfig(ScissorsConfig.class, null);
+     }
+ 
+@@ -175,6 +175,12 @@ public class ScissorsConfig
+         excludePlayersFromNbtComponents = getBoolean("excludePlayersFromNbtComponents", false);
+     }
+ 
++    public static int componentDepthLimit = 128;
++    private static void componentDepthLimit()
++    {
++        componentDepthLimit = getInt("componentDepthLimit", 128);
++    }
++
+     private static void set(String path, Object val)
+     {
+         config.set(path, val);
 diff --git a/src/main/java/net/minecraft/network/chat/Component.java b/src/main/java/net/minecraft/network/chat/Component.java
-index 9c2c22ee548ad77f0912698f33de5f467f32fb7f..9d46804db18cd2d6bc8d5f82ca3eb302a4dcb2ad 100644
+index 9c2c22ee548ad77f0912698f33de5f467f32fb7f..ba2879b25e59290ab81501458414a417c121ed03 100644
 --- a/src/main/java/net/minecraft/network/chat/Component.java
 +++ b/src/main/java/net/minecraft/network/chat/Component.java
-@@ -44,6 +44,7 @@ import net.minecraft.util.GsonHelper;
+@@ -26,6 +26,7 @@ import java.util.List;
+ import java.util.Map.Entry;
+ import java.util.Optional;
+ import javax.annotation.Nullable;
++import me.totalfreedom.scissors.ScissorsConfig; // Scissors
+ import net.minecraft.ChatFormatting;
+ import net.minecraft.Util;
+ import net.minecraft.network.chat.contents.BlockDataSource;
+@@ -44,6 +45,7 @@ import net.minecraft.util.GsonHelper;
  import net.minecraft.util.LowerCaseEnumTypeAdapterFactory;
  // CraftBukkit start
  import com.google.common.collect.Streams;
@@ -16,7 +52,7 @@ index 9c2c22ee548ad77f0912698f33de5f467f32fb7f..9d46804db18cd2d6bc8d5f82ca3eb302
  import java.util.stream.Stream;
  // CraftBukkit end
  
-@@ -254,10 +255,16 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
+@@ -254,10 +256,16 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
                  throw new IllegalStateException("Couldn't get field 'lineStart' for JsonReader", nosuchfieldexception);
              }
          });
@@ -27,14 +63,14 @@ index 9c2c22ee548ad77f0912698f33de5f467f32fb7f..9d46804db18cd2d6bc8d5f82ca3eb302
 -        public MutableComponent deserialize(JsonElement jsonelement, Type type, JsonDeserializationContext jsondeserializationcontext) throws JsonParseException {
 +        // Scissors start
 +        private MutableComponent deserialize(JsonElement jsonelement, JsonDeserializationContext jsondeserializationcontext, int depth) throws JsonParseException {
-+            if (depth > 128) {
++            if (depth > ScissorsConfig.componentDepthLimit) {
 +                throw new JsonParseException("Depth limit exceeded");
 +            }
 +
              if (jsonelement.isJsonPrimitive()) {
                  return Component.literal(jsonelement.getAsString());
              } else {
-@@ -266,18 +273,16 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
+@@ -266,18 +274,16 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
                  if (!jsonelement.isJsonObject()) {
                      if (jsonelement.isJsonArray()) {
                          JsonArray jsonarray = jsonelement.getAsJsonArray();
@@ -54,14 +90,14 @@ index 9c2c22ee548ad77f0912698f33de5f467f32fb7f..9d46804db18cd2d6bc8d5f82ca3eb302
  
                              if (ichatmutablecomponent == null) {
                                  ichatmutablecomponent = ichatmutablecomponent1;
-@@ -301,12 +306,17 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
+@@ -301,12 +307,17 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
                          s = GsonHelper.getAsString(jsonobject, "translate");
                          String s1 = GsonHelper.getAsString(jsonobject, "fallback", (String) null);
  
 +                        // Penalize depth for placeholders in translate & fallback
 +                        long translate_placeholders = PLACEHOLDER_PATTERN.matcher(s).results().count();
 +                        long fallback_placeholders = s1 != null ? PLACEHOLDER_PATTERN.matcher(s1).results().count() : 0;
-+                        int penalty = (int)Math.max(translate_placeholders, fallback_placeholders) * 5;
++                        int penalty = (int)Math.max(translate_placeholders, fallback_placeholders) * 12;
 +
                          if (jsonobject.has("with")) {
                              JsonArray jsonarray1 = GsonHelper.getAsJsonArray(jsonobject, "with");
@@ -73,7 +109,7 @@ index 9c2c22ee548ad77f0912698f33de5f467f32fb7f..9d46804db18cd2d6bc8d5f82ca3eb302
                              }
  
                              ichatmutablecomponent = Component.translatableWithFallback(s, s1, aobject);
-@@ -322,7 +332,7 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
+@@ -322,7 +333,7 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
  
                          ichatmutablecomponent = Component.score(GsonHelper.getAsString(jsonobject1, "name"), GsonHelper.getAsString(jsonobject1, "objective"));
                      } else if (jsonobject.has("selector")) {
@@ -82,7 +118,7 @@ index 9c2c22ee548ad77f0912698f33de5f467f32fb7f..9d46804db18cd2d6bc8d5f82ca3eb302
  
                          ichatmutablecomponent = Component.selector(GsonHelper.getAsString(jsonobject, "selector"), optional);
                      } else if (jsonobject.has("keybind")) {
-@@ -333,7 +343,7 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
+@@ -333,7 +344,7 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
                          }
  
                          s = GsonHelper.getAsString(jsonobject, "nbt");
@@ -91,7 +127,7 @@ index 9c2c22ee548ad77f0912698f33de5f467f32fb7f..9d46804db18cd2d6bc8d5f82ca3eb302
                          boolean flag = GsonHelper.getAsBoolean(jsonobject, "interpret", false);
                          Object object;
  
-@@ -360,7 +370,7 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
+@@ -360,7 +371,7 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
                          }
  
                          for (int j = 0; j < jsonarray2.size(); ++j) {
@@ -100,7 +136,7 @@ index 9c2c22ee548ad77f0912698f33de5f467f32fb7f..9d46804db18cd2d6bc8d5f82ca3eb302
                          }
                      }
  
-@@ -370,6 +380,11 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
+@@ -370,6 +381,11 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
              }
          }
  
@@ -112,7 +148,7 @@ index 9c2c22ee548ad77f0912698f33de5f467f32fb7f..9d46804db18cd2d6bc8d5f82ca3eb302
          private static Object unwrapTextArgument(Object text) {
              if (text instanceof Component) {
                  Component ichatbasecomponent = (Component) text;
-@@ -388,8 +403,10 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
+@@ -388,8 +404,10 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
              return text;
          }
  
