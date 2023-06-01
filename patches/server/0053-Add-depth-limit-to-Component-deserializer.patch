@@ -1,0 +1,151 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Luna <lunahatesgogle@gmail.com>
+Date: Wed, 31 May 2023 20:44:20 -0300
+Subject: [PATCH] Add depth limit to Component deserializer
+
+
+diff --git a/src/main/java/com/github/atlasmediagroup/scissors/ScissorsConfig.java b/src/main/java/com/github/atlasmediagroup/scissors/ScissorsConfig.java
+index bb58d90e9d676761a43a12cbc1c3b687d00654b1..74f33cba7d713eddca5a58a2b33cad357792145e 100644
+--- a/src/main/java/com/github/atlasmediagroup/scissors/ScissorsConfig.java
++++ b/src/main/java/com/github/atlasmediagroup/scissors/ScissorsConfig.java
+@@ -65,8 +65,8 @@ public class ScissorsConfig
+         config.options().header(HEADER);
+         config.options().copyDefaults(true);
+ 
+-        version = getInt("config-version", 3);
+-        set("config-version", 3);
++        version = getInt("config-version", 4);
++        set("config-version", 4);
+         readConfig(ScissorsConfig.class, null);
+     }
+ 
+@@ -146,6 +146,12 @@ public class ScissorsConfig
+         disableGameMasterBlocks = getBoolean("disableGameMasterBlocks", false);
+     }
+ 
++    public static int componentDepthLimit = 128;
++    private static void componentDepthLimit()
++    {
++        componentDepthLimit = getInt("componentDepthLimit", 128);
++    }
++
+     private static void set(String path, Object val)
+     {
+         config.set(path, val);
+diff --git a/src/main/java/net/minecraft/network/chat/Component.java b/src/main/java/net/minecraft/network/chat/Component.java
+index 474ed00c09d58a7796cd543c9bcf8752e2f9f742..68e99223b0b084bdfdb9990780150bbc7d8ad8ea 100644
+--- a/src/main/java/net/minecraft/network/chat/Component.java
++++ b/src/main/java/net/minecraft/network/chat/Component.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.network.chat;
+ 
++import com.github.atlasmediagroup.scissors.ScissorsConfig; // Scissors
+ import com.google.common.collect.Lists;
+ import io.papermc.paper.adventure.AdventureComponent; // Paper
+ import com.google.gson.Gson;
+@@ -33,6 +34,7 @@ import net.minecraft.util.GsonHelper;
+ import net.minecraft.util.LowerCaseEnumTypeAdapterFactory;
+ // CraftBukkit start
+ import com.google.common.collect.Streams;
++import java.util.regex.Pattern; // Scissors
+ import java.util.stream.Stream;
+ // CraftBukkit end
+ 
+@@ -192,27 +194,31 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
+                 throw new IllegalStateException("Couldn't get field 'lineStart' for JsonReader", nosuchfieldexception);
+             }
+         });
++        private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("%[0-9]+\\$s"); // Scissors
+ 
+         public Serializer() {}
+ 
+-        public MutableComponent deserialize(JsonElement jsonelement, Type type, JsonDeserializationContext jsondeserializationcontext) throws JsonParseException {
++        // Scissors start
++        private MutableComponent deserialize(JsonElement jsonelement, JsonDeserializationContext jsondeserializationcontext, int depth) throws JsonParseException {
++            if (depth > ScissorsConfig.componentDepthLimit) {
++                throw new JsonParseException("Depth limit exceeded");
++            }
++
+             if (jsonelement.isJsonPrimitive()) {
+                 return new TextComponent(jsonelement.getAsString());
+             } else if (!jsonelement.isJsonObject()) {
+                 if (jsonelement.isJsonArray()) {
+                     JsonArray jsonarray = jsonelement.getAsJsonArray();
+-                    // Scissors start
+                     if (jsonarray.size() <= 0) {
+                         throw new JsonParseException("Unexpected empty array of components");
+                     }
+-                    // Scissors end
+                     
+                     MutableComponent ichatmutablecomponent = null;
+                     Iterator iterator = jsonarray.iterator();
+ 
+                     while (iterator.hasNext()) {
+                         JsonElement jsonelement1 = (JsonElement) iterator.next();
+-                        MutableComponent ichatmutablecomponent1 = this.deserialize(jsonelement1, jsonelement1.getClass(), jsondeserializationcontext);
++                        MutableComponent ichatmutablecomponent1 = this.deserialize(jsonelement1, jsondeserializationcontext, depth + 1);
+ 
+                         if (ichatmutablecomponent == null) {
+                             ichatmutablecomponent = ichatmutablecomponent1;
+@@ -236,12 +242,17 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
+ 
+                     if (jsonobject.has("translate")) {
+                         s = GsonHelper.getAsString(jsonobject, "translate");
++ 
++                        // Penalize depth for placeholders in translate & fallback
++                        long translate_placeholders = PLACEHOLDER_PATTERN.matcher(s).results().count();
++                        int penalty = (int)translate_placeholders * 12;
++
+                         if (jsonobject.has("with")) {
+                             JsonArray jsonarray1 = GsonHelper.getAsJsonArray(jsonobject, "with");
+                             Object[] aobject = new Object[jsonarray1.size()];
+ 
+                             for (int i = 0; i < aobject.length; ++i) {
+-                                aobject[i] = this.deserialize(jsonarray1.get(i), type, jsondeserializationcontext);
++                                aobject[i] = this.deserialize(jsonarray1.get(i), jsondeserializationcontext, depth + 1 + penalty);
+                                 if (aobject[i] instanceof TextComponent) {
+                                     TextComponent chatcomponenttext = (TextComponent) aobject[i];
+ 
+@@ -264,7 +275,7 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
+ 
+                         object = new ScoreComponent(GsonHelper.getAsString(jsonobject1, "name"), GsonHelper.getAsString(jsonobject1, "objective"));
+                     } else if (jsonobject.has("selector")) {
+-                        Optional<Component> optional = this.parseSeparator(type, jsondeserializationcontext, jsonobject);
++                        Optional<Component> optional = this.parseSeparator(jsondeserializationcontext, jsonobject, depth + 1);
+ 
+                         object = new SelectorComponent(GsonHelper.getAsString(jsonobject, "selector"), optional);
+                     } else if (jsonobject.has("keybind")) {
+@@ -275,7 +286,7 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
+                         }
+ 
+                         s = GsonHelper.getAsString(jsonobject, "nbt");
+-                        Optional<Component> optional1 = this.parseSeparator(type, jsondeserializationcontext, jsonobject);
++                        Optional<Component> optional1 = this.parseSeparator(jsondeserializationcontext, jsonobject, depth + 1);
+                         boolean flag = GsonHelper.getAsBoolean(jsonobject, "interpret", false);
+ 
+                         if (jsonobject.has("block")) {
+@@ -300,7 +311,7 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
+                     }
+ 
+                     for (int j = 0; j < jsonarray2.size(); ++j) {
+-                        ((MutableComponent) object).append(this.deserialize(jsonarray2.get(j), type, jsondeserializationcontext));
++                        ((MutableComponent) object).append(this.deserialize(jsonarray2.get(j), jsondeserializationcontext, depth + 1));
+                     }
+                 }
+ 
+@@ -309,8 +320,13 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
+             }
+         }
+ 
+-        private Optional<Component> parseSeparator(Type type, JsonDeserializationContext context, JsonObject json) {
+-            return json.has("separator") ? Optional.of(this.deserialize(json.get("separator"), type, context)) : Optional.empty();
++        public MutableComponent deserialize(JsonElement jsonelement, Type type, JsonDeserializationContext jsondeserializationcontext) throws JsonParseException {
++            return this.deserialize(jsonelement, jsondeserializationcontext, 1);
++        }
++
++        private Optional<Component> parseSeparator(JsonDeserializationContext context, JsonObject json, int depth) {
++            return json.has("separator") ? Optional.of(this.deserialize(json.get("separator"), context, depth + 1)) : Optional.empty();
++            // Scissors end
+         }
+ 
+         private void serializeStyle(Style style, JsonObject json, JsonSerializationContext context) {
