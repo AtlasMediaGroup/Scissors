@@ -1,0 +1,98 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Allink <arclicious@vivaldi.net>
+Date: Fri, 2 Jun 2023 21:57:30 +0100
+Subject: [PATCH] Make annotation test pass
+
+
+diff --git a/src/main/java/me/totalfreedom/scissors/event/block/CommandBlockPlayerEditEvent.java b/src/main/java/me/totalfreedom/scissors/event/block/CommandBlockPlayerEditEvent.java
+index ce6f6cbbdc82dc0b4e9c9d1f35fa79465dd97867..eed9a93475aa32992dc28b6677a0fab154a4fa38 100644
+--- a/src/main/java/me/totalfreedom/scissors/event/block/CommandBlockPlayerEditEvent.java
++++ b/src/main/java/me/totalfreedom/scissors/event/block/CommandBlockPlayerEditEvent.java
+@@ -19,7 +19,7 @@ public class CommandBlockPlayerEditEvent extends Event implements Cancellable
+     private String newCommand;
+     private final CommandBlock commandBlock;
+ 
+-    public CommandBlockPlayerEditEvent(Player player, String oldCommand, String newCommand, CommandBlock commandBlock)
++    public CommandBlockPlayerEditEvent(@NotNull Player player, @NotNull String oldCommand, @NotNull String newCommand, @NotNull CommandBlock commandBlock)
+     {
+         this.player = player;
+         this.oldCommand = oldCommand;
+@@ -27,27 +27,27 @@ public class CommandBlockPlayerEditEvent extends Event implements Cancellable
+         this.commandBlock = commandBlock;
+     }
+ 
+-    public String getNewCommand()
++    public @NotNull String getNewCommand()
+     {
+         return this.newCommand;
+     }
+ 
+-    public String getOldCommand()
++    public @NotNull String getOldCommand()
+     {
+         return this.oldCommand;
+     }
+ 
+-    public void setNewCommand(final String newCommand)
++    public void setNewCommand(@NotNull String newCommand)
+     {
+         this.newCommand = newCommand;
+     }
+ 
+-    public Player getPlayer()
++    public @NotNull Player getPlayer()
+     {
+         return this.player;
+     }
+ 
+-    public CommandBlock getCommandBlock()
++    public @NotNull CommandBlock getCommandBlock()
+     {
+         return this.commandBlock;
+     }
+diff --git a/src/main/java/me/totalfreedom/scissors/event/block/CommandMinecartPlayerEditEvent.java b/src/main/java/me/totalfreedom/scissors/event/block/CommandMinecartPlayerEditEvent.java
+index 655814b19c1e2e8b25e133190664a250867ad6f2..9cc63909e8fb83984e4a0d0803e81a27cda65f88 100644
+--- a/src/main/java/me/totalfreedom/scissors/event/block/CommandMinecartPlayerEditEvent.java
++++ b/src/main/java/me/totalfreedom/scissors/event/block/CommandMinecartPlayerEditEvent.java
+@@ -20,7 +20,7 @@ public class CommandMinecartPlayerEditEvent extends Event implements Cancellable
+     private String newCommand;
+     private final CommandMinecart commandMinecart;
+ 
+-    public CommandMinecartPlayerEditEvent(Player player, String oldCommand, String newCommand, CommandMinecart commandMinecart)
++    public CommandMinecartPlayerEditEvent(@NotNull Player player, @NotNull String oldCommand, @NotNull String newCommand, @NotNull CommandMinecart commandMinecart)
+     {
+         this.player = player;
+         this.oldCommand = oldCommand;
+@@ -28,27 +28,27 @@ public class CommandMinecartPlayerEditEvent extends Event implements Cancellable
+         this.commandMinecart = commandMinecart;
+     }
+ 
+-    public String getNewCommand()
++    public @NotNull String getNewCommand()
+     {
+         return this.newCommand;
+     }
+ 
+-    public String getOldCommand()
++    public @NotNull String getOldCommand()
+     {
+         return this.oldCommand;
+     }
+ 
+-    public void setNewCommand(final String newCommand)
++    public void setNewCommand(@NotNull String newCommand)
+     {
+         this.newCommand = newCommand;
+     }
+ 
+-    public Player getPlayer()
++    public @NotNull Player getPlayer()
+     {
+         return this.player;
+     }
+ 
+-    public CommandMinecart getCommandMinecart()
++    public @NotNull CommandMinecart getCommandMinecart()
+     {
+         return this.commandMinecart;
+     }
