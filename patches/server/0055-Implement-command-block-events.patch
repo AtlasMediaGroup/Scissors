@@ -1,0 +1,86 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Allink <arclicious@vivaldi.net>
+Date: Fri, 2 Jun 2023 23:42:46 +0100
+Subject: [PATCH] Implement command block events
+
+
+diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+index 8ec188a09dd1d5150a25fdf18f49deac1593fb4d..0eb54b2b36df7870724e33d75d1d3f6d5492ffab 100644
+--- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+@@ -1,6 +1,8 @@
+ package net.minecraft.server.network;
+ 
+ import com.github.atlasmediagroup.scissors.ScissorsConfig;
++import com.github.atlasmediagroup.scissors.event.block.CommandBlockPlayerEditEvent;
++import com.github.atlasmediagroup.scissors.event.block.CommandMinecartPlayerEditEvent;
+ import com.github.atlasmediagroup.scissors.event.player.SpectatorTeleportEvent;
+ import com.google.common.collect.Lists;
+ import com.google.common.primitives.Floats;
+@@ -134,6 +136,7 @@ import net.minecraft.world.entity.player.ChatVisiblity;
+ import net.minecraft.world.entity.player.Inventory;
+ import net.minecraft.world.entity.projectile.AbstractArrow;
+ import net.minecraft.world.entity.vehicle.Boat;
++import net.minecraft.world.entity.vehicle.MinecartCommandBlock;
+ import net.minecraft.world.item.BlockItem;
+ import net.minecraft.world.item.BucketItem;
+ import net.minecraft.world.item.Item;
+@@ -186,6 +189,7 @@ import org.bukkit.craftbukkit.util.CraftMagicNumbers;
+ import org.bukkit.craftbukkit.util.LazyPlayerSet;
+ import org.bukkit.craftbukkit.util.Waitable;
+ import org.bukkit.entity.Player;
++import org.bukkit.entity.minecart.CommandMinecart;
+ import org.bukkit.event.Event;
+ import org.bukkit.event.block.Action;
+ import org.bukkit.event.block.SignChangeEvent;
+@@ -902,6 +906,21 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+                     this.player.level.getChunkAt(blockposition).setBlockEntity(tileentity);
+                 }
+ 
++                // Scissors start - Implement command block events
++                if (commandblocklistenerabstract instanceof org.bukkit.block.CommandBlock commandBlock)
++                {
++                    CommandBlockPlayerEditEvent event = new CommandBlockPlayerEditEvent(this.getCraftPlayer(), Objects.requireNonNullElse(commandblocklistenerabstract.getCommand(), ""), s, commandBlock);
++                    event.callEvent();
++
++                    if (event.isCancelled()) {
++                        return;
++                    }
++
++                    s = event.getNewCommand();
++                }
++
++                // Scissors end
++
+                 commandblocklistenerabstract.setCommand(s);
+                 commandblocklistenerabstract.setTrackOutput(flag);
+                 if (!flag) {
+@@ -933,7 +952,27 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+             BaseCommandBlock commandblocklistenerabstract = packet.getCommandBlock(this.player.level);
+ 
+             if (commandblocklistenerabstract != null) {
+-                commandblocklistenerabstract.setCommand(packet.getCommand());
++                // Scissors start - Implement command block events
++                String command = packet.getCommand();
++
++                if (commandblocklistenerabstract instanceof CommandMinecart commandMinecart)
++                {
++                    CommandMinecartPlayerEditEvent event = new CommandMinecartPlayerEditEvent(this.getCraftPlayer(), Objects.requireNonNullElse(commandblocklistenerabstract.getCommand(), ""), command, commandMinecart);
++                    event.callEvent();
++
++                    if (event.isCancelled()) {
++                        return;
++                    }
++
++                    command = event.getNewCommand();
++                }
++
++                commandblocklistenerabstract.setCommand(command);
++
++                // commandblocklistenerabstract.setCommand(packet.getCommand());
++
++                // Scissors end
++
+                 commandblocklistenerabstract.setTrackOutput(packet.isTrackOutput());
+                 if (!packet.isTrackOutput()) {
+                     commandblocklistenerabstract.setLastOutput((Component) null);
