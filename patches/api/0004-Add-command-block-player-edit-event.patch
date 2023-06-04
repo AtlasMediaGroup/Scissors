@@ -6,10 +6,10 @@ Subject: [PATCH] Add command block player edit event
 
 diff --git a/src/main/java/me/totalfreedom/scissors/event/block/CommandBlockPlayerEditEvent.java b/src/main/java/me/totalfreedom/scissors/event/block/CommandBlockPlayerEditEvent.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..eed9a93475aa32992dc28b6677a0fab154a4fa38
+index 0000000000000000000000000000000000000000..722f5839600954998cbbf799e68477d499d104c4
 --- /dev/null
 +++ b/src/main/java/me/totalfreedom/scissors/event/block/CommandBlockPlayerEditEvent.java
-@@ -0,0 +1,72 @@
+@@ -0,0 +1,77 @@
 +package me.totalfreedom.scissors.event.block;
 +
 +import org.bukkit.block.CommandBlock;
@@ -78,6 +78,11 @@ index 0000000000000000000000000000000000000000..eed9a93475aa32992dc28b6677a0fab1
 +
 +    @Override
 +    public @NotNull HandlerList getHandlers()
++    {
++        return handlers;
++    }
++
++    public static @NotNull HandlerList getHandlerList()
 +    {
 +        return handlers;
 +    }
