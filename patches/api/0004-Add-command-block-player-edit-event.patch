@@ -6,10 +6,10 @@ Subject: [PATCH] Add command block player edit event
 
 diff --git a/src/main/java/com/github/atlasmediagroup/scissors/event/block/CommandBlockPlayerEditEvent.java b/src/main/java/com/github/atlasmediagroup/scissors/event/block/CommandBlockPlayerEditEvent.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..b2d4c28f1f5b381498eae7486efa70bd92df9fc3
+index 0000000000000000000000000000000000000000..983dd3b25800d5f1fcc61415051bf7c28d0147bd
 --- /dev/null
 +++ b/src/main/java/com/github/atlasmediagroup/scissors/event/block/CommandBlockPlayerEditEvent.java
-@@ -0,0 +1,72 @@
+@@ -0,0 +1,77 @@
 +package com.github.atlasmediagroup.scissors.event.block;
 +
 +import org.bukkit.block.CommandBlock;
@@ -81,13 +81,18 @@ index 0000000000000000000000000000000000000000..b2d4c28f1f5b381498eae7486efa70bd
 +    {
 +        return handlers;
 +    }
++
++    public static @NotNull HandlerList getHandlerList()
++    {
++        return handlers;
++    }
 +}
 diff --git a/src/main/java/com/github/atlasmediagroup/scissors/event/block/CommandMinecartPlayerEditEvent.java b/src/main/java/com/github/atlasmediagroup/scissors/event/block/CommandMinecartPlayerEditEvent.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..19b37beb57c57112eb69b5a8504d0685f1940a64
+index 0000000000000000000000000000000000000000..2ecaad3d67d3a028a50e998d791de3a829197117
 --- /dev/null
 +++ b/src/main/java/com/github/atlasmediagroup/scissors/event/block/CommandMinecartPlayerEditEvent.java
-@@ -0,0 +1,73 @@
+@@ -0,0 +1,78 @@
 +package com.github.atlasmediagroup.scissors.event.block;
 +
 +import org.bukkit.block.CommandBlock;
@@ -157,6 +162,11 @@ index 0000000000000000000000000000000000000000..19b37beb57c57112eb69b5a8504d0685
 +
 +    @Override
 +    public @NotNull HandlerList getHandlers()
++    {
++        return handlers;
++    }
++
++    public static @NotNull HandlerList getHandlerList()
 +    {
 +        return handlers;
 +    }
