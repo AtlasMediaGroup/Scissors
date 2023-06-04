@@ -89,10 +89,10 @@ index 0000000000000000000000000000000000000000..722f5839600954998cbbf799e68477d4
 +}
 diff --git a/src/main/java/me/totalfreedom/scissors/event/block/CommandMinecartPlayerEditEvent.java b/src/main/java/me/totalfreedom/scissors/event/block/CommandMinecartPlayerEditEvent.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..9cc63909e8fb83984e4a0d0803e81a27cda65f88
+index 0000000000000000000000000000000000000000..4282f24deb87e52ee19a13b172ec80c6a6017e28
 --- /dev/null
 +++ b/src/main/java/me/totalfreedom/scissors/event/block/CommandMinecartPlayerEditEvent.java
-@@ -0,0 +1,73 @@
+@@ -0,0 +1,78 @@
 +package me.totalfreedom.scissors.event.block;
 +
 +import org.bukkit.block.CommandBlock;
@@ -162,6 +162,11 @@ index 0000000000000000000000000000000000000000..9cc63909e8fb83984e4a0d0803e81a27
 +
 +    @Override
 +    public @NotNull HandlerList getHandlers()
++    {
++        return handlers;
++    }
++
++    public static @NotNull HandlerList getHandlerList()
 +    {
 +        return handlers;
 +    }
