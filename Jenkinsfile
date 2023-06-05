@@ -20,6 +20,7 @@ pipeline {
                 sh """
                     #!/bin/sh
                     mv \${WORKSPACE}/build/libs/Scissors-paperclip-*.jar scissors-\${BUILD_NUMBER}.jar
+                    rm Scissors-bundler-*.jar
                     """
             }
         }
@@ -52,7 +53,7 @@ pipeline {
     }
     post {
         always {
-            archiveArtifacts artifacts: 'build/libs/scissors-${BUILD_NUMBER}.jar', fingerprint: true
+            archiveArtifacts artifacts: 'build/libs/scissors-*.jar', fingerprint: true
             junit 'Scissors-Server/build/test-results/test/*.xml'
             junit 'Scissors-API/build/test-results/test/*.xml'
             cleanWs()
