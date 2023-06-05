@@ -6,7 +6,6 @@ pipeline {
     stages {
         stage('applyPatches') {
             steps {
-                scmSkip(deleteBuild: true)
                 withGradle {
                     sh './gradlew applyPatches --no-daemon --refresh-dependencies'
                 }
