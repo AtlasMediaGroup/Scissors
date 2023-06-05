@@ -17,6 +17,10 @@ pipeline {
                 withGradle {
                     sh './gradlew createReobfPaperclipJar --no-daemon --refresh-dependencies'
                 }
+                sh """
+                    #!/bin/sh
+                    mv \${WORKSPACE}/build/libs/Scissors-paperclip-*.jar scissors-\${BUILD_NUMBER}.jar
+                    """
             }
         }
         stage('test') {
@@ -48,7 +52,7 @@ pipeline {
     }
     post {
         always {
-            archiveArtifacts artifacts: 'build/libs/Scissors-paperclip-*.jar', fingerprint: true
+            archiveArtifacts artifacts: 'build/libs/scissors-${BUILD_NUMBER}.jar', fingerprint: true
             junit 'Scissors-Server/build/test-results/test/*.xml'
             junit 'Scissors-API/build/test-results/test/*.xml'
             cleanWs()
