@@ -20,7 +20,7 @@ pipeline {
                 sh """
                     #!/bin/sh
                     mv \${WORKSPACE}/build/libs/Scissors-paperclip-*.jar scissors-\${BUILD_NUMBER}.jar
-                    rm Scissors-bundler-*.jar
+                    rm \${WORKSPACE}/build/libs/Scissors-bundler-*.jar
                     """
             }
         }
