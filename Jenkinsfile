@@ -6,7 +6,6 @@ pipeline {
     stages {
         stage('applyPatches') {
             steps {
-                scmSkip(deleteBuild: true)
                 withGradle {
                     sh './gradlew applyPatches --no-daemon --refresh-dependencies'
                 }
@@ -17,6 +16,10 @@ pipeline {
                 withGradle {
                     sh './gradlew paperclipJar --no-daemon --refresh-dependencies'
                 }
+                sh """
+                    #!/bin/sh
+                    mv \${WORKSPACE}/build/libs/Scissors-*.jar \${WORKSPACE}/build/libs/scissors-\${BUILD_NUMBER}.jar
+                    """
             }
         }
         stage('test') {
