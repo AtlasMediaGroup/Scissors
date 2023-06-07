@@ -18,7 +18,7 @@ pipeline {
                 }
                 sh """
                     #!/bin/sh
-                    mv \${WORKSPACE}/build/libs/Scissors-*.jar \${WORKSPACE}/build/libs/scissors-\${BUILD_NUMBER}.jar
+                    mv \${WORKSPACE}/build/libs/Scissors-*.jar \${WORKSPACE}/build/libs/scissors-\${BRANCH_NAME}-\${BUILD_NUMBER}.jar
                     """
             }
         }
