@@ -121,7 +121,7 @@ index 0000000000000000000000000000000000000000..b724baaef8d565e41db1af6393d0890e
 +}
 diff --git a/src/main/java/me/totalfreedom/scissors/PositionUtility.java b/src/main/java/me/totalfreedom/scissors/PositionUtility.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..9e33ad84e50c7e2491aa883f905323f3ad2b070c
+index 0000000000000000000000000000000000000000..c54535042a7ac12fe46b3b37db8d7b116e9469d5
 --- /dev/null
 +++ b/src/main/java/me/totalfreedom/scissors/PositionUtility.java
 @@ -0,0 +1,83 @@
@@ -175,7 +175,7 @@ index 0000000000000000000000000000000000000000..9e33ad84e50c7e2491aa883f905323f3
 +
 +    public static BlockPos getValidBlockPos(BlockPos blockPos, Entity entity)
 +    {
-+        final Level level = entity.level;
++        final Level level = entity.level();
 +
 +        try
 +        {
