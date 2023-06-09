@@ -32,7 +32,7 @@ pipeline {
         }
         stage('publish') {
             when {
-                branch "1.19.4"
+                branch "1.20"
             }
             steps {
                 script {
