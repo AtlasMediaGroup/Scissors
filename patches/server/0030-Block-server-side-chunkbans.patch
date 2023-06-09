@@ -1,18 +1,19 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: ayunami2000 <spwilliamsiam@gmail.com>
-Date: Fri, 17 Jun 2022 15:28:43 -0500
+From: Telesphoreo <me@telesphoreo.me>
+Date: Thu, 8 Jun 2023 19:41:10 -0500
 Subject: [PATCH] Block server side chunkbans
 
 
 diff --git a/src/main/java/net/minecraft/network/PacketEncoder.java b/src/main/java/net/minecraft/network/PacketEncoder.java
-index fbfadeb83719b81f42724e79c59e92ed88fdece7..d9ed02aa0dcec82bdf9d42c224694773b9307cfe 100644
+index fbfadeb83719b81f42724e79c59e92ed88fdece7..bcb9d99359fb3e03c86d7429d9bcfe63b6c0f5d5 100644
 --- a/src/main/java/net/minecraft/network/PacketEncoder.java
 +++ b/src/main/java/net/minecraft/network/PacketEncoder.java
-@@ -6,9 +6,26 @@ import io.netty.channel.ChannelHandlerContext;
+@@ -6,9 +6,18 @@ import io.netty.channel.ChannelHandlerContext;
  import io.netty.handler.codec.MessageToByteEncoder;
  import io.papermc.paper.adventure.PaperAdventure; // Paper
  import java.io.IOException;
 +import java.util.Collections;
++
 +import net.minecraft.ChatFormatting;
 +import net.minecraft.core.NonNullList;
 +import net.minecraft.nbt.CompoundTag;
@@ -20,22 +21,13 @@ index fbfadeb83719b81f42724e79c59e92ed88fdece7..d9ed02aa0dcec82bdf9d42c224694773
 +import net.minecraft.network.chat.SignedMessageBody;
  import net.minecraft.network.protocol.Packet;
  import net.minecraft.network.protocol.PacketFlow;
-+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-+import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
-+import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
-+import net.minecraft.network.protocol.game.ClientboundDisguisedChatPacket;
-+import net.minecraft.network.protocol.game.ClientboundLevelChunkPacketData;
-+import net.minecraft.network.protocol.game.ClientboundMapItemDataPacket;
-+import net.minecraft.network.protocol.game.ClientboundPlayerChatPacket;
-+import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
-+import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
-+import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
++import net.minecraft.network.protocol.game.*;
  import net.minecraft.util.profiling.jfr.JvmProfiler;
 +import net.minecraft.world.item.ItemStack;
  import org.slf4j.Logger;
  
  public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
-@@ -19,6 +36,23 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
+@@ -19,6 +28,23 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
          this.flow = side;
      }
  
@@ -59,13 +51,13 @@ index fbfadeb83719b81f42724e79c59e92ed88fdece7..d9ed02aa0dcec82bdf9d42c224694773
      protected void encode(ChannelHandlerContext channelHandlerContext, Packet<?> packet, ByteBuf byteBuf) throws Exception {
          ConnectionProtocol connectionProtocol = channelHandlerContext.channel().attr(Connection.ATTRIBUTE_PROTOCOL).get();
          if (connectionProtocol == null) {
-@@ -33,38 +67,87 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
+@@ -33,38 +59,66 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
                  throw new IOException("Can't serialize unregistered packet");
              } else {
                  FriendlyByteBuf friendlyByteBuf = new FriendlyByteBuf(byteBuf);
 -                friendlyByteBuf.writeVarInt(i);
 -                friendlyByteBuf.adventure$locale = channelHandlerContext.channel().attr(PaperAdventure.LOCALE_ATTRIBUTE).get(); // Paper
--
+ 
 +                // Scissors start
 +                int k;
                  try {
@@ -107,46 +99,26 @@ index fbfadeb83719b81f42724e79c59e92ed88fdece7..d9ed02aa0dcec82bdf9d42c224694773
      }
  
 +    // Scissors start
-+    private static Packet capPacket(Packet packet, int i)
-+    {
-+        if (packet instanceof ClientboundBlockEntityDataPacket blockEntityDataPacket)
-+        {
++    private static Packet capPacket(Packet packet, int i) {
++        if (packet instanceof ClientboundBlockEntityDataPacket blockEntityDataPacket) {
 +            packet = new ClientboundBlockEntityDataPacket(blockEntityDataPacket.getPos(), blockEntityDataPacket.getType(), new CompoundTag());
-+        }
-+        else if (packet instanceof ClientboundLevelChunkPacketData chunkPacket)
-+        {
++        } else if (packet instanceof ClientboundLevelChunkPacketData chunkPacket) {
 +            chunkPacket.clearNBT();
-+        }
-+        else if (packet instanceof ClientboundSetEntityDataPacket)
-+        {
++        } else if (packet instanceof ClientboundSetEntityDataPacket) {
 +            return null; // Skip
-+        }
-+        else if (packet instanceof ClientboundContainerSetContentPacket containerSetContentPacket)
-+        {
++        } else if (packet instanceof ClientboundContainerSetContentPacket containerSetContentPacket) {
 +            packet = new ClientboundContainerSetContentPacket(containerSetContentPacket.getContainerId(), containerSetContentPacket.getStateId(), NonNullList.create(), ItemStack.EMPTY);
-+        }
-+        else if (packet instanceof ClientboundSetEquipmentPacket setEquipmentPacket)
-+        {
++        } else if (packet instanceof ClientboundSetEquipmentPacket setEquipmentPacket) {
 +            packet = new ClientboundSetEquipmentPacket(setEquipmentPacket.getEntity(), Collections.emptyList());
-+        }
-+        else if (packet instanceof ClientboundContainerSetSlotPacket containerSetSlotPacket)
-+        {
++        } else if (packet instanceof ClientboundContainerSetSlotPacket containerSetSlotPacket) {
 +            packet = new ClientboundContainerSetSlotPacket(containerSetSlotPacket.getContainerId(), containerSetSlotPacket.getStateId(), containerSetSlotPacket.getSlot(), ItemStack.EMPTY);
-+        }
-+        else if (packet instanceof ClientboundMapItemDataPacket mapItemDataPacket)
-+        {
++        } else if (packet instanceof ClientboundMapItemDataPacket mapItemDataPacket) {
 +            packet = new ClientboundMapItemDataPacket(mapItemDataPacket.getMapId(), mapItemDataPacket.getScale(), mapItemDataPacket.isLocked(), null, null);
-+        }
-+        else if (packet instanceof ClientboundSystemChatPacket)
-+        {
++        } else if (packet instanceof ClientboundSystemChatPacket) {
 +            return null;
-+        }
-+        else if (packet instanceof ClientboundDisguisedChatPacket)
-+        {
++        } else if (packet instanceof ClientboundDisguisedChatPacket) {
 +            return null;
-+        }
-+        else if (packet instanceof ClientboundPlayerChatPacket playerChatPacket)
-+        {
++        } else if (packet instanceof ClientboundPlayerChatPacket playerChatPacket) {
 +            final SignedMessageBody.Packed body = playerChatPacket.body();
 +            packet = new ClientboundPlayerChatPacket(playerChatPacket.sender(), // Not sending this packet results in a kick when someone says something.
 +                playerChatPacket.index(),
@@ -156,9 +128,7 @@ index fbfadeb83719b81f42724e79c59e92ed88fdece7..d9ed02aa0dcec82bdf9d42c224694773
 +                playerChatPacket.filterMask(),
 +                playerChatPacket.chatType()
 +            );
-+        }
-+        else
-+        {
++        } else {
 +            LOGGER.error("Packet with ID {} was too large and was not caught. Please report this to the Scissors developers.", i);
 +            return null;
 +        }
@@ -184,21 +154,20 @@ index 3944852921335c78a04a9dc301882ab5b152b1ed..96ee53c7cc862e059328c5cdf5e07f30
          this.type = blockEntityType;
          this.tag = nbt.isEmpty() ? null : nbt;
 diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java
-index f3fa2678796c33f3a408a02a1995ad117eac9169..c8dd976240aa4f640bb2d223d472f81fdd8dcf7c 100644
+index bd439aef96aeecb9c72b5f50d748d231cccbc970..fda495bfefac4c3b147f5f6b6eb18ad5d103fef2 100644
 --- a/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java
 +++ b/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java
-@@ -33,6 +33,14 @@ public class ClientboundLevelChunkPacketData {
+@@ -33,6 +33,13 @@ public class ClientboundLevelChunkPacketData {
      }
      // Paper end
  
 +    // Scissors start
-+    public void clearNBT()
-+    {
++    public void clearNBT() {
 +        this.blockEntitiesData.clear();
 +        this.extraPackets.clear();
 +    }
 +    // Scissors end
 +
-     // Paper start - Anti-Xray - Add chunk packet info
-     @Deprecated @io.papermc.paper.annotation.DoNotUse public ClientboundLevelChunkPacketData(LevelChunk chunk) { this(chunk, null); }
-     public ClientboundLevelChunkPacketData(LevelChunk chunk, com.destroystokyo.paper.antixray.ChunkPacketInfo<net.minecraft.world.level.block.state.BlockState> chunkPacketInfo) {
+     public ClientboundLevelChunkPacketData(LevelChunk chunk) {
+         this.heightmaps = new CompoundTag();
+ 

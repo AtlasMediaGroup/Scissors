@@ -110,10 +110,10 @@ index 97a2657bc98d41c3c1e376b266d2c85f685acc88..7b6476455e095eed15c92797ce3a3e11
                      }
                  }).reduce((accumulator, current) -> {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 280ee1838106201f5e3ba7753caced6d030f7e55..ade4ed2f219d32050a372283eaebe75f9014ec78 100644
+index 92202262eff01ae3bbeff0e6ebdcf26ad613c169..38c027c0fbddf58136b7d67eb7156403a79de4d1 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -2354,12 +2354,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -2473,12 +2473,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
                      this.setRot(this.getYRot(), this.getXRot());
                      if (nbt.contains("CustomName", 8)) {
                          String s = nbt.getString("CustomName");
@@ -128,7 +128,7 @@ index 280ee1838106201f5e3ba7753caced6d030f7e55..ade4ed2f219d32050a372283eaebe75f
  
                      this.setCustomNameVisible(nbt.getBoolean("CustomNameVisible"));
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java
-index ef740d1ad6352ca4af299001a081b720bc472d2e..f2325c0c475bb465f5275f78c71949648a860d0c 100644
+index 59246e24558569f7f50b4d4d508616798091c888..5005a0ad5f703727ea9c618ae4b769a77d5655b5 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java
 @@ -410,7 +410,7 @@ public class BeaconBlockEntity extends BlockEntity implements MenuProvider, Name

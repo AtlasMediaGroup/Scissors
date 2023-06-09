@@ -5,10 +5,10 @@ Subject: [PATCH] Reset large tags
 
 
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index a7533d18fe6148d7bfd3106b9cdcb6fa3347cf7c..135c1c3013bd75673a8352b9386679195eb681d3 100644
+index 103ad5f373a59fadb4783892579f3e681a8fd596..ab1065ce7b626ad242905dbbfec98839fd0cd9c6 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
-@@ -20,6 +20,7 @@ import java.util.function.Predicate;
+@@ -21,6 +21,7 @@ import java.util.function.Predicate;
  import java.util.stream.Collectors;
  import java.util.stream.Stream;
  import javax.annotation.Nullable;
@@ -16,7 +16,7 @@ index a7533d18fe6148d7bfd3106b9cdcb6fa3347cf7c..135c1c3013bd75673a8352b938667919
  import net.minecraft.ChatFormatting;
  import net.minecraft.Util;
  import net.minecraft.advancements.CriteriaTriggers;
-@@ -258,6 +259,12 @@ public final class ItemStack {
+@@ -253,6 +254,12 @@ public final class ItemStack {
  
      // CraftBukkit - break into own method
      private void load(CompoundTag nbttagcompound) {
@@ -29,7 +29,7 @@ index a7533d18fe6148d7bfd3106b9cdcb6fa3347cf7c..135c1c3013bd75673a8352b938667919
          this.item = (Item) BuiltInRegistries.ITEM.get(new ResourceLocation(nbttagcompound.getString("id")));
          this.count = nbttagcompound.getByte("Count");
          if (nbttagcompound.contains("tag", 10)) {
-@@ -538,7 +545,11 @@ public final class ItemStack {
+@@ -546,7 +553,11 @@ public final class ItemStack {
          nbt.putString("id", minecraftkey == null ? "minecraft:air" : minecraftkey.toString());
          nbt.putByte("Count", (byte) this.count);
          if (this.tag != null) {
@@ -42,7 +42,7 @@ index a7533d18fe6148d7bfd3106b9cdcb6fa3347cf7c..135c1c3013bd75673a8352b938667919
          }
  
          return nbt;
-@@ -874,6 +885,9 @@ public final class ItemStack {
+@@ -876,6 +887,9 @@ public final class ItemStack {
      // Paper end
  
      public void setTag(@Nullable CompoundTag nbt) {

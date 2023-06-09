@@ -5,10 +5,10 @@ Subject: [PATCH] Limit map decoration count
 
 
 diff --git a/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java b/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java
-index 25a64250ce57fe4cd90f8b95d1e003d961662152..60e013d418b1aa8c154ca9474186191aa5c9041d 100644
+index 3b12030b49b1c539684d75ca3896eb498400ef99..a1f042e5329343489cf30e436a8f553d39e5a6e4 100644
 --- a/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java
 +++ b/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java
-@@ -356,6 +356,12 @@ public class MapItemSavedData extends SavedData {
+@@ -354,6 +354,12 @@ public class MapItemSavedData extends SavedData {
      }
  
      private void addDecoration(MapDecoration.Type type, @Nullable LevelAccessor world, String key, double x, double z, double rotation, @Nullable Component text) {

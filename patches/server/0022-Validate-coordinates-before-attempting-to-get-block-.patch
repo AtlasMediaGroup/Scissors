@@ -6,10 +6,10 @@ Subject: [PATCH] Validate coordinates before attempting to get block entities
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index aa287d7f37f38d938d195114408cb6dbda59063d..80384bf470da2da2d6214a9d3429c8556aa18320 100644
+index 1288f651fa83d5ab99a88858f52a6d3212284df0..61f6b51b9d868ae6bd79185cc066976a094da8ce 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -1922,6 +1922,18 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -1920,6 +1920,18 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
      }
      // Spigot end
  
@@ -27,27 +27,27 @@ index aa287d7f37f38d938d195114408cb6dbda59063d..80384bf470da2da2d6214a9d3429c855
 +
      @Override
      public void handleUseItemOn(ServerboundUseItemOnPacket packet) {
-         PacketUtils.ensureRunningOnSameThread(packet, this, this.player.getLevel());
-@@ -3345,17 +3357,24 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+         PacketUtils.ensureRunningOnSameThread(packet, this, this.player.serverLevel());
+@@ -3344,17 +3356,24 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
              if (!itemstack.isEmpty() && nbttagcompound != null && nbttagcompound.contains("x") && nbttagcompound.contains("y") && nbttagcompound.contains("z") && this.player.getBukkitEntity().hasPermission("minecraft.nbt.copy")) { // Spigot
                  BlockPos blockposition = BlockEntity.getPosFromTag(nbttagcompound);
  
--                if (this.player.level.isLoaded(blockposition)) {
+-                if (this.player.level().isLoaded(blockposition)) {
 -                    // Paper start
 -                    BlockEntity tileentity = null;
--                    if (this.player.distanceToSqr(blockposition.getX(), blockposition.getY(), blockposition.getZ()) < 32 * 32 && this.player.getLevel().isLoadedAndInBounds(blockposition)) {
--                        tileentity = this.player.level.getBlockEntity(blockposition);
+-                    if (this.player.distanceToSqr(blockposition.getX(), blockposition.getY(), blockposition.getZ()) < 32 * 32 && this.player.serverLevel().isLoadedAndInBounds(blockposition)) {
+-                        tileentity = this.player.level().getBlockEntity(blockposition);
 -                    }
 -                    // Paper end
-+                if (this.player.level.isLoaded(blockposition))
++                if (this.player.level().isLoaded(blockposition))
 +                {
 +                    // Scissors start - Validate coordinates and whether the player can reach them
 +                    if (Level.isInSpawnableBounds(blockposition) && !isOutsideOfReach(blockposition.getX(), blockposition.getY(), blockposition.getZ()))
 +                    {
 +                        BlockEntity tileentity = null;
-+                        if (this.player.distanceToSqr(blockposition.getX(), blockposition.getY(), blockposition.getZ()) < 32 * 32 && this.player.getLevel().isLoadedAndInBounds(blockposition))
++                        if (this.player.distanceToSqr(blockposition.getX(), blockposition.getY(), blockposition.getZ()) < 32 * 32 && this.player.serverLevel().isLoadedAndInBounds(blockposition))
 +                        {
-+                            tileentity = this.player.level.getBlockEntity(blockposition);
++                            tileentity = this.player.level().getBlockEntity(blockposition);
 +                        }
 +                        // Paper end
  

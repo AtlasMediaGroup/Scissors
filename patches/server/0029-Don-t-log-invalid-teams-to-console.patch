@@ -1,15 +1,15 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Allink <arclicious@vivaldi.net>
-Date: Tue, 17 May 2022 05:57:52 +0100
+From: Telesphoreo <me@telesphoreo.me>
+Date: Thu, 8 Jun 2023 19:32:11 -0500
 Subject: [PATCH] Don't log invalid teams to console
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 36b1fcc106909aa7305d63bb4710b4330cb9bc6a..795ebbea0c0100cd05661caad74ed2ae1a32e045 100644
+index 468f64afb7e9b3ef579205d3beea025deb31b460..71a32f8dfdf043f55f092225a13884ae8935e67c 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -844,7 +844,9 @@ public abstract class LivingEntity extends Entity implements Attackable {
-             boolean flag = scoreboardteam != null && this.level.getScoreboard().addPlayerToTeam(this.getStringUUID(), scoreboardteam);
+@@ -862,7 +862,9 @@ public abstract class LivingEntity extends Entity implements Attackable {
+             boolean flag = scoreboardteam != null && this.level().getScoreboard().addPlayerToTeam(this.getStringUUID(), scoreboardteam);
  
              if (!flag) {
 -                LivingEntity.LOGGER.warn("Unable to add mob to team \"{}\" (that team probably doesn't exist)", s);

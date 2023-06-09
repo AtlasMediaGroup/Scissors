@@ -5,7 +5,7 @@ Subject: [PATCH] Build changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 4f2fa65ade89c5703451dad4f80eeef162b277d1..9c1dc30f351b62bf7f527afed9da0021b4234aaf 100644
+index a3a76b9b7efa773117d2ee1ce53ef784b09b277d..fad5e021f1282cd478f6ce484edbc135494b81b3 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -7,8 +7,10 @@ plugins {
@@ -15,7 +15,7 @@ index 4f2fa65ade89c5703451dad4f80eeef162b277d1..9c1dc30f351b62bf7f527afed9da0021
 -    implementation(project(":paper-api"))
 -    implementation(project(":paper-mojangapi"))
 +    implementation(project(":Scissors-API"))
-+    implementation("io.papermc.paper:paper-mojangapi:1.19.4-R0.1-SNAPSHOT") {
++    implementation("io.papermc.paper:paper-mojangapi:1.20-R0.1-SNAPSHOT") {
 +        exclude("io.papermc.paper", "paper-api")
 +    }
      // Paper start
@@ -51,10 +51,10 @@ index 4f2fa65ade89c5703451dad4f80eeef162b277d1..9c1dc30f351b62bf7f527afed9da0021
      standardInput = System.`in`
      workingDir = rootProject.layout.projectDirectory
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 9f15d9dbdfa74a0640b1a2b4ff695609d4758a4c..c048169628a53462baf2e418136459719b2ac709 100644
+index fb82bb52f219e7683fe1d3c0fb3acbe2251de8d4..0f9928bf68f8bc5abfe02f41c98c63888987d9b9 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1682,7 +1682,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1681,7 +1681,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
@@ -64,7 +64,7 @@ index 9f15d9dbdfa74a0640b1a2b4ff695609d4758a4c..c048169628a53462baf2e41813645971
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 9f2536d9a73bdb15b5b3004d4da79ca32cee205b..c5e22893b1a570e582fc4d0c36a04470639411d9 100644
+index aefbb6a3f49a74a4c8fd004aa6a4ab1ab907e878..777b727a360683a72cef8c06ab7ab1439d69ac0a 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -262,7 +262,7 @@ import javax.annotation.Nullable; // Paper
