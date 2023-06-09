@@ -50,6 +50,46 @@ index 4f2fa65ade89c5703451dad4f80eeef162b277d1..9c1dc30f351b62bf7f527afed9da0021
      mainClass.set("org.bukkit.craftbukkit.Main")
      standardInput = System.`in`
      workingDir = rootProject.layout.projectDirectory
+diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
+index 4b002e8b75d117b726b0de274a76d3596fce015b..5ff11b9bcef76cb767f0b03ffc326d3f7a361371 100644
+--- a/src/main/java/com/destroystokyo/paper/Metrics.java
++++ b/src/main/java/com/destroystokyo/paper/Metrics.java
+@@ -593,7 +593,7 @@ public class Metrics {
+             boolean logFailedRequests = config.getBoolean("logFailedRequests", false);
+             // Only start Metrics, if it's enabled in the config
+             if (config.getBoolean("enabled", true)) {
+-                Metrics metrics = new Metrics("Paper", serverUUID, logFailedRequests, Bukkit.getLogger());
++                Metrics metrics = new Metrics("Scissors", serverUUID, logFailedRequests, Bukkit.getLogger());
+ 
+                 metrics.addCustomChart(new Metrics.SimplePie("minecraft_version", () -> {
+                     String minecraftVersion = Bukkit.getVersion();
+@@ -607,11 +607,11 @@ public class Metrics {
+                 final String implVersion = org.bukkit.craftbukkit.Main.class.getPackage().getImplementationVersion();
+                 if (implVersion != null) {
+                     final String buildOrHash = implVersion.substring(implVersion.lastIndexOf('-') + 1);
+-                    paperVersion = "git-Paper-%s-%s".formatted(Bukkit.getServer().getMinecraftVersion(), buildOrHash);
++                    paperVersion = "git-Scissors-%s-%s".formatted(Bukkit.getServer().getMinecraftVersion(), buildOrHash);
+                 } else {
+                     paperVersion = "unknown";
+                 }
+-                metrics.addCustomChart(new Metrics.SimplePie("paper_version", () -> paperVersion));
++                metrics.addCustomChart(new Metrics.SimplePie("scissors_version", () -> paperVersion));
+ 
+                 metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
+                     Map<String, Map<String, Integer>> map = new HashMap<>();
+diff --git a/src/main/java/com/destroystokyo/paper/console/PaperConsole.java b/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
+index c5d5648f4ca603ef2b1df723b58f9caf4dd3c722..2fbb5fc19e6d7f3767c7c6eedcbc6af2b0877ae5 100644
+--- a/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
++++ b/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
+@@ -17,7 +17,7 @@ public final class PaperConsole extends SimpleTerminalConsole {
+     @Override
+     protected LineReader buildReader(LineReaderBuilder builder) {
+         builder
+-                .appName("Paper")
++                .appName("Scissors")
+                 .variable(LineReader.HISTORY_FILE, java.nio.file.Paths.get(".console_history"))
+                 .completer(new ConsoleCommandCompleter(this.server))
+                 .option(LineReader.Option.COMPLETE_IN_WORD, true);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
 index 9f15d9dbdfa74a0640b1a2b4ff695609d4758a4c..c048169628a53462baf2e418136459719b2ac709 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
