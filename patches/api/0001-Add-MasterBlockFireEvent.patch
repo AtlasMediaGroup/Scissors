@@ -4,13 +4,13 @@ Date: Mon, 4 Jul 2022 16:44:35 +0100
 Subject: [PATCH] Add MasterBlockFireEvent
 
 
-diff --git a/src/main/java/com/github/atlasmediagroup/scissors/event/block/MasterBlockFireEvent.java b/src/main/java/com/github/atlasmediagroup/scissors/event/block/MasterBlockFireEvent.java
+diff --git a/src/main/java/me/totalfreedom/scissors/event/block/MasterBlockFireEvent.java b/src/main/java/me/totalfreedom/scissors/event/block/MasterBlockFireEvent.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..a24cb52a5af62012c5d5acc29e4c3558e92ae572
+index 0000000000000000000000000000000000000000..812e6ae9f1c8eb9558e5109c522d3ce3a7deb35c
 --- /dev/null
-+++ b/src/main/java/com/github/atlasmediagroup/scissors/event/block/MasterBlockFireEvent.java
++++ b/src/main/java/me/totalfreedom/scissors/event/block/MasterBlockFireEvent.java
 @@ -0,0 +1,51 @@
-+package com.github.atlasmediagroup.scissors.event.block;
++package me.totalfreedom.scissors.event.block;
 +
 +import org.bukkit.Location;
 +import org.bukkit.event.Cancellable;
