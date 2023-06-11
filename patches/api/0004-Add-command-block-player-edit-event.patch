@@ -1,0 +1,173 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Allink <arclicious@vivaldi.net>
+Date: Fri, 2 Jun 2023 20:42:02 +0100
+Subject: [PATCH] Add command block player edit event
+
+
+diff --git a/src/main/java/me/totalfreedom/scissors/event/block/CommandBlockPlayerEditEvent.java b/src/main/java/me/totalfreedom/scissors/event/block/CommandBlockPlayerEditEvent.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..722f5839600954998cbbf799e68477d499d104c4
+--- /dev/null
++++ b/src/main/java/me/totalfreedom/scissors/event/block/CommandBlockPlayerEditEvent.java
+@@ -0,0 +1,77 @@
++package me.totalfreedom.scissors.event.block;
++
++import org.bukkit.block.CommandBlock;
++import org.bukkit.entity.Player;
++import org.bukkit.event.Cancellable;
++import org.bukkit.event.Event;
++import org.bukkit.event.HandlerList;
++import org.jetbrains.annotations.NotNull;
++
++/**
++ * Called when a command block is modified by a player
++ */
++public class CommandBlockPlayerEditEvent extends Event implements Cancellable
++{
++    private static final HandlerList handlers = new HandlerList();
++    private boolean cancelled;
++    private final Player player;
++    private final String oldCommand;
++    private String newCommand;
++    private final CommandBlock commandBlock;
++
++    public CommandBlockPlayerEditEvent(@NotNull Player player, @NotNull String oldCommand, @NotNull String newCommand, @NotNull CommandBlock commandBlock)
++    {
++        this.player = player;
++        this.oldCommand = oldCommand;
++        this.newCommand = newCommand;
++        this.commandBlock = commandBlock;
++    }
++
++    public @NotNull String getNewCommand()
++    {
++        return this.newCommand;
++    }
++
++    public @NotNull String getOldCommand()
++    {
++        return this.oldCommand;
++    }
++
++    public void setNewCommand(@NotNull String newCommand)
++    {
++        this.newCommand = newCommand;
++    }
++
++    public @NotNull Player getPlayer()
++    {
++        return this.player;
++    }
++
++    public @NotNull CommandBlock getCommandBlock()
++    {
++        return this.commandBlock;
++    }
++
++    @Override
++    public boolean isCancelled()
++    {
++        return this.cancelled;
++    }
++
++    @Override
++    public void setCancelled(boolean cancel)
++    {
++        this.cancelled = cancel;
++    }
++
++    @Override
++    public @NotNull HandlerList getHandlers()
++    {
++        return handlers;
++    }
++
++    public static @NotNull HandlerList getHandlerList()
++    {
++        return handlers;
++    }
++}
+diff --git a/src/main/java/me/totalfreedom/scissors/event/block/CommandMinecartPlayerEditEvent.java b/src/main/java/me/totalfreedom/scissors/event/block/CommandMinecartPlayerEditEvent.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..4282f24deb87e52ee19a13b172ec80c6a6017e28
+--- /dev/null
++++ b/src/main/java/me/totalfreedom/scissors/event/block/CommandMinecartPlayerEditEvent.java
+@@ -0,0 +1,78 @@
++package me.totalfreedom.scissors.event.block;
++
++import org.bukkit.block.CommandBlock;
++import org.bukkit.entity.Player;
++import org.bukkit.entity.minecart.CommandMinecart;
++import org.bukkit.event.Cancellable;
++import org.bukkit.event.Event;
++import org.bukkit.event.HandlerList;
++import org.jetbrains.annotations.NotNull;
++
++/**
++ * Called when a command block is modified by a player
++ */
++public class CommandMinecartPlayerEditEvent extends Event implements Cancellable
++{
++    private static final HandlerList handlers = new HandlerList();
++    private boolean cancelled;
++    private final Player player;
++    private final String oldCommand;
++    private String newCommand;
++    private final CommandMinecart commandMinecart;
++
++    public CommandMinecartPlayerEditEvent(@NotNull Player player, @NotNull String oldCommand, @NotNull String newCommand, @NotNull CommandMinecart commandMinecart)
++    {
++        this.player = player;
++        this.oldCommand = oldCommand;
++        this.newCommand = newCommand;
++        this.commandMinecart = commandMinecart;
++    }
++
++    public @NotNull String getNewCommand()
++    {
++        return this.newCommand;
++    }
++
++    public @NotNull String getOldCommand()
++    {
++        return this.oldCommand;
++    }
++
++    public void setNewCommand(@NotNull String newCommand)
++    {
++        this.newCommand = newCommand;
++    }
++
++    public @NotNull Player getPlayer()
++    {
++        return this.player;
++    }
++
++    public @NotNull CommandMinecart getCommandMinecart()
++    {
++        return this.commandMinecart;
++    }
++
++    @Override
++    public boolean isCancelled()
++    {
++        return this.cancelled;
++    }
++
++    @Override
++    public void setCancelled(boolean cancel)
++    {
++        this.cancelled = cancel;
++    }
++
++    @Override
++    public @NotNull HandlerList getHandlers()
++    {
++        return handlers;
++    }
++
++    public static @NotNull HandlerList getHandlerList()
++    {
++        return handlers;
++    }
++}

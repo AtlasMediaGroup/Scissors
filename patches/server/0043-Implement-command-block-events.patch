@@ -1,0 +1,74 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Telesphoreo <me@telesphoreo.me>
+Date: Sun, 11 Jun 2023 00:00:20 -0500
+Subject: [PATCH] Implement command block events
+
+
+diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+index 2e6e1af5244202e0bc77b443f089b4f3016be8ac..f1f17e33cddf23fffae96d60bfd92934b6ab3c5a 100644
+--- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+@@ -25,6 +25,8 @@ import java.util.stream.Collectors;
+ import java.util.stream.Stream;
+ import javax.annotation.Nullable;
+ 
++import me.totalfreedom.scissors.event.block.CommandBlockPlayerEditEvent;
++import me.totalfreedom.scissors.event.block.CommandMinecartPlayerEditEvent;
+ import net.kyori.adventure.text.format.NamedTextColor;
+ import net.minecraft.ChatFormatting;
+ import net.minecraft.CrashReport;
+@@ -156,6 +158,7 @@ import net.minecraft.world.phys.shapes.BooleanOp;
+ import net.minecraft.world.phys.shapes.Shapes;
+ import net.minecraft.world.phys.shapes.VoxelShape;
+ import org.apache.commons.lang3.StringUtils;
++import org.bukkit.entity.minecart.CommandMinecart;
+ import org.slf4j.Logger;
+ 
+ // CraftBukkit start
+@@ -916,6 +919,19 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+                     this.player.level.getChunkAt(blockposition).setBlockEntity(tileentity);
+                 }
+ 
++                // Scissors start - Implement command block events
++                if (commandblocklistenerabstract instanceof org.bukkit.block.CommandBlock commandBlock) {
++                    CommandBlockPlayerEditEvent event = new CommandBlockPlayerEditEvent(this.getCraftPlayer(), Objects.requireNonNullElse(commandblocklistenerabstract.getCommand(), ""), s, commandBlock);
++                    event.callEvent();
++
++                    if (event.isCancelled()) {
++                        return;
++                    }
++
++                    s = event.getNewCommand();
++                }
++                // Scissors end
++
+                 commandblocklistenerabstract.setCommand(s);
+                 commandblocklistenerabstract.setTrackOutput(flag);
+                 if (!flag) {
+@@ -947,7 +963,25 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+             BaseCommandBlock commandblocklistenerabstract = packet.getCommandBlock(this.player.level);
+ 
+             if (commandblocklistenerabstract != null) {
+-                commandblocklistenerabstract.setCommand(packet.getCommand());
++                // Scissors start - Implement command block events
++                String command = packet.getCommand();
++
++                if (commandblocklistenerabstract instanceof CommandMinecart commandMinecart) {
++                    CommandMinecartPlayerEditEvent event = new CommandMinecartPlayerEditEvent(this.getCraftPlayer(), Objects.requireNonNullElse(commandblocklistenerabstract.getCommand(), ""), command, commandMinecart);
++                    event.callEvent();
++
++                    if (event.isCancelled()) {
++                        return;
++                    }
++
++                    command = event.getNewCommand();
++                }
++
++                commandblocklistenerabstract.setCommand(command);
++
++                // commandblocklistenerabstract.setCommand(packet.getCommand());
++
++                // Scissors end
+                 commandblocklistenerabstract.setTrackOutput(packet.isTrackOutput());
+                 if (!packet.isTrackOutput()) {
+                     commandblocklistenerabstract.setLastOutput((Component) null);
