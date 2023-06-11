@@ -6,7 +6,6 @@ pipeline {
     stages {
         stage('applyPatches') {
             steps {
-                scmSkip(deleteBuild: true)
                 withGradle {
                     sh './gradlew applyPatches --no-daemon --refresh-dependencies'
                 }
@@ -17,6 +16,11 @@ pipeline {
                 withGradle {
                     sh './gradlew createReobfPaperclipJar --no-daemon --refresh-dependencies'
                 }
+                sh """
+                    #!/bin/sh
+                    mv \${WORKSPACE}/build/libs/Scissors-paperclip-*.jar \${WORKSPACE}/build/libs/scissors-\${BRANCH_NAME}-\${BUILD_NUMBER}.jar
+                    rm \${WORKSPACE}/build/libs/Scissors-bundler-*.jar
+                    """
             }
         }
         stage('test') {
@@ -48,7 +52,7 @@ pipeline {
     }
     post {
         always {
-            archiveArtifacts artifacts: 'build/libs/Scissors-paperclip-*.jar', fingerprint: true
+            archiveArtifacts artifacts: 'build/libs/scissors-*.jar', fingerprint: true
             junit 'Scissors-Server/build/test-results/test/*.xml'
             junit 'Scissors-API/build/test-results/test/*.xml'
             cleanWs()
