@@ -206,7 +206,7 @@ index 0000000000000000000000000000000000000000..797677d892d83cf54d9a60af1e277b67
 +}
 diff --git a/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java b/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..9f2a51fddb692f5152c32dcbe1f5a6ba150634e4
+index 0000000000000000000000000000000000000000..c973f955879c4d9223d76890b785e21db8d86c97
 --- /dev/null
 +++ b/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
 @@ -0,0 +1,213 @@
@@ -248,7 +248,7 @@ index 0000000000000000000000000000000000000000..9f2a51fddb692f5152c32dcbe1f5a6ba
 +
 +            Discord: https://discord.com/invite/mtVQcHn58h
 +            Website: https://scissors.gg/\s
-+            Docs: https://scissors.gg/javadoc/1.19.4/\s
++            Docs: https://javadoc.scissors.gg/1.19.4/\s
 +            """;
 +    private static final Pattern SPACE = Pattern.compile(" ");
 +    private static final Pattern NOT_NUMERIC = Pattern.compile("[^-\\d.]");
