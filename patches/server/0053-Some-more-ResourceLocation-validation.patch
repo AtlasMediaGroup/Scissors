@@ -1,0 +1,37 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Luna <lunahatesgogle@gmail.com>
+Date: Tue, 13 Jun 2023 18:37:56 -0300
+Subject: [PATCH] Some more ResourceLocation validation
+
+
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
+index 430810b9cc554dfb3bb0972c103c8a36e8db67ef..b2832c75beab2a1fa077b0317392b6aa46134ce6 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
+@@ -300,7 +300,12 @@ public abstract class AbstractFurnaceBlockEntity extends BaseContainerBlockEntit
+         while (iterator.hasNext()) {
+             String s = (String) iterator.next();
+ 
+-            this.recipesUsed.put(new ResourceLocation(s), nbttagcompound1.getInt(s));
++            // Scissors start
++            final ResourceLocation rl = ResourceLocation.tryParse(s);
++            if (rl != null) {
++                this.recipesUsed.put(rl, nbttagcompound1.getInt(s));
++            }
++            // Scissors end
+         }
+ 
+         // Paper start - cook speed API
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/BrushableBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BrushableBlockEntity.java
+index 14ddb953176b02e7ac68401c5c03120f920739a1..c04d24930f03d91f341fb45bed3b8356890dce83 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/BrushableBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/BrushableBlockEntity.java
+@@ -199,7 +199,7 @@ public class BrushableBlockEntity extends BlockEntity {
+ 
+     private boolean tryLoadLootTable(CompoundTag nbt) {
+         if (nbt.contains("LootTable", 8)) {
+-            this.lootTable = new ResourceLocation(nbt.getString("LootTable"));
++            this.lootTable = ResourceLocation.tryParse(nbt.getString("LootTable")); // Scissors
+             this.lootTableSeed = nbt.getLong("LootTableSeed");
+             return true;
+         } else {
