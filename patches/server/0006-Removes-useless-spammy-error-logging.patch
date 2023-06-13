@@ -5,10 +5,10 @@ Subject: [PATCH] Removes useless spammy error logging
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
-index 4caf272f065a681bd7101d52fedf2642cc78d3bc..af5a1111a06789e1401f8c60bb4c8838587f2376 100644
+index ac9fb7cf96ed36162c4f6c2a834b627d0120f3cc..5da793c0754a943b12ef01cac1072b71afd27b0e 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
-@@ -1798,8 +1798,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
+@@ -1795,8 +1795,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
                  resource = CraftNamespacedKey.fromMinecraft(key);
              }
          } catch (IllegalArgumentException ex) {
