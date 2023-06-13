@@ -18,7 +18,8 @@ pipeline {
                 }
                 sh """
                     #!/bin/sh
-                    mv \${WORKSPACE}/build/libs/Scissors-paperclip-*.jar \${WORKSPACE}/build/libs/scissors-\${BRANCH_NAME}-\${BUILD_NUMBER}.jar
+                    BRANCH=\$(echo "\${BRANCH_NAME}" | sed 's/\\//_/g')
+                    mv \${WORKSPACE}/build/libs/Scissors-paperclip-*.jar \${WORKSPACE}/build/libs/scissors-\${BRANCH}-\${BUILD_NUMBER}.jar
                     rm \${WORKSPACE}/build/libs/Scissors-bundler-*.jar
                     """
             }
@@ -32,7 +33,7 @@ pipeline {
         }
         stage('publish') {
             when {
-                branch "1.20"
+                branch "1.20.1"
             }
             steps {
                 script {

@@ -5,7 +5,7 @@ Subject: [PATCH] Build changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index a3a76b9b7efa773117d2ee1ce53ef784b09b277d..fad5e021f1282cd478f6ce484edbc135494b81b3 100644
+index a0c5592530d2a59bfde87d1e9eb3752e7d4694da..fb4ab6c631c3a149178db0aa08f55fc5f7b7067d 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -7,8 +7,10 @@ plugins {
@@ -15,13 +15,13 @@ index a3a76b9b7efa773117d2ee1ce53ef784b09b277d..fad5e021f1282cd478f6ce484edbc135
 -    implementation(project(":paper-api"))
 -    implementation(project(":paper-mojangapi"))
 +    implementation(project(":Scissors-API"))
-+    implementation("io.papermc.paper:paper-mojangapi:1.20-R0.1-SNAPSHOT") {
++    implementation("io.papermc.paper:paper-mojangapi:1.20.1-R0.1-SNAPSHOT") {
 +        exclude("io.papermc.paper", "paper-api")
 +    }
      // Paper start
      implementation("org.jline:jline-terminal-jansi:3.21.0")
      implementation("net.minecrell:terminalconsoleappender:1.3.0")
-@@ -58,11 +60,17 @@ tasks.jar {
+@@ -59,11 +61,17 @@ tasks.jar {
          val gitHash = git("rev-parse", "--short=7", "HEAD").getText().trim()
          val implementationVersion = System.getenv("BUILD_NUMBER") ?: "\"$gitHash\""
          val date = git("show", "-s", "--format=%ci", gitHash).getText().trim() // Paper
@@ -41,7 +41,7 @@ index a3a76b9b7efa773117d2ee1ce53ef784b09b277d..fad5e021f1282cd478f6ce484edbc135
              "Implementation-Vendor" to date, // Paper
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
-@@ -134,7 +142,7 @@ fun TaskContainer.registerRunTask(
+@@ -135,7 +143,7 @@ fun TaskContainer.registerRunTask(
      name: String,
      block: JavaExec.() -> Unit
  ): TaskProvider<JavaExec> = register<JavaExec>(name) {
@@ -91,10 +91,10 @@ index c5d5648f4ca603ef2b1df723b58f9caf4dd3c722..2fbb5fc19e6d7f3767c7c6eedcbc6af2
                  .completer(new ConsoleCommandCompleter(this.server))
                  .option(LineReader.Option.COMPLETE_IN_WORD, true);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index fb82bb52f219e7683fe1d3c0fb3acbe2251de8d4..0f9928bf68f8bc5abfe02f41c98c63888987d9b9 100644
+index 80cf4852e4010eeeadaf920ab927a40df0179b40..a276c294e161bc0e5c13c7cd607592ac9062dcfa 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1681,7 +1681,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1679,7 +1679,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
@@ -104,10 +104,10 @@ index fb82bb52f219e7683fe1d3c0fb3acbe2251de8d4..0f9928bf68f8bc5abfe02f41c98c6388
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index aefbb6a3f49a74a4c8fd004aa6a4ab1ab907e878..777b727a360683a72cef8c06ab7ab1439d69ac0a 100644
+index 9f8c5ceb8485b14a84f2a7b2ffc8192be5c6bdfd..965cba6087632199407eec04a3828c902e6f2cb4 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -262,7 +262,7 @@ import javax.annotation.Nullable; // Paper
+@@ -261,7 +261,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {
