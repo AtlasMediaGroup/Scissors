@@ -18,7 +18,7 @@ index c99fc118013cb3d4043638e2001a8297e79ddf9c..cdaa81e1f2167b29ec01cc25e51a8400
      private final boolean trackOutput;
  
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 757f20c0d546ab2ca9f32ca2c3733f36290d3a3d..127ed778733eb29f90416ae9c9f2ae0b8c727e9d 100644
+index 26bf05922698c734302fa80076e7a1eadbfe1d8d..5422eb931d83f65d40be5fcca49b6d9e57eec735 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -1,6 +1,8 @@
@@ -132,7 +132,7 @@ index 757f20c0d546ab2ca9f32ca2c3733f36290d3a3d..127ed778733eb29f90416ae9c9f2ae0b
                                      ServerGamePacketListenerImpl.LOGGER.warn("{} moved too quickly! {},{},{}", new Object[]{this.player.getName().getString(), d6, d7, d8});
                                      this.teleport(this.player.getX(), this.player.getY(), this.player.getZ(), this.player.getYRot(), this.player.getXRot());
                                      return;
-@@ -1976,7 +2008,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -1979,7 +2011,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
                                  MutableComponent ichatmutablecomponent = Component.translatable("build.tooHigh", i - 1).withStyle(ChatFormatting.RED);
  
                                  this.player.sendSystemMessage(ichatmutablecomponent, true);
@@ -141,7 +141,7 @@ index 757f20c0d546ab2ca9f32ca2c3733f36290d3a3d..127ed778733eb29f90416ae9c9f2ae0b
                                  this.player.swing(enumhand, true);
                              }
                          }
-@@ -2227,32 +2259,32 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -2230,32 +2262,32 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
          // CraftBukkit end
          if (ServerGamePacketListenerImpl.isChatMessageIllegal(packet.message())) {
              this.server.scheduleOnMain(() -> { // Paper - push to main for event firing
@@ -190,7 +190,7 @@ index 757f20c0d546ab2ca9f32ca2c3733f36290d3a3d..127ed778733eb29f90416ae9c9f2ae0b
                  // }); // CraftBukkit - async chat
              }
  
-@@ -2263,7 +2295,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -2266,7 +2298,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
      public void handleChatCommand(ServerboundChatCommandPacket packet) {
          if (ServerGamePacketListenerImpl.isChatMessageIllegal(packet.command())) {
              this.server.scheduleOnMain(() -> { // Paper - push to main for event firing
@@ -199,7 +199,7 @@ index 757f20c0d546ab2ca9f32ca2c3733f36290d3a3d..127ed778733eb29f90416ae9c9f2ae0b
              }); // Paper - push to main for event firing
          } else {
              Optional<LastSeenMessages> optional = this.tryHandleChat(packet.command(), packet.timeStamp(), packet.lastSeenMessages());
-@@ -2288,7 +2320,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -2291,7 +2323,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
          // CraftBukkit start
          String command = "/" + packet.command();
          if (org.spigotmc.SpigotConfig.logCommands) { // Paper
@@ -208,7 +208,7 @@ index 757f20c0d546ab2ca9f32ca2c3733f36290d3a3d..127ed778733eb29f90416ae9c9f2ae0b
          } // Paper
  
          PlayerCommandPreprocessEvent event = new PlayerCommandPreprocessEvent(this.getCraftPlayer(), command, new LazyPlayerSet(this.server));
-@@ -2353,7 +2385,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -2356,7 +2388,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
          if (!this.updateChatOrder(timestamp)) {
              ServerGamePacketListenerImpl.LOGGER.warn("{} sent out-of-order chat: '{}': {} > {}", this.player.getName().getString(), message, this.lastChatTimeStamp.get().getEpochSecond(), timestamp.getEpochSecond()); // Paper
              this.server.scheduleOnMain(() -> { // Paper - push to main
@@ -217,7 +217,7 @@ index 757f20c0d546ab2ca9f32ca2c3733f36290d3a3d..127ed778733eb29f90416ae9c9f2ae0b
              }); // Paper - push to main
              return Optional.empty();
          } else {
-@@ -2424,7 +2456,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -2427,7 +2459,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
              this.handleCommand(s);
          } else if (this.player.getChatVisibility() == ChatVisiblity.SYSTEM) {
              // Do nothing, this is coming from a plugin
@@ -226,7 +226,7 @@ index 757f20c0d546ab2ca9f32ca2c3733f36290d3a3d..127ed778733eb29f90416ae9c9f2ae0b
          } else if (true) {
              final ChatProcessor cp = new ChatProcessor(this.server, this.player, original, async);
              cp.process();
-@@ -2535,7 +2567,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -2538,7 +2570,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
          // Paper End
          co.aikar.timings.MinecraftTimings.playerCommandTimer.startTiming(); // Paper
          if ( org.spigotmc.SpigotConfig.logCommands ) // Spigot
@@ -235,7 +235,7 @@ index 757f20c0d546ab2ca9f32ca2c3733f36290d3a3d..127ed778733eb29f90416ae9c9f2ae0b
  
          CraftPlayer player = this.getCraftPlayer();
  
-@@ -2614,16 +2646,16 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -2617,16 +2649,16 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
      @Override
      public void handleChatAck(ServerboundChatAckPacket packet) {
          LastSeenMessagesValidator lastseenmessagesvalidator = this.lastSeenMessages;
@@ -262,7 +262,7 @@ index 757f20c0d546ab2ca9f32ca2c3733f36290d3a3d..127ed778733eb29f90416ae9c9f2ae0b
              }
  
          }
-@@ -2862,7 +2894,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -2865,7 +2897,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
                              }
  
                              if (event.isCancelled()) {
@@ -271,7 +271,7 @@ index 757f20c0d546ab2ca9f32ca2c3733f36290d3a3d..127ed778733eb29f90416ae9c9f2ae0b
                                  return;
                              }
                              // CraftBukkit end
-@@ -3436,19 +3468,19 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -3439,19 +3471,19 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
                  itemstack = CraftItemStack.asNMSCopy(event.getCursor());
  
                  switch (event.getResult()) {
@@ -304,7 +304,7 @@ index 757f20c0d546ab2ca9f32ca2c3733f36290d3a3d..127ed778733eb29f90416ae9c9f2ae0b
                  }
              }
              // CraftBukkit end
-@@ -3516,7 +3548,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -3519,7 +3551,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
          } else if (!this.isSingleplayerOwner()) {
              // Paper start - This needs to be handled on the main thread for plugins
              server.submit(() -> {
