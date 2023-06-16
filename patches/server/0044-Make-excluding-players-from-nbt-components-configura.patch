@@ -5,7 +5,7 @@ Subject: [PATCH] Make excluding players from nbt components configurable
 
 
 diff --git a/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java b/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
-index 9f2a51fddb692f5152c32dcbe1f5a6ba150634e4..39b56ca496ed7369ead21805d476c2b813fcdd1d 100644
+index ec93980fefcab57b7bac78d2fc4a217b376b7eca..44920c46aa75bcdc450e192d8c8ca0bf7ad0b7d5 100644
 --- a/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
 +++ b/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
 @@ -87,8 +87,8 @@ public class ScissorsConfig
