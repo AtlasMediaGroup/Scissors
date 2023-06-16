@@ -5,7 +5,7 @@ Subject: [PATCH] Don't log invalid teams to console
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 468f64afb7e9b3ef579205d3beea025deb31b460..71a32f8dfdf043f55f092225a13884ae8935e67c 100644
+index 79430aef1cbcad7d872435ebdec60321e2573bb3..ee1744ca00fe14b052b9d164d2bbe9dc93201bde 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -862,7 +862,9 @@ public abstract class LivingEntity extends Entity implements Attackable {

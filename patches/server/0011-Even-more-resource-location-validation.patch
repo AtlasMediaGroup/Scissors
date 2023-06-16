@@ -1,13 +1,22 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Video <videogamesm12@gmail.com>
 Date: Mon, 9 May 2022 23:40:59 -0500
-Subject: [PATCH] Even more ResourceLocation validation and log spam fixes
+Subject: [PATCH] Even more resource location validation
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java b/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
-index fa724cd34a7c469ca12068e64295cd00ad215a3c..168b60fda38a7172f4473017ccc42447b36faab2 100644
+index 91e0328f847a2464a1cf65134520244a4cec705f..77ae3bc5fd6cf34aae7bd3baa563f3e23e57de26 100644
 --- a/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
 +++ b/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
+@@ -145,7 +145,7 @@ public class AreaEffectCloud extends Entity implements TraceableEntity {
+     }
+ 
+     public void setPotionType(String string) {
+-        this.setPotion(BuiltInRegistries.POTION.get(new ResourceLocation(string)));
++        this.setPotion(BuiltInRegistries.POTION.get(ResourceLocation.tryParse(string))); // Scissors - Validate resource locations
+     }
+     // CraftBukkit end
+ 
 @@ -425,7 +425,7 @@ public class AreaEffectCloud extends Entity implements TraceableEntity {
              try {
                  this.setParticle(ParticleArgument.readParticle(new StringReader(nbt.getString("Particle")), (HolderLookup) BuiltInRegistries.PARTICLE_TYPE.asLookup()));
@@ -15,6 +24,41 @@ index fa724cd34a7c469ca12068e64295cd00ad215a3c..168b60fda38a7172f4473017ccc42447
 -                AreaEffectCloud.LOGGER.warn("Couldn't load custom particle {}", nbt.getString("Particle"), commandsyntaxexception);
 +                // Scissors - Don't log custom particle errors
              }
+         }
+ 
+diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
+index 9afc81ccb237c3655d64cdbe8a0db9a4d7791043..ffcb77755b28bcdb3eae981fc735e6dde664bb6e 100644
+--- a/src/main/java/net/minecraft/world/entity/EntityType.java
++++ b/src/main/java/net/minecraft/world/entity/EntityType.java
+@@ -588,7 +588,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+         }), (entity) -> {
+             entity.load(nbt);
+         }, () -> {
+-            EntityType.LOGGER.warn("Skipping Entity with id {}", nbt.getString("id"));
++            /*EntityType.LOGGER.warn("Skipping Entity with id {}", nbt.getString("id"));*/ // Scissors - Don't log invalid entities
+         });
+     }
+ 
+@@ -607,7 +607,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+     }
+ 
+     public static Optional<EntityType<?>> by(CompoundTag nbt) {
+-        return BuiltInRegistries.ENTITY_TYPE.getOptional(new ResourceLocation(nbt.getString("id")));
++        return BuiltInRegistries.ENTITY_TYPE.getOptional(ResourceLocation.tryParse(nbt.getString("id")));
+     }
+ 
+     @Nullable
+diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
+index e2a25c29ec74147b3e66aa0b3deb85a8f6ee53a5..b0c953ad8275740679c847e348b311de93d64965 100644
+--- a/src/main/java/net/minecraft/world/entity/Mob.java
++++ b/src/main/java/net/minecraft/world/entity/Mob.java
+@@ -618,7 +618,7 @@ public abstract class Mob extends LivingEntity implements Targeting {
+ 
+         this.setLeftHanded(nbt.getBoolean("LeftHanded"));
+         if (nbt.contains("DeathLootTable", 8)) {
+-            this.lootTable = new ResourceLocation(nbt.getString("DeathLootTable"));
++            this.lootTable = ResourceLocation.tryParse(nbt.getString("DeathLootTable"));
+             this.lootTableSeed = nbt.getLong("DeathLootTableSeed");
          }
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftLootable.java b/src/main/java/org/bukkit/craftbukkit/block/CraftLootable.java
@@ -60,7 +104,7 @@ index 0dd0ce9a9b3253e87eda12354249ec2fd2a33cf2..b6920f9432ca1736afbe775186fbbcf1
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
-index 620d918e302a00d5a6640648e3096988d15535a0..ac6831248b7c4f25d48391432afb613f25d7e23a 100644
+index 18b9b0dc70f6872a9d71c120bcd2edca531b0ac4..fa0c023b3a88bd797f563e0e675d70966ff7dbd3 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
 @@ -80,8 +80,18 @@ public abstract class CraftMob extends CraftLivingEntity implements Mob {

@@ -6,7 +6,7 @@ Subject: [PATCH] Fixes creative-killing potion effects and certain potion
 
 
 diff --git a/src/main/java/net/minecraft/world/effect/MobEffect.java b/src/main/java/net/minecraft/world/effect/MobEffect.java
-index 2cc714585fc3790b70a7ad1ab8034543462e2b3b..2d3706d8d0dbed3b3588066eaa6b9ce1b266294f 100644
+index bcce17f884b57e619749351b7b2047f0a5f9be71..65e245e02676077e481f8a1fcd9885c389f9666c 100644
 --- a/src/main/java/net/minecraft/world/effect/MobEffect.java
 +++ b/src/main/java/net/minecraft/world/effect/MobEffect.java
 @@ -58,6 +58,7 @@ public class MobEffect {

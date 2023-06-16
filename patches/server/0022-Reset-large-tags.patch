@@ -5,7 +5,7 @@ Subject: [PATCH] Reset large tags
 
 
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index b367ec1feaccbd67e9e28c0d0515e163f37135fe..d1547b9ba36baec925751b9bb0498c8a8cac12f8 100644
+index adb7220be617d6d9f2cdd7fbe4fa2dd24cc7d142..aabde31cd4c6a4f58855156272bc451b042cc315 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
 @@ -21,6 +21,7 @@ import java.util.function.Predicate;

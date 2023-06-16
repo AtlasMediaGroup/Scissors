@@ -59,7 +59,7 @@ index 4092c7a8c2b0d9d26e6f4d97386735236300d132..9e0ab51dd7a4f9fed8f9edde962d42d4
              }
          }
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
-index 2a786c9fd29dc2139cf487fa645cd43345d60167..dbdc66620ae4284cfe96f633b1f4db46866b597b 100644
+index 448fa4f4f200430d6ce3051763c7ceb697696146..430810b9cc554dfb3bb0972c103c8a36e8db67ef 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 @@ -9,6 +9,7 @@ import java.util.Iterator;
@@ -201,7 +201,7 @@ index 881379681c39230a00b3a1f11cd87498984396c7..1be5d600573f7632e6630224530dd765
      }
  
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
-index 789e5458f4a137694563a22612455506807de51b..84c721da46b7786857677b56f439c2b9448ba4b8 100644
+index a8a26a0a37a08b6bbeb5a1fde417d6f448d3c79f..2502c38640fa39552efc02b59733bd0d7330e13a 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 @@ -6,6 +6,7 @@ import java.util.function.BooleanSupplier;
