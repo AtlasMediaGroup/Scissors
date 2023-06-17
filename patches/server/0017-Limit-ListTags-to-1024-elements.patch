@@ -5,7 +5,7 @@ Subject: [PATCH] Limit ListTags to 1024 elements
 
 
 diff --git a/src/main/java/net/minecraft/nbt/ListTag.java b/src/main/java/net/minecraft/nbt/ListTag.java
-index 749d3e67a877d7d1ed47b5fef511a604ee6589b6..fe7a7fd77c7dd1750144fb57e181c51ccda26329 100644
+index b74b77ec2fd45c7a44e4f2696c4f57075c3d4080..c6ac2aff889ff157da47ee26fbfc1f83616d5b8f 100644
 --- a/src/main/java/net/minecraft/nbt/ListTag.java
 +++ b/src/main/java/net/minecraft/nbt/ListTag.java
 @@ -31,6 +31,7 @@ public class ListTag extends CollectionTag<Tag> {

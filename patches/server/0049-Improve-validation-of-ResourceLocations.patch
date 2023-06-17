@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Luna <lunahatesgogle@gmail.com>
-Date: Tue, 13 Jun 2023 18:37:56 -0300
-Subject: [PATCH] Some more ResourceLocation validation
+Date: Tue, 13 Jun 2023 18:29:18 -0300
+Subject: [PATCH] Improve validation of ResourceLocations
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
@@ -23,7 +23,7 @@ index 430810b9cc554dfb3bb0972c103c8a36e8db67ef..b2832c75beab2a1fa077b0317392b6aa
  
          // Paper start - cook speed API
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BrushableBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BrushableBlockEntity.java
-index 14ddb953176b02e7ac68401c5c03120f920739a1..c04d24930f03d91f341fb45bed3b8356890dce83 100644
+index 7a3ac883be4015d41a4c7582341a424b4bd6bbf4..6a6d34831a3c9a1a0fd47dbfd3a497c0b7923ce5 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BrushableBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BrushableBlockEntity.java
 @@ -199,7 +199,7 @@ public class BrushableBlockEntity extends BlockEntity {
@@ -35,3 +35,15 @@ index 14ddb953176b02e7ac68401c5c03120f920739a1..c04d24930f03d91f341fb45bed3b8356
              this.lootTableSeed = nbt.getLong("LootTableSeed");
              return true;
          } else {
+diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftNamespacedKey.java b/src/main/java/org/bukkit/craftbukkit/util/CraftNamespacedKey.java
+index 5014192edb9616ce725fc1592832034789527b6f..64da1b0afd51720803aba0d9e86d0b1743bdb0da 100644
+--- a/src/main/java/org/bukkit/craftbukkit/util/CraftNamespacedKey.java
++++ b/src/main/java/org/bukkit/craftbukkit/util/CraftNamespacedKey.java
+@@ -21,6 +21,7 @@ public final class CraftNamespacedKey {
+     }
+ 
+     public static NamespacedKey fromMinecraft(ResourceLocation minecraft) {
++        if (minecraft == null) throw new IllegalArgumentException("Null ResourceLocation provided"); // Scissors
+         return new NamespacedKey(minecraft.getNamespace(), minecraft.getPath());
+     }
+ 

@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Luna <lunahatesgogle@gmail.com>
 Date: Fri, 28 Apr 2023 16:29:23 -0300
-Subject: [PATCH] Limit map decoration text length
+Subject: [PATCH] Limit map decorations
 
 
 diff --git a/src/main/java/net/minecraft/world/level/saveddata/maps/MapDecoration.java b/src/main/java/net/minecraft/world/level/saveddata/maps/MapDecoration.java
@@ -29,3 +29,20 @@ index 347d2914f9560a3ee8cea59444bc0dfbb7cf3456..b225f770869832775c9a8a79ffaf89e9
          this.type = type;
          this.x = x;
          this.y = z;
+diff --git a/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java b/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java
+index 3b12030b49b1c539684d75ca3896eb498400ef99..a1f042e5329343489cf30e436a8f553d39e5a6e4 100644
+--- a/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java
++++ b/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java
+@@ -354,6 +354,12 @@ public class MapItemSavedData extends SavedData {
+     }
+ 
+     private void addDecoration(MapDecoration.Type type, @Nullable LevelAccessor world, String key, double x, double z, double rotation, @Nullable Component text) {
++        // Scissors start - Limit decoration count
++        if (this.decorations.size() > 32) {
++            return;
++        }
++        // Scissors end
++
+         int i = 1 << this.scale;
+         float f = (float) (x - (double) this.centerX) / (float) i;
+         float f1 = (float) (z - (double) this.centerZ) / (float) i;

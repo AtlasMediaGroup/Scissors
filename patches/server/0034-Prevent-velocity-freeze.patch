@@ -5,7 +5,7 @@ Subject: [PATCH] Prevent velocity freeze
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java b/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java
-index 2096e8a0bdbcfc865f175f3a01ab688542481531..15d375221c253dc4ca1b598eb80b4638eba6f8d0 100644
+index 6c9a8f062f989db022154155e8a05b334a0510da..68c80eab60680c647094b4465ee1377c9e13d5ff 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java
 @@ -1,5 +1,6 @@
