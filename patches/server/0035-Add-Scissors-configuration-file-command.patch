@@ -608,7 +608,7 @@ index 31911c09fe15753ae32fa39417bdc9e9de552a88..97ce45c6e44b1400b8d60b5239761703
      @Override
      public boolean isFoil(ItemStack stack) {
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
-index ba6f0ba00cd2635bcd19889dca0349b363b079fe..59fe6f9aba094f8e5393de44d8977e5e48ed76d8 100644
+index 0521240dddde12d78cc05deda7fac11690f5d155..f19d82fd11633d9f91a70fb14cb5a1bcd91bce73 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
 @@ -8,8 +8,11 @@ import java.util.Objects;
@@ -647,7 +647,7 @@ index ba6f0ba00cd2635bcd19889dca0349b363b079fe..59fe6f9aba094f8e5393de44d8977e5e
  
  public class SignBlockEntity extends BlockEntity implements CommandSource { // CraftBukkit - implements
  
-@@ -285,6 +290,21 @@ public class SignBlockEntity extends BlockEntity implements CommandSource { // C
+@@ -286,6 +291,21 @@ public class SignBlockEntity extends BlockEntity implements CommandSource { // C
                  }
                  player.getServer().getCommands().performPrefixedCommand(this.createCommandSourceStack(((org.bukkit.craftbukkit.entity.CraftPlayer) event.getPlayer()).getHandle(), world, pos), event.getMessage());
                  // Paper end
@@ -670,10 +670,10 @@ index ba6f0ba00cd2635bcd19889dca0349b363b079fe..59fe6f9aba094f8e5393de44d8977e5e
              }
          }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 965cba6087632199407eec04a3828c902e6f2cb4..41be0da946ce80fd3ecf0396e6617bf3da1f9b0b 100644
+index 9767d6bba065d1d37dc387ef01bad4aabfe503bb..244f307f5f71a9bc937bb1f42cca35d876dbf49b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -978,6 +978,7 @@ public final class CraftServer implements Server {
+@@ -982,6 +982,7 @@ public final class CraftServer implements Server {
          }
  
          org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
@@ -681,7 +681,7 @@ index 965cba6087632199407eec04a3828c902e6f2cb4..41be0da946ce80fd3ecf0396e6617bf3
          this.console.paperConfigurations.reloadConfigs(this.console);
          for (ServerLevel world : this.console.getAllLevels()) {
              // world.serverLevelData.setDifficulty(config.difficulty); // Paper - per level difficulty
-@@ -1009,6 +1010,7 @@ public final class CraftServer implements Server {
+@@ -1013,6 +1014,7 @@ public final class CraftServer implements Server {
          this.reloadData();
          org.spigotmc.SpigotConfig.registerCommands(); // Spigot
          io.papermc.paper.command.PaperCommands.registerCommands(this.console); // Paper
@@ -689,7 +689,7 @@ index 965cba6087632199407eec04a3828c902e6f2cb4..41be0da946ce80fd3ecf0396e6617bf3
          this.overrideAllCommandBlockCommands = this.commandsConfiguration.getStringList("command-block-overrides").contains("*");
          this.ignoreVanillaPermissions = this.commandsConfiguration.getBoolean("ignore-vanilla-permissions");
  
-@@ -2776,6 +2778,12 @@ public final class CraftServer implements Server {
+@@ -2780,6 +2782,12 @@ public final class CraftServer implements Server {
              return CraftServer.this.console.paperConfigurations.createLegacyObject(CraftServer.this.console);
          }
  
