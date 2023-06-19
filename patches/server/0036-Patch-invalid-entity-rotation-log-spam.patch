@@ -5,10 +5,10 @@ Subject: [PATCH] Patch invalid entity rotation log spam
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index bcd9565c8e09b44ca4cac372bea1b1e9ec343871..71e64ecf217b77371b5be32f93c66be042f124f2 100644
+index c19ea0dd30c39b1e7a30ab5bcc32820a5ee3d16a..4705a80cd759dce1fe5313417c7eb0e7be05e706 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -4615,7 +4615,9 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -4628,7 +4628,9 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
  
      public void setYRot(float yaw) {
          if (!Float.isFinite(yaw)) {
@@ -19,7 +19,7 @@ index bcd9565c8e09b44ca4cac372bea1b1e9ec343871..71e64ecf217b77371b5be32f93c66be0
          } else {
              this.yRot = yaw;
          }
-@@ -4627,7 +4629,9 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -4640,7 +4642,9 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
  
      public void setXRot(float pitch) {
          if (!Float.isFinite(pitch)) {
