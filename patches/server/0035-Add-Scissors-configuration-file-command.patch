@@ -452,6 +452,29 @@ index 74cf1c043beef03cfd5adf481414a5ee78bef2a6..182f68359a7a8c0b331acd103ed3952e
          }
      }
  }
+diff --git a/src/main/java/net/minecraft/network/chat/SignedMessageChain.java b/src/main/java/net/minecraft/network/chat/SignedMessageChain.java
+index c0a80824a0307ea673805015119cc834b268f0dc..cc67d0e351333731d953d5732215b19d1c36d4bc 100644
+--- a/src/main/java/net/minecraft/network/chat/SignedMessageChain.java
++++ b/src/main/java/net/minecraft/network/chat/SignedMessageChain.java
+@@ -4,6 +4,8 @@ import com.mojang.logging.LogUtils;
+ import java.time.Instant;
+ import java.util.UUID;
+ import javax.annotation.Nullable;
++
++import me.totalfreedom.scissors.ScissorsConfig;
+ import net.minecraft.util.SignatureUpdater;
+ import net.minecraft.util.SignatureValidator;
+ import net.minecraft.util.Signer;
+@@ -41,7 +43,8 @@ public class SignedMessageChain {
+                 if (!playerChatMessage.verify(signatureValidator)) {
+                     throw new SignedMessageChain.DecodeException(Component.translatable("multiplayer.disconnect.unsigned_chat"), true, org.bukkit.event.player.PlayerKickEvent.Cause.UNSIGNED_CHAT); // Paper - kick event causes
+                 } else {
+-                    if (playerChatMessage.hasExpiredServer(Instant.now())) {
++                    // Scissors - Do not log this message if chat signatures are disabled
++                    if (playerChatMessage.hasExpiredServer(Instant.now()) && ScissorsConfig.chatSignaturesEnabled) {
+                         LOGGER.warn("Received expired chat: '{}'. Is the client/server system time unsynchronized?", (Object)body.content());
+                     }
+ 
 diff --git a/src/main/java/net/minecraft/server/Main.java b/src/main/java/net/minecraft/server/Main.java
 index dae36c6452ccd57a436dd918547b64d59957ab0a..d450cf3cf8ab5cbb5d32a28ee2e4a6717941adef 100644
 --- a/src/main/java/net/minecraft/server/Main.java
