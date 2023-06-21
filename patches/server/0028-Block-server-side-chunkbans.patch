@@ -154,7 +154,7 @@ index 3944852921335c78a04a9dc301882ab5b152b1ed..96ee53c7cc862e059328c5cdf5e07f30
          this.type = blockEntityType;
          this.tag = nbt.isEmpty() ? null : nbt;
 diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java
-index 39b879f21f958dbd91ab0f74e5d4f3c74928fc33..c5d568ce15879be812207f4cd7819f2f6e7d0f7e 100644
+index 39b879f21f958dbd91ab0f74e5d4f3c74928fc33..688287c637a0d4b28d630b7304a3c2cf339bdf54 100644
 --- a/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java
 +++ b/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java
 @@ -33,6 +33,13 @@ public class ClientboundLevelChunkPacketData {
@@ -171,3 +171,11 @@ index 39b879f21f958dbd91ab0f74e5d4f3c74928fc33..c5d568ce15879be812207f4cd7819f2f
      // Paper start - Anti-Xray - Add chunk packet info
      @Deprecated @io.papermc.paper.annotation.DoNotUse public ClientboundLevelChunkPacketData(LevelChunk chunk) { this(chunk, null); }
      public ClientboundLevelChunkPacketData(LevelChunk chunk, com.destroystokyo.paper.antixray.ChunkPacketInfo<net.minecraft.world.level.block.state.BlockState> chunkPacketInfo) {
+@@ -58,6 +65,7 @@ public class ClientboundLevelChunkPacketData {
+         int totalTileEntities = 0; // Paper
+ 
+         for(Map.Entry<BlockPos, BlockEntity> entry2 : chunk.getBlockEntities().entrySet()) {
++            if (this.extraPackets.size() > 50) break; // Scissors - Limit extraPackets size
+             // Paper start
+             if (++totalTileEntities > TE_LIMIT) {
+                 var packet = entry2.getValue().getUpdatePacket();
