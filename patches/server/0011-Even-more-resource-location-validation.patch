@@ -61,6 +61,19 @@ index e2a25c29ec74147b3e66aa0b3deb85a8f6ee53a5..b0c953ad8275740679c847e348b311de
              this.lootTableSeed = nbt.getLong("DeathLootTableSeed");
          }
  
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/DecoratedPotBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/DecoratedPotBlockEntity.java
+index 6f9286db4e5786464fb0b49dc125e1228ab7ae93..8d91accb0d5e8afa3957d816bd71681b4198ee6e 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/DecoratedPotBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/DecoratedPotBlockEntity.java
+@@ -90,7 +90,7 @@ public class DecoratedPotBlockEntity extends BlockEntity {
+                 return Items.BRICK;
+             } else {
+                 Tag tag = list.get(index);
+-                return BuiltInRegistries.ITEM.get(new ResourceLocation(tag.getAsString()));
++                return BuiltInRegistries.ITEM.get(ResourceLocation.tryParse(tag.getAsString())); // Scissors
+             }
+         }
+     }
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftLootable.java b/src/main/java/org/bukkit/craftbukkit/block/CraftLootable.java
 index e49eece9bff3a53469673d03a7bbf8f9cf8776b8..a49f32e9649155b6af4b1f236e4e8142d730e7e8 100644
 --- a/src/main/java/org/bukkit/craftbukkit/block/CraftLootable.java
