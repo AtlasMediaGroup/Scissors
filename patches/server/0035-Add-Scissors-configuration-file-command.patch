@@ -424,7 +424,7 @@ index 0000000000000000000000000000000000000000..ec93980fefcab57b7bac78d2fc4a217b
 +}
 +
 diff --git a/src/main/java/net/minecraft/network/chat/OutgoingChatMessage.java b/src/main/java/net/minecraft/network/chat/OutgoingChatMessage.java
-index 74cf1c043beef03cfd5adf481414a5ee78bef2a6..182f68359a7a8c0b331acd103ed3952ea3c33b93 100644
+index 74cf1c043beef03cfd5adf481414a5ee78bef2a6..bca80fb82b4bc5318820bcca7d6b4357be94def9 100644
 --- a/src/main/java/net/minecraft/network/chat/OutgoingChatMessage.java
 +++ b/src/main/java/net/minecraft/network/chat/OutgoingChatMessage.java
 @@ -1,5 +1,6 @@
@@ -434,20 +434,29 @@ index 74cf1c043beef03cfd5adf481414a5ee78bef2a6..182f68359a7a8c0b331acd103ed3952e
  import net.minecraft.server.level.ServerPlayer;
  
  public interface OutgoingChatMessage {
-@@ -42,12 +43,16 @@ public interface OutgoingChatMessage {
-         }
-         public void sendToPlayer(ServerPlayer sender, boolean filterMaskEnabled, ChatType.Bound params, @javax.annotation.Nullable Component unsigned) {
+@@ -44,10 +45,25 @@ public interface OutgoingChatMessage {
              // Paper end
-+            // Scissors start - Add configuration option to disable chat signatures
              PlayerChatMessage playerChatMessage = this.message.filter(filterMaskEnabled);
              playerChatMessage = unsigned != null ? playerChatMessage.withUnsignedContent(unsigned) : playerChatMessage; // Paper
 -            if (!playerChatMessage.isFullyFiltered()) {
-+            if (!playerChatMessage.isFullyFiltered() && /* Scissors */ ScissorsConfig.chatSignaturesEnabled) {
++            // Scissors start - Add configuration option to disable chat signatures
++            if (!playerChatMessage.isFullyFiltered() && ScissorsConfig.chatSignaturesEnabled) {
                  sender.connection.sendPlayerChatMessage(playerChatMessage, params);
 +                return;
              }
  
-+            sender.connection.sendDisguisedChatMessage(playerChatMessage.decoratedContent(), params);
++            if (sender.getServer().server.getOnlineMode()) {
++                sender.connection.sendDisguisedChatMessage(playerChatMessage.decoratedContent(), params);
++            } else {
++                sender.connection.sendPlayerChatMessage(new PlayerChatMessage(
++                    SignedMessageLink.unsigned(playerChatMessage.sender()),
++                    null,
++                    SignedMessageBody.unsigned(playerChatMessage.signedContent()),
++                    unsigned,
++                    playerChatMessage.filterMask(),
++                    playerChatMessage.result()
++                ), params);
++            }
 +            // Scissors end
          }
      }
