@@ -572,7 +572,7 @@ index cb5f11f60e5abe21ca3dd724c79f29391cd052cc..494e99351d6f70871c88c233a5d7e668
  
          }
 diff --git a/src/main/java/net/minecraft/world/item/WrittenBookItem.java b/src/main/java/net/minecraft/world/item/WrittenBookItem.java
-index 31911c09fe15753ae32fa39417bdc9e9de552a88..97ce45c6e44b1400b8d60b52397617038f8fe911 100644
+index 31911c09fe15753ae32fa39417bdc9e9de552a88..1cce74b2fd105d7fe06d390ad77bffa4bdad2a4d 100644
 --- a/src/main/java/net/minecraft/world/item/WrittenBookItem.java
 +++ b/src/main/java/net/minecraft/world/item/WrittenBookItem.java
 @@ -2,6 +2,8 @@ package net.minecraft.world.item;
@@ -594,17 +594,7 @@ index 31911c09fe15753ae32fa39417bdc9e9de552a88..97ce45c6e44b1400b8d60b5239761703
  import net.minecraft.stats.Stats;
  import net.minecraft.util.StringUtil;
  import net.minecraft.world.InteractionHand;
-@@ -111,8 +112,7 @@ public class WrittenBookItem extends Item {
- 
-     public static boolean resolveBookComponents(ItemStack book, @Nullable CommandSourceStack commandSource, @Nullable Player player) {
-         CompoundTag compoundTag = book.getTag();
--        if (io.papermc.paper.configuration.GlobalConfiguration.get().itemValidation.resolveSelectorsInBooks && compoundTag != null && !compoundTag.getBoolean("resolved")) { // Paper
--            compoundTag.putBoolean("resolved", true);
-+        if (compoundTag != null) { // Paper
-             if (!makeSureTagIsValid(compoundTag)) {
-                 return false;
-             } else {
-@@ -161,8 +161,42 @@ public class WrittenBookItem extends Item {
+@@ -161,8 +162,42 @@ public class WrittenBookItem extends Item {
              component2 = Component.literal(text);
          }
  
