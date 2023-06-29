@@ -518,7 +518,7 @@ index 9f422cbeaa52b3e6a0a27af4f8ad4ddb7808483f..bbfb536ddec7f44d2a75d35ab495be26
          this.setFlightAllowed(dedicatedserverproperties.allowFlight);
          this.setMotd(dedicatedserverproperties.motd);
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 7e473ebbc8d89b01e1ee09047d43d075906d0d7c..0f7311755c5718a96d8a295a44fd85290d5d4425 100644
+index cb5f11f60e5abe21ca3dd724c79f29391cd052cc..494e99351d6f70871c88c233a5d7e668ae67d5be 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -1,5 +1,6 @@
@@ -528,7 +528,7 @@ index 7e473ebbc8d89b01e1ee09047d43d075906d0d7c..0f7311755c5718a96d8a295a44fd8529
  import me.totalfreedom.scissors.event.player.SpectatorTeleportEvent;
  import com.google.common.collect.Lists;
  import com.google.common.primitives.Floats;
-@@ -2323,7 +2324,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -2325,7 +2326,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
      }
  
      private void handleMessageDecodeFailure(SignedMessageChain.DecodeException exception) {
@@ -537,7 +537,7 @@ index 7e473ebbc8d89b01e1ee09047d43d075906d0d7c..0f7311755c5718a96d8a295a44fd8529
              this.disconnect(exception.getComponent(), exception.kickCause); // Paper - kick event causes
          } else {
              this.player.sendSystemMessage(exception.getComponent().copy().withStyle(ChatFormatting.RED));
-@@ -2379,6 +2380,12 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -2381,6 +2382,12 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
              Optional<LastSeenMessages> optional = this.lastSeenMessages.applyUpdate(acknowledgment);
  
              if (optional.isEmpty()) {
@@ -550,7 +550,7 @@ index 7e473ebbc8d89b01e1ee09047d43d075906d0d7c..0f7311755c5718a96d8a295a44fd8529
                  ServerGamePacketListenerImpl.LOGGER.warn("Failed to validate message acknowledgements from {}", this.player.getName().getString());
                  this.disconnect(ServerGamePacketListenerImpl.CHAT_VALIDATION_FAILED, org.bukkit.event.player.PlayerKickEvent.Cause.CHAT_VALIDATION_FAILED); // Paper - kick event causes
              }
-@@ -2611,11 +2618,16 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -2613,11 +2620,16 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
      @Override
      public void handleChatAck(ServerboundChatAckPacket packet) {
          LastSeenMessagesValidator lastseenmessagesvalidator = this.lastSeenMessages;

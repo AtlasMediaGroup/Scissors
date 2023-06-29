@@ -5,15 +5,19 @@ Subject: [PATCH] Validate block entity tag query positions
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index afc17ec86d12cefc30c2aabd86a04131f7dffdb6..27c48014605d34d9716ea3029ac84b2eb4907a4e 100644
+index f6f5efbf757f1508b628db90c9f63da382ebf4d5..cb5f11f60e5abe21ca3dd724c79f29391cd052cc 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -1375,7 +1375,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -1375,8 +1375,10 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
      @Override
      public void handleBlockEntityTagQuery(ServerboundBlockEntityTagQuery packet) {
          PacketUtils.ensureRunningOnSameThread(packet, this, this.player.serverLevel());
 -        if (this.player.hasPermissions(2)) {
-+        if (this.player.hasPermissions(2) && Level.isInSpawnableBounds(packet.getPos())) { // Scissors - Validate block entity tag query positions
-             BlockEntity tileentity = this.player.level().getBlockEntity(packet.getPos());
+-            BlockEntity tileentity = this.player.level().getBlockEntity(packet.getPos());
++        // Scissors - Validate block entity tag query positions
++        if (this.player.hasPermissions(2) && Level.isInSpawnableBounds(packet.getPos())) {
++            BlockEntity tileentity = this.player.level().isLoaded(packet.getPos()) ? this.player.level().getBlockEntity(packet.getPos()) : null;
++            // Scissors end
              CompoundTag nbttagcompound = tileentity != null ? tileentity.saveWithoutMetadata() : null;
  
+             this.player.connection.send(new ClientboundTagQueryPacket(packet.getTransactionId(), nbttagcompound));
