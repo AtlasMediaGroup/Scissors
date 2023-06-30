@@ -18,14 +18,14 @@ index 60d32afe2eecdfebdc91531ca3672f8f130ac30e..73b0f516f80ef810379860ea74697a34
              this.minSq = squareOpt(min);
              this.maxSq = squareOpt(max);
 diff --git a/src/main/java/net/minecraft/commands/arguments/selector/EntitySelector.java b/src/main/java/net/minecraft/commands/arguments/selector/EntitySelector.java
-index f25b9330e068c7d9e12cb57a7761cfef9ebaf7bc..ba549e6e5da75413ae3b4083f8b7a5527672de4e 100644
+index f25b9330e068c7d9e12cb57a7761cfef9ebaf7bc..e8cf963f0190438bbf65f827d144775ab0b02b63 100644
 --- a/src/main/java/net/minecraft/commands/arguments/selector/EntitySelector.java
 +++ b/src/main/java/net/minecraft/commands/arguments/selector/EntitySelector.java
 @@ -10,6 +10,7 @@ import java.util.function.BiConsumer;
  import java.util.function.Function;
  import java.util.function.Predicate;
  import javax.annotation.Nullable;
-+import me.totalfreedom.scissors.MathUtility;
++import me.totalfreedom.scissors.MathUtility; // Scissors
  import net.minecraft.advancements.critereon.MinMaxBounds;
  import net.minecraft.commands.CommandSourceStack;
  import net.minecraft.commands.arguments.EntityArgument;

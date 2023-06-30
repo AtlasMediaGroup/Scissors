@@ -6,7 +6,7 @@ Subject: [PATCH] Fixes creative-killing potion effects and certain potion
 
 
 diff --git a/src/main/java/net/minecraft/world/effect/MobEffect.java b/src/main/java/net/minecraft/world/effect/MobEffect.java
-index bcce17f884b57e619749351b7b2047f0a5f9be71..65e245e02676077e481f8a1fcd9885c389f9666c 100644
+index bcce17f884b57e619749351b7b2047f0a5f9be71..84ce9410a9259fd3b8ac8457e6796c7998a1eabc 100644
 --- a/src/main/java/net/minecraft/world/effect/MobEffect.java
 +++ b/src/main/java/net/minecraft/world/effect/MobEffect.java
 @@ -58,6 +58,7 @@ public class MobEffect {
@@ -25,9 +25,9 @@ index bcce17f884b57e619749351b7b2047f0a5f9be71..65e245e02676077e481f8a1fcd9885c3
 +            // Scissors start
 +            amplifier = Math.min(Math.abs(amplifier), 124);
 +            if (!god && (this == MobEffects.HARM && !entity.isInvertedHealAndHarm() || this == MobEffects.HEAL && entity.isInvertedHealAndHarm())) {
++            // Scissors end
                  entity.hurt(entity.damageSources().magic(), (float) (6 << amplifier));
              }
-+            // Scissors end
          } else {
 -            entity.heal((float) Math.max(4 << amplifier, 0), RegainReason.MAGIC); // CraftBukkit
 +            // Scissors start

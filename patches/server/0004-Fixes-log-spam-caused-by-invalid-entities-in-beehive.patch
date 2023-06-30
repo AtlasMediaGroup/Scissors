@@ -5,7 +5,7 @@ Subject: [PATCH] Fixes log spam caused by invalid entities in beehives
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
-index 41c9f074203915c31c1ae7a160ce509c13383f84..79a7fff759f062b783a540079cb43f2942799715 100644
+index 41c9f074203915c31c1ae7a160ce509c13383f84..a75ce92312f7468502745a4a4bf0406a73beb765 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
 @@ -11,6 +11,7 @@ import net.minecraft.nbt.CompoundTag;
@@ -25,7 +25,7 @@ index 41c9f074203915c31c1ae7a160ce509c13383f84..79a7fff759f062b783a540079cb43f29
 +            if (!nbttagcompound1.contains("id") || !ResourceLocation.isValidResourceLocation(nbttagcompound1.getString("id")) || EntityType.byString(nbttagcompound1.getString("id")).isEmpty()) {
 +                continue;
 +            }
-+            // Scissor end
++            // Scissors end
 +
              BeehiveBlockEntity.BeeData tileentitybeehive_hivebee = new BeehiveBlockEntity.BeeData(nbttagcompound1.getCompound("EntityData"), nbttagcompound1.getInt("TicksInHive"), nbttagcompound1.getInt("MinOccupationTicks"));
  

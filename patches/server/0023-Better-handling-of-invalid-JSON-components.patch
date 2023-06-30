@@ -5,14 +5,14 @@ Subject: [PATCH] Better handling of invalid JSON components
 
 
 diff --git a/src/main/java/net/minecraft/network/chat/Component.java b/src/main/java/net/minecraft/network/chat/Component.java
-index 37fc353c3e59dd5af2fd6c58ac084fb0e6e155d7..3c0ee4e1f42f6056ca86a6f9f129d467e29a2fbc 100644
+index 37fc353c3e59dd5af2fd6c58ac084fb0e6e155d7..2873ed7c443ed8c8c57a8b1d3e444d229f10f07b 100644
 --- a/src/main/java/net/minecraft/network/chat/Component.java
 +++ b/src/main/java/net/minecraft/network/chat/Component.java
 @@ -26,6 +26,7 @@ import java.util.List;
  import java.util.Map.Entry;
  import java.util.Optional;
  import javax.annotation.Nullable;
-+import net.minecraft.ChatFormatting;
++import net.minecraft.ChatFormatting; // Scissors
  import net.minecraft.Util;
  import net.minecraft.network.chat.contents.BlockDataSource;
  import net.minecraft.network.chat.contents.DataSource;
@@ -84,7 +84,7 @@ index 7449a024265c42f28a6c9a1ed8d8f4b9e3096aac..487c68abc3eb5c18dc7fee762b216400
                  // Scissors start
                  UUID uUID;
 diff --git a/src/main/java/net/minecraft/network/chat/contents/NbtContents.java b/src/main/java/net/minecraft/network/chat/contents/NbtContents.java
-index 97a2657bc98d41c3c1e376b266d2c85f685acc88..7b6476455e095eed15c92797ce3a3e1146dbdc3f 100644
+index 97a2657bc98d41c3c1e376b266d2c85f685acc88..a55cae0724cd92c80a4f79a3babb91d0802f0860 100644
 --- a/src/main/java/net/minecraft/network/chat/contents/NbtContents.java
 +++ b/src/main/java/net/minecraft/network/chat/contents/NbtContents.java
 @@ -8,6 +8,7 @@ import java.util.Optional;
@@ -95,7 +95,7 @@ index 97a2657bc98d41c3c1e376b266d2c85f685acc88..7b6476455e095eed15c92797ce3a3e11
  import net.minecraft.commands.CommandSourceStack;
  import net.minecraft.commands.arguments.NbtPathArgument;
  import net.minecraft.nbt.Tag;
-@@ -107,10 +108,11 @@ public class NbtContents implements ComponentContents {
+@@ -107,10 +108,10 @@ public class NbtContents implements ComponentContents {
                  Component component = DataFixUtils.orElse(ComponentUtils.updateForEntity(source, this.separator, sender, depth), ComponentUtils.DEFAULT_NO_STYLE_SEPARATOR);
                  return stream.flatMap((text) -> {
                      try {
@@ -105,7 +105,6 @@ index 97a2657bc98d41c3c1e376b266d2c85f685acc88..7b6476455e095eed15c92797ce3a3e11
                      } catch (Exception var5) {
 -                        LOGGER.warn("Failed to parse component: {}", text, var5);
 +                        // Scissors - don't log
-+                        // LOGGER.warn("Failed to parse component: {}", text, var5);
                          return Stream.of();
                      }
                  }).reduce((accumulator, current) -> {

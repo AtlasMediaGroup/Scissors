@@ -5,23 +5,34 @@ Subject: [PATCH] Don't query player data in the `nbt` component
 
 
 diff --git a/src/main/java/net/minecraft/network/chat/contents/EntityDataSource.java b/src/main/java/net/minecraft/network/chat/contents/EntityDataSource.java
-index 8a6799b50062c1b7b141ee1568dc523f9ee7ecfd..e5a2bb129100f0f935c8f10682204e7cb6277142 100644
+index 8a6799b50062c1b7b141ee1568dc523f9ee7ecfd..80e7b0889235288b60d813a569daecb7e08e108e 100644
 --- a/src/main/java/net/minecraft/network/chat/contents/EntityDataSource.java
 +++ b/src/main/java/net/minecraft/network/chat/contents/EntityDataSource.java
-@@ -11,6 +11,7 @@ import net.minecraft.commands.arguments.selector.EntitySelector;
+@@ -1,5 +1,6 @@
+ package net.minecraft.network.chat.contents;
+ 
++import me.totalfreedom.scissors.ScissorsConfig; // Scissors
+ import com.mojang.brigadier.StringReader;
+ import com.mojang.brigadier.exceptions.CommandSyntaxException;
+ import java.util.List;
+@@ -11,6 +12,7 @@ import net.minecraft.commands.arguments.selector.EntitySelector;
  import net.minecraft.commands.arguments.selector.EntitySelectorParser;
  import net.minecraft.nbt.CompoundTag;
  import net.minecraft.world.entity.Entity;
-+import net.minecraft.world.entity.player.Player;
++import net.minecraft.world.entity.player.Player; // Scissors
  
  public record EntityDataSource(String selectorPattern, @Nullable EntitySelector compiledSelector) implements DataSource {
      public EntityDataSource(String rawPath) {
-@@ -31,7 +32,7 @@ public record EntityDataSource(String selectorPattern, @Nullable EntitySelector
+@@ -31,7 +33,11 @@ public record EntityDataSource(String selectorPattern, @Nullable EntitySelector
      public Stream<CompoundTag> getData(CommandSourceStack source) throws CommandSyntaxException {
          if (this.compiledSelector != null) {
              List<? extends Entity> list = this.compiledSelector.findEntities(source);
 -            return list.stream().map(NbtPredicate::getEntityTagToCompare);
-+            return list.stream().filter((entity) -> !(entity instanceof Player)).map(NbtPredicate::getEntityTagToCompare); // Scissors - Don't query NBT from players
++	         // Scissors start
++            Stream<? extends Entity> stream = list.stream();
++            if (ScissorsConfig.excludePlayersFromNbtComponents) stream = stream.filter((entity) -> !(entity instanceof Player));
++            return stream.map(NbtPredicate::getEntityTagToCompare);
++	         // Scissors end
          } else {
              return Stream.empty();
          }

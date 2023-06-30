@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Telesphoreo <me@telesphoreo.me>
-Date: Fri, 7 Apr 2023 15:35:35 -0500
+Date: Sat, 26 Mar 2022 21:51:07 -0500
 Subject: [PATCH] Change version fetcher to AMG
 
 
@@ -77,7 +77,7 @@ index 9d687da5bdf398bb3f6c84cdf1249a7213d09f2e..0a8fda6939152d393f07e5d2812409ad
          switch (distance) {
              case -1:
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index 717e292040ed7779eb4b6c5fa26665d3df9024e7..0fb3a648ee6bd6cb88515770bcfc70e368313527 100644
+index d4f6935a1bea77e5118bfd538f9b1358c21591a7..2a834708001ea940d8ab6f6559024df32b1e9520 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -292,7 +292,7 @@ public class Main {

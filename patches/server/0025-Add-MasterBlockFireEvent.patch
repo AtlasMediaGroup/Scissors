@@ -5,29 +5,16 @@ Subject: [PATCH] Add MasterBlockFireEvent
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/CommandBlock.java b/src/main/java/net/minecraft/world/level/block/CommandBlock.java
-index 2e7c03b00bc941b86df6a7f1b2b188c9f0aede22..333f9bcccbe9ecd88c1fd13e2956f69414d6e295 100644
+index 2e7c03b00bc941b86df6a7f1b2b188c9f0aede22..3a073a2358a20785647eb216e1c229ce079de2a0 100644
 --- a/src/main/java/net/minecraft/world/level/block/CommandBlock.java
 +++ b/src/main/java/net/minecraft/world/level/block/CommandBlock.java
 @@ -1,5 +1,6 @@
  package net.minecraft.world.level.block;
  
-+import me.totalfreedom.scissors.event.block.MasterBlockFireEvent;
++import me.totalfreedom.scissors.event.block.MasterBlockFireEvent; // Scissors
  import com.mojang.logging.LogUtils;
  import net.minecraft.core.BlockPos;
  import net.minecraft.core.Direction;
-@@ -25,10 +26,10 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
- import net.minecraft.world.level.block.state.properties.BooleanProperty;
- import net.minecraft.world.level.block.state.properties.DirectionProperty;
- import net.minecraft.world.phys.BlockHitResult;
-+import org.bukkit.event.block.BlockRedstoneEvent;
-+import org.bukkit.Location;
- import org.slf4j.Logger;
- 
--import org.bukkit.event.block.BlockRedstoneEvent; // CraftBukkit
--
- public class CommandBlock extends BaseEntityBlock implements GameMasterBlock {
- 
-     private static final Logger LOGGER = LogUtils.getLogger();
 @@ -117,6 +118,15 @@ public class CommandBlock extends BaseEntityBlock implements GameMasterBlock {
      }
  
@@ -44,44 +31,31 @@ index 2e7c03b00bc941b86df6a7f1b2b188c9f0aede22..333f9bcccbe9ecd88c1fd13e2956f694
          if (hasCommand) {
              executor.performCommand(world);
          } else {
-diff --git a/src/main/java/net/minecraft/world/level/block/StructureBlock.java b/src/main/java/net/minecraft/world/level/block/StructureBlock.java
-index a3dac53b07618819b322b48339d850d80a1c55ba..4dd21b7ea247b3ced3d3ee6c67746cc6811d5bb8 100644
---- a/src/main/java/net/minecraft/world/level/block/StructureBlock.java
-+++ b/src/main/java/net/minecraft/world/level/block/StructureBlock.java
-@@ -1,6 +1,7 @@
- package net.minecraft.world.level.block;
- 
- import javax.annotation.Nullable;
-+
- import net.minecraft.core.BlockPos;
- import net.minecraft.server.level.ServerLevel;
- import net.minecraft.world.InteractionHand;
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/JigsawBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/JigsawBlockEntity.java
-index 182e16c1d968707a11329150d71b7d01df6c6e52..fa5cade3f5f2fecc37cc065b96403d0a1c1a2553 100644
+index 182e16c1d968707a11329150d71b7d01df6c6e52..8582a9369cffe0eebeb82a81fc413d0bf4ad28ed 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/JigsawBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/JigsawBlockEntity.java
-@@ -2,6 +2,8 @@ package net.minecraft.world.level.block.entity;
+@@ -2,6 +2,7 @@ package net.minecraft.world.level.block.entity;
  
  import java.util.Arrays;
  import java.util.Optional;
-+
-+import me.totalfreedom.scissors.event.block.MasterBlockFireEvent;
++import me.totalfreedom.scissors.event.block.MasterBlockFireEvent; // Scissors
  import net.minecraft.core.BlockPos;
  import net.minecraft.core.Holder;
  import net.minecraft.core.Registry;
-@@ -17,6 +19,7 @@ import net.minecraft.world.level.block.JigsawBlock;
+@@ -17,6 +18,7 @@ import net.minecraft.world.level.block.JigsawBlock;
  import net.minecraft.world.level.block.state.BlockState;
  import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
  import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
-+import org.bukkit.Location;
++import org.bukkit.Location; // Scissors
  
  public class JigsawBlockEntity extends BlockEntity {
      public static final String TARGET = "target";
-@@ -107,6 +110,16 @@ public class JigsawBlockEntity extends BlockEntity {
+@@ -107,6 +109,16 @@ public class JigsawBlockEntity extends BlockEntity {
      }
  
      public void generate(ServerLevel world, int maxDepth, boolean keepJigsaws) {
-+        // Scissors - Add master block fire event
++        // Scissors start - Add master block fire event
 +        final BlockPos pos = this.getBlockPos();
 +        final MasterBlockFireEvent event = new MasterBlockFireEvent(new Location(this.getLevel().getWorld(), pos.getX(), pos.getY(), pos.getZ()));
 +
@@ -95,39 +69,30 @@ index 182e16c1d968707a11329150d71b7d01df6c6e52..fa5cade3f5f2fecc37cc065b96403d0a
          Registry<StructureTemplatePool> registry = world.registryAccess().registryOrThrow(Registries.TEMPLATE_POOL);
          // Paper start - Replace getHolderOrThrow with a null check
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/StructureBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/StructureBlockEntity.java
-index 9792bf3ee083f571f1f4089d30beb586839f5f6b..e9d584b0ca984f9b7c70f99e1665cdedecb710e1 100644
+index 9792bf3ee083f571f1f4089d30beb586839f5f6b..8ba3085f7f442e6d9790805228762d39a6f81c1a 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/StructureBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/StructureBlockEntity.java
-@@ -5,6 +5,8 @@ import java.util.Objects;
+@@ -5,6 +5,7 @@ import java.util.Objects;
  import java.util.Optional;
  import java.util.stream.Stream;
  import javax.annotation.Nullable;
-+
-+import me.totalfreedom.scissors.event.block.MasterBlockFireEvent;
++import me.totalfreedom.scissors.event.block.MasterBlockFireEvent; // Scissors
  import net.minecraft.ResourceLocationException;
  import net.minecraft.Util;
  import net.minecraft.core.BlockPos;
-@@ -29,6 +31,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.BlockRotProce
+@@ -29,6 +30,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.BlockRotProce
  import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
  import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
  import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
-+import org.bukkit.Location;
++import org.bukkit.Location; // Scissors
  
  public class StructureBlockEntity extends BlockEntity {
      private static final int SCAN_CORNER_BLOCKS_RANGE = 5;
-@@ -264,7 +267,6 @@ public class StructureBlockEntity extends BlockEntity {
-             return false;
-         } else {
-             BlockPos blockPos = this.getBlockPos();
--            int i = 80;
-             BlockPos blockPos2 = new BlockPos(blockPos.getX() - 80, this.level.getMinBuildHeight(), blockPos.getZ() - 80);
-             BlockPos blockPos3 = new BlockPos(blockPos.getX() + 80, this.level.getMaxBuildHeight() - 1, blockPos.getZ() + 80);
-             Stream<BlockPos> stream = this.getRelatedCorners(blockPos2, blockPos3);
 @@ -321,6 +323,16 @@ public class StructureBlockEntity extends BlockEntity {
  
      public boolean saveStructure(boolean bl) {
          if (this.mode == StructureMode.SAVE && !this.level.isClientSide && this.structureName != null) {
-+            // Scissors - Add master block fire event
++            // Scissors start - Add master block fire event
 +            final BlockPos pos = this.getBlockPos();
 +            final MasterBlockFireEvent event = new MasterBlockFireEvent(new Location(this.getLevel().getWorld(), pos.getX(), pos.getY(), pos.getZ()));
 +
@@ -144,7 +109,7 @@ index 9792bf3ee083f571f1f4089d30beb586839f5f6b..e9d584b0ca984f9b7c70f99e1665cded
  
      public boolean loadStructure(ServerLevel world, boolean bl) {
          if (this.mode == StructureMode.LOAD && this.structureName != null) {
-+            // Scissors - Add master block fire event
++            // Scissors start - Add master block fire event
 +            final BlockPos blockPos = this.getBlockPos();
 +            final MasterBlockFireEvent event = new MasterBlockFireEvent(new Location(this.getLevel().getWorld(), blockPos.getX(), blockPos.getY(), blockPos.getZ()));
 +
@@ -161,7 +126,7 @@ index 9792bf3ee083f571f1f4089d30beb586839f5f6b..e9d584b0ca984f9b7c70f99e1665cded
      }
  
      public void unloadStructure() {
-+        // Scissors - Add master block fire event
++        // Scissors start - Add master block fire event
 +        final BlockPos blockPos = this.getBlockPos();
 +        final MasterBlockFireEvent event = new MasterBlockFireEvent(new Location(this.getLevel().getWorld(), blockPos.getX(), blockPos.getY(), blockPos.getZ()));
 +

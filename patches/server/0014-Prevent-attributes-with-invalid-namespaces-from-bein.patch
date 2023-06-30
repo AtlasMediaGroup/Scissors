@@ -6,14 +6,14 @@ Subject: [PATCH] Prevent attributes with invalid namespaces from being applied
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
-index 5da793c0754a943b12ef01cac1072b71afd27b0e..aed46e2ca3191e1c7dccb4eb7d71bd3be97c2993 100644
+index db7d7e2ab25f8559247e2496a54807161e24a203..3f8ab313979954c84dd42143fddc84b288a75890 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 @@ -46,6 +46,7 @@ import net.minecraft.nbt.NbtIo;
  import net.minecraft.nbt.StringTag;
  import net.minecraft.nbt.Tag;
  import net.minecraft.network.chat.Component;
-+import net.minecraft.resources.ResourceLocation;
++import net.minecraft.resources.ResourceLocation; // Scissors
  import net.minecraft.world.item.BlockItem;
  import net.minecraft.world.level.block.state.BlockState;
  import org.apache.commons.lang3.EnumUtils;

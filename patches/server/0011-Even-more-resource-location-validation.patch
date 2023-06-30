@@ -27,7 +27,7 @@ index 91e0328f847a2464a1cf65134520244a4cec705f..77ae3bc5fd6cf34aae7bd3baa563f3e2
          }
  
 diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
-index 9afc81ccb237c3655d64cdbe8a0db9a4d7791043..ffcb77755b28bcdb3eae981fc735e6dde664bb6e 100644
+index 9afc81ccb237c3655d64cdbe8a0db9a4d7791043..7b0aed8ed3a150b7c10fa246bb0b519232424737 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityType.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityType.java
 @@ -588,7 +588,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
@@ -35,7 +35,7 @@ index 9afc81ccb237c3655d64cdbe8a0db9a4d7791043..ffcb77755b28bcdb3eae981fc735e6dd
              entity.load(nbt);
          }, () -> {
 -            EntityType.LOGGER.warn("Skipping Entity with id {}", nbt.getString("id"));
-+            /*EntityType.LOGGER.warn("Skipping Entity with id {}", nbt.getString("id"));*/ // Scissors - Don't log invalid entities
++            // Scissors - Don't log invalid entities
          });
      }
  
@@ -44,12 +44,12 @@ index 9afc81ccb237c3655d64cdbe8a0db9a4d7791043..ffcb77755b28bcdb3eae981fc735e6dd
  
      public static Optional<EntityType<?>> by(CompoundTag nbt) {
 -        return BuiltInRegistries.ENTITY_TYPE.getOptional(new ResourceLocation(nbt.getString("id")));
-+        return BuiltInRegistries.ENTITY_TYPE.getOptional(ResourceLocation.tryParse(nbt.getString("id")));
++        return BuiltInRegistries.ENTITY_TYPE.getOptional(ResourceLocation.tryParse(nbt.getString("id"))); // Scissors
      }
  
      @Nullable
 diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index e2a25c29ec74147b3e66aa0b3deb85a8f6ee53a5..b0c953ad8275740679c847e348b311de93d64965 100644
+index e2a25c29ec74147b3e66aa0b3deb85a8f6ee53a5..0bb87ca2556ca41e0b14503d3ae62e0fc133a209 100644
 --- a/src/main/java/net/minecraft/world/entity/Mob.java
 +++ b/src/main/java/net/minecraft/world/entity/Mob.java
 @@ -618,7 +618,7 @@ public abstract class Mob extends LivingEntity implements Targeting {
@@ -57,7 +57,7 @@ index e2a25c29ec74147b3e66aa0b3deb85a8f6ee53a5..b0c953ad8275740679c847e348b311de
          this.setLeftHanded(nbt.getBoolean("LeftHanded"));
          if (nbt.contains("DeathLootTable", 8)) {
 -            this.lootTable = new ResourceLocation(nbt.getString("DeathLootTable"));
-+            this.lootTable = ResourceLocation.tryParse(nbt.getString("DeathLootTable"));
++            this.lootTable = ResourceLocation.tryParse(nbt.getString("DeathLootTable")); // Scissors
              this.lootTableSeed = nbt.getLong("DeathLootTableSeed");
          }
  
@@ -117,19 +117,15 @@ index 0dd0ce9a9b3253e87eda12354249ec2fd2a33cf2..b6920f9432ca1736afbe775186fbbcf1
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
-index 18b9b0dc70f6872a9d71c120bcd2edca531b0ac4..fa0c023b3a88bd797f563e0e675d70966ff7dbd3 100644
+index 18b9b0dc70f6872a9d71c120bcd2edca531b0ac4..4732fff6d1198e5fc4875b4d4523aa2d152817ea 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
-@@ -80,8 +80,18 @@ public abstract class CraftMob extends CraftLivingEntity implements Mob {
+@@ -80,8 +80,14 @@ public abstract class CraftMob extends CraftLivingEntity implements Mob {
  
      @Override
      public LootTable getLootTable() {
 -        NamespacedKey key = CraftNamespacedKey.fromMinecraft(this.getHandle().getLootTable());
 -        return Bukkit.getLootTable(key);
-+        if (this.getHandle().lootTable == null) {
-+            this.getHandle().lootTable = this.getHandle().getDefaultLootTable();
-+        }
-+
 +        // Scissors start - Return a null loot table if the specified loot table is not valid
 +        try {
 +            NamespacedKey key = CraftNamespacedKey.fromMinecraft(this.getHandle().getLootTable());

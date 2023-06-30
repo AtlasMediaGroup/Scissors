@@ -5,29 +5,28 @@ Subject: [PATCH] Block server side chunkbans
 
 
 diff --git a/src/main/java/net/minecraft/network/PacketEncoder.java b/src/main/java/net/minecraft/network/PacketEncoder.java
-index fbfadeb83719b81f42724e79c59e92ed88fdece7..bcb9d99359fb3e03c86d7429d9bcfe63b6c0f5d5 100644
+index fbfadeb83719b81f42724e79c59e92ed88fdece7..c9c0652a22760716f9dbb5fc73bc6fce5148b800 100644
 --- a/src/main/java/net/minecraft/network/PacketEncoder.java
 +++ b/src/main/java/net/minecraft/network/PacketEncoder.java
-@@ -6,9 +6,18 @@ import io.netty.channel.ChannelHandlerContext;
+@@ -6,9 +6,17 @@ import io.netty.channel.ChannelHandlerContext;
  import io.netty.handler.codec.MessageToByteEncoder;
  import io.papermc.paper.adventure.PaperAdventure; // Paper
  import java.io.IOException;
-+import java.util.Collections;
-+
-+import net.minecraft.ChatFormatting;
-+import net.minecraft.core.NonNullList;
-+import net.minecraft.nbt.CompoundTag;
-+import net.minecraft.network.chat.Component;
-+import net.minecraft.network.chat.SignedMessageBody;
++import java.util.Collections; // Scissors
++import net.minecraft.ChatFormatting; // Scissors
++import net.minecraft.core.NonNullList; // Scissors
++import net.minecraft.nbt.CompoundTag; // Scissors
++import net.minecraft.network.chat.Component; // Scissors
++import net.minecraft.network.chat.SignedMessageBody; // Scissors
  import net.minecraft.network.protocol.Packet;
  import net.minecraft.network.protocol.PacketFlow;
-+import net.minecraft.network.protocol.game.*;
++import net.minecraft.network.protocol.game.*; // Scissors
  import net.minecraft.util.profiling.jfr.JvmProfiler;
-+import net.minecraft.world.item.ItemStack;
++import net.minecraft.world.item.ItemStack; // Scissors
  import org.slf4j.Logger;
  
  public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
-@@ -19,6 +28,23 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
+@@ -19,6 +27,23 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
          this.flow = side;
      }
  
@@ -51,7 +50,7 @@ index fbfadeb83719b81f42724e79c59e92ed88fdece7..bcb9d99359fb3e03c86d7429d9bcfe63
      protected void encode(ChannelHandlerContext channelHandlerContext, Packet<?> packet, ByteBuf byteBuf) throws Exception {
          ConnectionProtocol connectionProtocol = channelHandlerContext.channel().attr(Connection.ATTRIBUTE_PROTOCOL).get();
          if (connectionProtocol == null) {
-@@ -33,38 +59,66 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
+@@ -33,38 +58,66 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
                  throw new IOException("Can't serialize unregistered packet");
              } else {
                  FriendlyByteBuf friendlyByteBuf = new FriendlyByteBuf(byteBuf);

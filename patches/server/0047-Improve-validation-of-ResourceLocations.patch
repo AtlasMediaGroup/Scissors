@@ -5,10 +5,10 @@ Subject: [PATCH] Improve validation of ResourceLocations
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
-index 430810b9cc554dfb3bb0972c103c8a36e8db67ef..b2832c75beab2a1fa077b0317392b6aa46134ce6 100644
+index c1598e072e09c6690d5cd781a333d88a520a9a29..f292aa0016e6f741b36ddc1417f6f63d248f987f 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
-@@ -300,7 +300,12 @@ public abstract class AbstractFurnaceBlockEntity extends BaseContainerBlockEntit
+@@ -301,7 +301,12 @@ public abstract class AbstractFurnaceBlockEntity extends BaseContainerBlockEntit
          while (iterator.hasNext()) {
              String s = (String) iterator.next();
  
@@ -23,7 +23,7 @@ index 430810b9cc554dfb3bb0972c103c8a36e8db67ef..b2832c75beab2a1fa077b0317392b6aa
  
          // Paper start - cook speed API
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BrushableBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BrushableBlockEntity.java
-index 7a3ac883be4015d41a4c7582341a424b4bd6bbf4..6a6d34831a3c9a1a0fd47dbfd3a497c0b7923ce5 100644
+index 0425151e688966442340ea1cf892aff34ffe0791..244b04e0020b1bd1e7be34a1b6266a8ac75d29fc 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BrushableBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BrushableBlockEntity.java
 @@ -199,7 +199,7 @@ public class BrushableBlockEntity extends BlockEntity {

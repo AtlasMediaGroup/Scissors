@@ -5,31 +5,28 @@ Subject: [PATCH] Reject oversized components from updating
 
 
 diff --git a/src/main/java/net/minecraft/network/chat/ComponentUtils.java b/src/main/java/net/minecraft/network/chat/ComponentUtils.java
-index 584a58659fae6ba3d8b53858890bc6ec509ffb0e..0dcee5b53740126e0886058dacc43e447836b8d8 100644
+index 584a58659fae6ba3d8b53858890bc6ec509ffb0e..54a7dae26854d320d9e53f63eb411a85a2d78159 100644
 --- a/src/main/java/net/minecraft/network/chat/ComponentUtils.java
 +++ b/src/main/java/net/minecraft/network/chat/ComponentUtils.java
-@@ -39,8 +39,10 @@ public class ComponentUtils {
+@@ -39,8 +39,9 @@ public class ComponentUtils {
      }
  
      public static MutableComponent updateForEntity(@Nullable CommandSourceStack source, Component text, @Nullable Entity sender, int depth) throws CommandSyntaxException {
-+        // Scissors start - Reject oversized components
-+        MutableComponent result;
++        MutableComponent result; // Scissors
          if (depth > 100) {
 -            return text.copy();
-+            result = text.copy();
++            result = text.copy(); // Scissors
          } else {
              // Paper start
              if (text instanceof io.papermc.paper.adventure.AdventureComponent adventureComponent) {
-@@ -53,8 +55,11 @@ public class ComponentUtils {
+@@ -53,8 +54,9 @@ public class ComponentUtils {
                  mutableComponent.append(updateForEntity(source, component, sender, depth + 1));
              }
  
 -            return mutableComponent.withStyle(resolveStyle(source, text.getStyle(), sender, depth));
-+            result = mutableComponent.withStyle(resolveStyle(source, text.getStyle(), sender, depth));
++            result = mutableComponent.withStyle(resolveStyle(source, text.getStyle(), sender, depth)); // Scissors
          }
-+        // Would the resulting component exceed 65535 bytes when encoded as a string?
-+        return Component.Serializer.toJson(result).length() > 65535 ? Component.empty() : result;
-+        // Scissors end
++        return Component.Serializer.toJson(result).length() > 65535 ? Component.empty() : result; // Scissors
      }
  
      private static Style resolveStyle(@Nullable CommandSourceStack source, Style style, @Nullable Entity sender, int depth) throws CommandSyntaxException {

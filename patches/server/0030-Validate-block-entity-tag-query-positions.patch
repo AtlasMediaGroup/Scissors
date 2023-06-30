@@ -5,16 +5,16 @@ Subject: [PATCH] Validate block entity tag query positions
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index f6f5efbf757f1508b628db90c9f63da382ebf4d5..cb5f11f60e5abe21ca3dd724c79f29391cd052cc 100644
+index aaaa55f8574694e4b83824773a99461b2f36542a..24502eb6588ae1ea19d53b4af66c3ba78280de59 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -1375,8 +1375,10 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -1374,8 +1374,10 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
      @Override
      public void handleBlockEntityTagQuery(ServerboundBlockEntityTagQuery packet) {
          PacketUtils.ensureRunningOnSameThread(packet, this, this.player.serverLevel());
 -        if (this.player.hasPermissions(2)) {
 -            BlockEntity tileentity = this.player.level().getBlockEntity(packet.getPos());
-+        // Scissors - Validate block entity tag query positions
++        // Scissors start - Validate block entity tag query positions
 +        if (this.player.hasPermissions(2) && Level.isInSpawnableBounds(packet.getPos())) {
 +            BlockEntity tileentity = this.player.level().isLoaded(packet.getPos()) ? this.player.level().getBlockEntity(packet.getPos()) : null;
 +            // Scissors end

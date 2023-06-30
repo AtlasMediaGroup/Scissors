@@ -1,9 +1,26 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Telesphoreo <me@telesphoreo.me>
-Date: Sat, 10 Dec 2022 22:25:38 -0600
-Subject: [PATCH] Return null when a show_entity hover event's UUID isn't valid
+From: Video <videogamesm12@gmail.com>
+Date: Sat, 12 Mar 2022 19:34:59 -0700
+Subject: [PATCH] UUID validation
 
 
+diff --git a/src/main/java/net/minecraft/nbt/NbtUtils.java b/src/main/java/net/minecraft/nbt/NbtUtils.java
+index 6dac24354192bea79a4b9eb721543110826790b2..a9c3c55eb622b18c74d8a9bd472e4e871d11b2aa 100644
+--- a/src/main/java/net/minecraft/nbt/NbtUtils.java
++++ b/src/main/java/net/minecraft/nbt/NbtUtils.java
+@@ -78,7 +78,11 @@ public final class NbtUtils {
+         }
+         // Paper start - support string UUID's
+         if (nbt.contains("Id", 8)) {
+-            uUID = UUID.fromString(nbt.getString("Id"));
++            // Scissors start - Validate String UUIDs in game profiles
++            try {
++                uUID = UUID.fromString(nbt.getString("Id"));
++            } catch (Exception ignored) {}
++            // Scissors end
+         }
+         // Paper end
+ 
 diff --git a/src/main/java/net/minecraft/network/chat/HoverEvent.java b/src/main/java/net/minecraft/network/chat/HoverEvent.java
 index 3ad05bbab726c59e7b67d9614af4b208d4520cb3..c0633f9553fb5aa52e8ffc863159521d09cb3bd5 100644
 --- a/src/main/java/net/minecraft/network/chat/HoverEvent.java

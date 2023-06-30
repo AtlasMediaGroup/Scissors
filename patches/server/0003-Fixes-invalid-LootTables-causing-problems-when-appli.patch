@@ -1,12 +1,12 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Video <videogamesm12@gmail.com>
-Date: Fri, 10 Jun 2022 22:55:01 -0500
+Date: Sun, 13 Mar 2022 07:39:26 -0600
 Subject: [PATCH] Fixes invalid LootTables causing problems when applied to
  Minecart entities
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/loottable/PaperContainerEntityLootableInventory.java b/src/main/java/com/destroystokyo/paper/loottable/PaperContainerEntityLootableInventory.java
-index d4a8c1bbb8fef27ac42bdf27dde495b4c649e6cb..865c61accf211d28be3c82dcf158fec9778b50c1 100644
+index 15173e715fa36546820d930a46e0f0c493d07cfc..356cc6f468975faa676db87db8fc0fa2df32f020 100644
 --- a/src/main/java/com/destroystokyo/paper/loottable/PaperContainerEntityLootableInventory.java
 +++ b/src/main/java/com/destroystokyo/paper/loottable/PaperContainerEntityLootableInventory.java
 @@ -17,7 +17,7 @@ public class PaperContainerEntityLootableInventory implements PaperLootableEntit
@@ -32,7 +32,7 @@ index 2ee4ee14ab3345486dad6b24fd9a4fcc6c746b99..c5ac6cda91a81d3075f5c763e30dc009
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
-index b9f0dae1ec96194fe78c086b63d8a18b1d0cfcf7..bdc49a9965fd3add3dfca31fb0517c14597fb076 100644
+index 081691f9710ff1115e4308f79ed49fbc38941193..c29dfd15e147d5c4d9c9584ff7803c2a52009f0d 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
 @@ -46,7 +46,7 @@ public abstract class RandomizableContainerBlockEntity extends BaseContainerBloc
