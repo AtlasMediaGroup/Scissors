@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Telesphoreo <me@telesphoreo.me>
-Date: Sat, 10 Dec 2022 23:38:53 -0600
+From: Allink <arclicious@vivaldi.net>
+Date: Mon, 18 Apr 2022 03:56:09 +0100
 Subject: [PATCH] Reset large tags
 
 
@@ -105,7 +105,7 @@ index adb7220be617d6d9f2cdd7fbe4fa2dd24cc7d142..4a7658deb89e7673bbac8b7e5a91d286
          this.processEnchantOrder(this.tag); // Paper
          if (this.getItem().canBeDepleted()) {
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
-index 448fa4f4f200430d6ce3051763c7ceb697696146..c1598e072e09c6690d5cd781a333d88a520a9a29 100644
+index 40e59b8db83aec1143e3c394427e916beea7c01f..f292aa0016e6f741b36ddc1417f6f63d248f987f 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 @@ -9,6 +9,7 @@ import java.util.Iterator;

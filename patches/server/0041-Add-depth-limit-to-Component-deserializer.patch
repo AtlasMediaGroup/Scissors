@@ -5,7 +5,7 @@ Subject: [PATCH] Add depth limit to Component deserializer
 
 
 diff --git a/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java b/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
-index cd4c69573df64393a0301538e78502355b78d3dd..e8ad243933b4004a79026b55b81a42e26510c898 100644
+index 44920c46aa75bcdc450e192d8c8ca0bf7ad0b7d5..56aa12b57d893b0be9ff7a18df87645dae2c8a19 100644
 --- a/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
 +++ b/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
 @@ -87,8 +87,8 @@ public class ScissorsConfig

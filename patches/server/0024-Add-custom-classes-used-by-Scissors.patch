@@ -121,10 +121,10 @@ index 0000000000000000000000000000000000000000..b724baaef8d565e41db1af6393d0890e
 +}
 diff --git a/src/main/java/me/totalfreedom/scissors/PositionUtility.java b/src/main/java/me/totalfreedom/scissors/PositionUtility.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..c54535042a7ac12fe46b3b37db8d7b116e9469d5
+index 0000000000000000000000000000000000000000..c5dcc833d6f2c0daa1d0c2a7ab81430f25e0b2f3
 --- /dev/null
 +++ b/src/main/java/me/totalfreedom/scissors/PositionUtility.java
-@@ -0,0 +1,83 @@
+@@ -0,0 +1,53 @@
 +package me.totalfreedom.scissors;
 +
 +import net.minecraft.core.BlockPos;
@@ -135,36 +135,6 @@ index 0000000000000000000000000000000000000000..c54535042a7ac12fe46b3b37db8d7b11
 +
 +public class PositionUtility
 +{
-+    public static Vec3 getValidVec3(double x, double y, double z, Entity entity)
-+    {
-+        final Level level = entity.level;
-+
-+        try
-+        {
-+            if (level.isInWorldBounds(new BlockPos(Math.floor(MathUtility.safeDoubleToInt(x)), Math.floor(MathUtility.safeDoubleToInt(y)), Math.floor(MathUtility.safeDoubleToInt(z)))))
-+            {
-+                return new Vec3(x, y, z);
-+            }
-+            else
-+            {
-+                final WorldBorder worldBorder = level.getWorldBorder();
-+
-+                final double maxX = worldBorder.getMaxX();
-+                final double maxY = level.getMaxBuildHeight();
-+                final double maxZ = worldBorder.getMaxZ();
-+
-+                final double minX = worldBorder.getMinX();
-+                final double minY = level.getMinBuildHeight();
-+                final double minZ = worldBorder.getMinZ();
-+
-+                return new Vec3(MathUtility.clampDouble(x, minX, maxX), MathUtility.clampDouble(y, minY, maxY), MathUtility.clampDouble(z, minZ, maxZ));
-+            }
-+        }
-+        catch (Exception e)
-+        { // If we throw some sort of exception due to the position being crazy, catch it
-+            return new Vec3(0, 0, 0);
-+        }
-+    }
 +
 +    public static Vec3 getValidVec3FromBlockPos(BlockPos blockPos, Entity entity)
 +    {

@@ -5,7 +5,7 @@ Subject: [PATCH] Add MasterBlockFireEvent
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/CommandBlock.java b/src/main/java/net/minecraft/world/level/block/CommandBlock.java
-index 2e7c03b00bc941b86df6a7f1b2b188c9f0aede22..3a073a2358a20785647eb216e1c229ce079de2a0 100644
+index 2e7c03b00bc941b86df6a7f1b2b188c9f0aede22..6d4defceae65290a60a84561293d5b4095c4dcaa 100644
 --- a/src/main/java/net/minecraft/world/level/block/CommandBlock.java
 +++ b/src/main/java/net/minecraft/world/level/block/CommandBlock.java
 @@ -1,5 +1,6 @@
@@ -15,11 +15,19 @@ index 2e7c03b00bc941b86df6a7f1b2b188c9f0aede22..3a073a2358a20785647eb216e1c229ce
  import com.mojang.logging.LogUtils;
  import net.minecraft.core.BlockPos;
  import net.minecraft.core.Direction;
-@@ -117,6 +118,15 @@ public class CommandBlock extends BaseEntityBlock implements GameMasterBlock {
+@@ -25,6 +26,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+ import net.minecraft.world.level.block.state.properties.BooleanProperty;
+ import net.minecraft.world.level.block.state.properties.DirectionProperty;
+ import net.minecraft.world.phys.BlockHitResult;
++import org.bukkit.Location; // Scissors
+ import org.slf4j.Logger;
+ 
+ import org.bukkit.event.block.BlockRedstoneEvent; // CraftBukkit
+@@ -117,6 +119,15 @@ public class CommandBlock extends BaseEntityBlock implements GameMasterBlock {
      }
  
      private void execute(BlockState state, Level world, BlockPos pos, BaseCommandBlock executor, boolean hasCommand) {
-+        // Scissors - Add master block fire event
++        // Scissors start - Add master block fire event
 +        final MasterBlockFireEvent event = new MasterBlockFireEvent(new Location(world.getWorld(), pos.getX(), pos.getY(), pos.getZ()));
 +
 +        if (!event.callEvent())
@@ -69,7 +77,7 @@ index 182e16c1d968707a11329150d71b7d01df6c6e52..8582a9369cffe0eebeb82a81fc413d0b
          Registry<StructureTemplatePool> registry = world.registryAccess().registryOrThrow(Registries.TEMPLATE_POOL);
          // Paper start - Replace getHolderOrThrow with a null check
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/StructureBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/StructureBlockEntity.java
-index 9792bf3ee083f571f1f4089d30beb586839f5f6b..8ba3085f7f442e6d9790805228762d39a6f81c1a 100644
+index 9792bf3ee083f571f1f4089d30beb586839f5f6b..fa6592cdc916d3578fccc6c0075eb616fd3f73eb 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/StructureBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/StructureBlockEntity.java
 @@ -5,6 +5,7 @@ import java.util.Objects;
@@ -88,6 +96,15 @@ index 9792bf3ee083f571f1f4089d30beb586839f5f6b..8ba3085f7f442e6d9790805228762d39
  
  public class StructureBlockEntity extends BlockEntity {
      private static final int SCAN_CORNER_BLOCKS_RANGE = 5;
+@@ -264,7 +266,7 @@ public class StructureBlockEntity extends BlockEntity {
+             return false;
+         } else {
+             BlockPos blockPos = this.getBlockPos();
+-            int i = 80;
++            // Scissors - Obfuscation fixes
+             BlockPos blockPos2 = new BlockPos(blockPos.getX() - 80, this.level.getMinBuildHeight(), blockPos.getZ() - 80);
+             BlockPos blockPos3 = new BlockPos(blockPos.getX() + 80, this.level.getMaxBuildHeight() - 1, blockPos.getZ() + 80);
+             Stream<BlockPos> stream = this.getRelatedCorners(blockPos2, blockPos3);
 @@ -321,6 +323,16 @@ public class StructureBlockEntity extends BlockEntity {
  
      public boolean saveStructure(boolean bl) {
