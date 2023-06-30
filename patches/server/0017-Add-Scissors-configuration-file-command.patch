@@ -184,10 +184,10 @@ index 0000000000000000000000000000000000000000..797677d892d83cf54d9a60af1e277b67
 +}
 diff --git a/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java b/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..44920c46aa75bcdc450e192d8c8ca0bf7ad0b7d5
+index 0000000000000000000000000000000000000000..8cd2848aa6b06c5efbe797ed2d75ff4b025b3c52
 --- /dev/null
 +++ b/src/main/java/me/totalfreedom/scissors/ScissorsConfig.java
-@@ -0,0 +1,219 @@
+@@ -0,0 +1,225 @@
 +package me.totalfreedom.scissors;
 +
 +
@@ -277,8 +277,8 @@ index 0000000000000000000000000000000000000000..44920c46aa75bcdc450e192d8c8ca0bf
 +        config.options().header(HEADER);
 +        config.options().copyDefaults(true);
 +
-+        version = getInt("config-version", 4);
-+        set("config-version", 4);
++        version = getInt("config-version", 5);
++        set("config-version", 5);
 +        readConfig(ScissorsConfig.class, null);
 +    }
 +
@@ -364,6 +364,12 @@ index 0000000000000000000000000000000000000000..44920c46aa75bcdc450e192d8c8ca0bf
 +    {
 +        excludePlayersFromNbtComponents = getBoolean("excludePlayersFromNbtComponents", false);
 +    }
++    public static int componentDepthLimit = 128;
++    private static void componentDepthLimit()
++    {
++        componentDepthLimit = getInt("componentDepthLimit", 128);
++    }
++
 +
 +    private static void set(String path, Object val)
 +    {
@@ -407,67 +413,6 @@ index 0000000000000000000000000000000000000000..44920c46aa75bcdc450e192d8c8ca0bf
 +    }
 +}
 +
-diff --git a/src/main/java/net/minecraft/network/chat/OutgoingChatMessage.java b/src/main/java/net/minecraft/network/chat/OutgoingChatMessage.java
-index 74cf1c043beef03cfd5adf481414a5ee78bef2a6..bca80fb82b4bc5318820bcca7d6b4357be94def9 100644
---- a/src/main/java/net/minecraft/network/chat/OutgoingChatMessage.java
-+++ b/src/main/java/net/minecraft/network/chat/OutgoingChatMessage.java
-@@ -1,5 +1,6 @@
- package net.minecraft.network.chat;
- 
-+import me.totalfreedom.scissors.ScissorsConfig;
- import net.minecraft.server.level.ServerPlayer;
- 
- public interface OutgoingChatMessage {
-@@ -44,10 +45,25 @@ public interface OutgoingChatMessage {
-             // Paper end
-             PlayerChatMessage playerChatMessage = this.message.filter(filterMaskEnabled);
-             playerChatMessage = unsigned != null ? playerChatMessage.withUnsignedContent(unsigned) : playerChatMessage; // Paper
--            if (!playerChatMessage.isFullyFiltered()) {
-+            // Scissors start - Add configuration option to disable chat signatures
-+            if (!playerChatMessage.isFullyFiltered() && ScissorsConfig.chatSignaturesEnabled) {
-                 sender.connection.sendPlayerChatMessage(playerChatMessage, params);
-+                return;
-             }
- 
-+            if (sender.getServer().server.getOnlineMode()) {
-+                sender.connection.sendDisguisedChatMessage(playerChatMessage.decoratedContent(), params);
-+            } else {
-+                sender.connection.sendPlayerChatMessage(new PlayerChatMessage(
-+                    SignedMessageLink.unsigned(playerChatMessage.sender()),
-+                    null,
-+                    SignedMessageBody.unsigned(playerChatMessage.signedContent()),
-+                    unsigned,
-+                    playerChatMessage.filterMask(),
-+                    playerChatMessage.result()
-+                ), params);
-+            }
-+            // Scissors end
-         }
-     }
- }
-diff --git a/src/main/java/net/minecraft/network/chat/SignedMessageChain.java b/src/main/java/net/minecraft/network/chat/SignedMessageChain.java
-index c0a80824a0307ea673805015119cc834b268f0dc..cc67d0e351333731d953d5732215b19d1c36d4bc 100644
---- a/src/main/java/net/minecraft/network/chat/SignedMessageChain.java
-+++ b/src/main/java/net/minecraft/network/chat/SignedMessageChain.java
-@@ -4,6 +4,8 @@ import com.mojang.logging.LogUtils;
- import java.time.Instant;
- import java.util.UUID;
- import javax.annotation.Nullable;
-+
-+import me.totalfreedom.scissors.ScissorsConfig;
- import net.minecraft.util.SignatureUpdater;
- import net.minecraft.util.SignatureValidator;
- import net.minecraft.util.Signer;
-@@ -41,7 +43,8 @@ public class SignedMessageChain {
-                 if (!playerChatMessage.verify(signatureValidator)) {
-                     throw new SignedMessageChain.DecodeException(Component.translatable("multiplayer.disconnect.unsigned_chat"), true, org.bukkit.event.player.PlayerKickEvent.Cause.UNSIGNED_CHAT); // Paper - kick event causes
-                 } else {
--                    if (playerChatMessage.hasExpiredServer(Instant.now())) {
-+                    // Scissors - Do not log this message if chat signatures are disabled
-+                    if (playerChatMessage.hasExpiredServer(Instant.now()) && ScissorsConfig.chatSignaturesEnabled) {
-                         LOGGER.warn("Received expired chat: '{}'. Is the client/server system time unsynchronized?", (Object)body.content());
-                     }
- 
 diff --git a/src/main/java/net/minecraft/server/Main.java b/src/main/java/net/minecraft/server/Main.java
 index dae36c6452ccd57a436dd918547b64d59957ab0a..d450cf3cf8ab5cbb5d32a28ee2e4a6717941adef 100644
 --- a/src/main/java/net/minecraft/server/Main.java
@@ -501,189 +446,6 @@ index 9f422cbeaa52b3e6a0a27af4f8ad4ddb7808483f..bbfb536ddec7f44d2a75d35ab495be26
          this.setPvpAllowed(dedicatedserverproperties.pvp);
          this.setFlightAllowed(dedicatedserverproperties.allowFlight);
          this.setMotd(dedicatedserverproperties.motd);
-diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index a38c677b01dc4a18ac63d2e5f63cd40d07cc02d9..4191d5f804084ed9fefefadf0ceaaf77bf1e1d10 100644
---- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-+++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -1,5 +1,6 @@
- package net.minecraft.server.network;
- 
-+import me.totalfreedom.scissors.ScissorsConfig; // Scissors
- import com.google.common.collect.Lists;
- import com.google.common.primitives.Floats;
- import com.mojang.brigadier.ParseResults;
-@@ -2312,7 +2313,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
-     }
- 
-     private void handleMessageDecodeFailure(SignedMessageChain.DecodeException exception) {
--        if (exception.shouldDisconnect()) {
-+        if (exception.shouldDisconnect() && ScissorsConfig.chatSignaturesEnabled) { // Scissors - Do not kick when chat signatures are disabled
-             this.disconnect(exception.getComponent(), exception.kickCause); // Paper - kick event causes
-         } else {
-             this.player.sendSystemMessage(exception.getComponent().copy().withStyle(ChatFormatting.RED));
-@@ -2368,6 +2369,12 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
-             Optional<LastSeenMessages> optional = this.lastSeenMessages.applyUpdate(acknowledgment);
- 
-             if (optional.isEmpty()) {
-+                // Scissors start - Add configuration option to disable chat signatures
-+                if (!ScissorsConfig.chatSignaturesEnabled)
-+                {
-+                    return optional;
-+                }
-+                // Scissors end
-                 ServerGamePacketListenerImpl.LOGGER.warn("Failed to validate message acknowledgements from {}", this.player.getName().getString());
-                 this.disconnect(ServerGamePacketListenerImpl.CHAT_VALIDATION_FAILED, org.bukkit.event.player.PlayerKickEvent.Cause.CHAT_VALIDATION_FAILED); // Paper - kick event causes
-             }
-@@ -2600,11 +2607,16 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
-     @Override
-     public void handleChatAck(ServerboundChatAckPacket packet) {
-         LastSeenMessagesValidator lastseenmessagesvalidator = this.lastSeenMessages;
--
--        synchronized (this.lastSeenMessages) {
-             if (!this.lastSeenMessages.applyOffset(packet.offset())) {
--                ServerGamePacketListenerImpl.LOGGER.warn("Failed to validate message acknowledgements from {}", this.player.getName().getString());
--                this.disconnect(ServerGamePacketListenerImpl.CHAT_VALIDATION_FAILED, org.bukkit.event.player.PlayerKickEvent.Cause.CHAT_VALIDATION_FAILED); // Paper - kick event causes
-+                synchronized (this.lastSeenMessages) {
-+                    // Scissors start - Add configuration option to disable chat signatures
-+                    if (!ScissorsConfig.chatSignaturesEnabled)
-+                    {
-+                        return;
-+                    }
-+                    // Scissors end
-+                    ServerGamePacketListenerImpl.LOGGER.warn("Failed to validate message acknowledgements from {}", this.player.getName().getString());
-+                    this.disconnect(ServerGamePacketListenerImpl.CHAT_VALIDATION_FAILED, org.bukkit.event.player.PlayerKickEvent.Cause.CHAT_VALIDATION_FAILED); // Paper - kick event causes
-             }
- 
-         }
-diff --git a/src/main/java/net/minecraft/world/item/WrittenBookItem.java b/src/main/java/net/minecraft/world/item/WrittenBookItem.java
-index 31911c09fe15753ae32fa39417bdc9e9de552a88..1cce74b2fd105d7fe06d390ad77bffa4bdad2a4d 100644
---- a/src/main/java/net/minecraft/world/item/WrittenBookItem.java
-+++ b/src/main/java/net/minecraft/world/item/WrittenBookItem.java
-@@ -2,6 +2,8 @@ package net.minecraft.world.item;
- 
- import java.util.List;
- import javax.annotation.Nullable;
-+
-+import me.totalfreedom.scissors.ScissorsConfig;
- import net.minecraft.ChatFormatting;
- import net.minecraft.commands.CommandSourceStack;
- import net.minecraft.core.BlockPos;
-@@ -9,8 +11,7 @@ import net.minecraft.nbt.CompoundTag;
- import net.minecraft.nbt.ListTag;
- import net.minecraft.nbt.StringTag;
- import net.minecraft.nbt.Tag;
--import net.minecraft.network.chat.Component;
--import net.minecraft.network.chat.ComponentUtils;
-+import net.minecraft.network.chat.*;
- import net.minecraft.stats.Stats;
- import net.minecraft.util.StringUtil;
- import net.minecraft.world.InteractionHand;
-@@ -161,8 +162,42 @@ public class WrittenBookItem extends Item {
-             component2 = Component.literal(text);
-         }
- 
--        return Component.Serializer.toJson(component2);
-+        return Component.Serializer.toJson(!ScissorsConfig.runCommandsInBooks ? sanitize(component2, 0) : component2); // Scissors - Allow server owners to disable run command in books
-+    }
-+
-+    // Scissors start - Allow server owners to disable run command in books
-+    public static Component sanitize(Component component, int depth)
-+    {
-+        if (depth > 128)
-+        {
-+            return Component.nullToEmpty("Sanitization function depth limit exceeded");
-+        }
-+
-+        MutableComponent component2 = component.copy();
-+
-+        final Style style = component2.getStyle();
-+        final ClickEvent clickEvent = style.getClickEvent();
-+
-+        if (clickEvent != null && clickEvent.getAction().equals(ClickEvent.Action.RUN_COMMAND))
-+        {
-+            final String clickEventValue = clickEvent.getValue();
-+
-+            component2 = component2.copy().setStyle(style
-+                .withClickEvent(null)
-+                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.nullToEmpty("Would've " + (clickEventValue.startsWith("/") ? "ran" : "said") + ": " + clickEvent.getValue())))
-+            );
-+        }
-+
-+        final List<Component> processedExtra = component2.getSiblings()
-+            .stream()
-+            .map(comp -> sanitize(comp, depth + 1))
-+            .toList();
-+        component2.getSiblings().clear();
-+        component2.getSiblings().addAll(processedExtra);
-+
-+        return component2;
-     }
-+    // Scissors end
- 
-     @Override
-     public boolean isFoil(ItemStack stack) {
-diff --git a/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
-index 0521240dddde12d78cc05deda7fac11690f5d155..04fb4cba4c0c97d24838b00d7012f3988d2f32ab 100644
---- a/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
-+++ b/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
-@@ -8,8 +8,11 @@ import java.util.Objects;
- import java.util.UUID;
- import java.util.function.UnaryOperator;
- import javax.annotation.Nullable;
-+
-+import me.totalfreedom.scissors.ScissorsConfig;
- import net.minecraft.commands.CommandSource;
- import net.minecraft.commands.CommandSourceStack;
-+import net.minecraft.commands.Commands;
- import net.minecraft.core.BlockPos;
- import net.minecraft.nbt.CompoundTag;
- import net.minecraft.nbt.NbtOps;
-@@ -19,6 +22,7 @@ import net.minecraft.network.chat.Component;
- import net.minecraft.network.chat.ComponentUtils;
- import net.minecraft.network.chat.Style;
- import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-+import net.minecraft.server.MinecraftServer;
- import net.minecraft.server.level.ServerLevel;
- import net.minecraft.server.level.ServerPlayer;
- import net.minecraft.server.network.FilteredText;
-@@ -30,6 +34,7 @@ import net.minecraft.world.level.block.SignBlock;
- import net.minecraft.world.level.block.state.BlockState;
- import net.minecraft.world.phys.Vec2;
- import net.minecraft.world.phys.Vec3;
-+import org.bukkit.craftbukkit.entity.CraftHumanEntity;
- import org.slf4j.Logger;
- import org.bukkit.block.sign.Side;
- import org.bukkit.craftbukkit.block.CraftBlock;
-@@ -37,6 +42,7 @@ import org.bukkit.craftbukkit.util.CraftChatMessage;
- import org.bukkit.entity.Player;
- import org.bukkit.event.block.SignChangeEvent;
- // CraftBukkit end
-+import org.bukkit.craftbukkit.CraftServer;
- 
- public class SignBlockEntity extends BlockEntity implements CommandSource { // CraftBukkit - implements
- 
-@@ -286,6 +292,21 @@ public class SignBlockEntity extends BlockEntity implements CommandSource { // C
-                 }
-                 player.getServer().getCommands().performPrefixedCommand(this.createCommandSourceStack(((org.bukkit.craftbukkit.entity.CraftPlayer) event.getPlayer()).getHandle(), world, pos), event.getMessage());
-                 // Paper end
-+                // Scissors start - Add optional permissions to command signs
-+                final MinecraftServer vanillaServer = player.getServer();
-+                final CraftServer craftServer = vanillaServer.server;
-+                final CraftHumanEntity craftPlayer = player.getBukkitEntity();
-+                final Commands commands = vanillaServer.getCommands();
-+
-+                if (ScissorsConfig.commandSignsBypassPermissions)
-+                {
-+                    commands.performPrefixedCommand(this.createCommandSourceStack(((org.bukkit.craftbukkit.entity.CraftPlayer) event.getPlayer()).getHandle(), world, pos), event.getMessage());
-+                }
-+                else
-+                {
-+                    craftServer.dispatchCommand(craftPlayer, command.substring(1));
-+                }
-+                // Scissors end
-                 flag1 = true;
-             }
-         }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 index c4717c47aca7d07abeef7625459d13b8c9d6f036..5023a85b79cf293da414ec8834c9845e86f05f25 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
