@@ -1,0 +1,60 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Video <videogamesm12@gmail.com>
+Date: Sun, 20 Mar 2022 07:46:37 -0600
+Subject: [PATCH] Validate coordinates before attempting to get block entities
+ when handling Creative Inventory packets
+
+
+diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+index 2a609e43370e68943c580083f7f7d8c9b0972955..9d9bcf537ba9ae67cdcfec33f983c0983aaf889e 100644
+--- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+@@ -1923,6 +1923,18 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+     }
+     // Spigot end
+ 
++    // Scissors start - Readd the following Paper code
++    // Paper start
++    private static final int SURVIVAL_PLACE_DISTANCE_SQUARED = 6 * 6;
++    private static final int CREATIVE_PLACE_DISTANCE_SQUARED = 7 * 7;
++    private boolean isOutsideOfReach(double x, double y, double z) {
++        Location eyeLoc = this.getCraftPlayer().getEyeLocation();
++        double reachDistance = org.bukkit.util.NumberConversions.square(eyeLoc.getX() - x) + org.bukkit.util.NumberConversions.square(eyeLoc.getY() - y) + org.bukkit.util.NumberConversions.square(eyeLoc.getZ() - z);
++        return reachDistance > (this.getCraftPlayer().getGameMode() == org.bukkit.GameMode.CREATIVE ? CREATIVE_PLACE_DISTANCE_SQUARED : SURVIVAL_PLACE_DISTANCE_SQUARED);
++    }
++    // Paper end
++    // Scissors end
++
+     @Override
+     public void handleUseItemOn(ServerboundUseItemOnPacket packet) {
+         PacketUtils.ensureRunningOnSameThread(packet, this, this.player.serverLevel());
+@@ -3349,16 +3361,21 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+                 BlockPos blockposition = BlockEntity.getPosFromTag(nbttagcompound);
+ 
+                 if (this.player.level().isLoaded(blockposition)) {
+-                    // Paper start
+-                    BlockEntity tileentity = null;
+-                    if (this.player.distanceToSqr(blockposition.getX(), blockposition.getY(), blockposition.getZ()) < 32 * 32 && this.player.serverLevel().isLoadedAndInBounds(blockposition)) {
+-                        tileentity = this.player.level().getBlockEntity(blockposition);
+-                    }
+-                    // Paper end
++                    // Scissors start - Validate coordinates and whether the player can reach them
++                    if (Level.isInSpawnableBounds(blockposition) && !isOutsideOfReach(blockposition.getX(), blockposition.getY(), blockposition.getZ()))
++                    {
++                        BlockEntity tileentity = null;
++                        if (this.player.distanceToSqr(blockposition.getX(), blockposition.getY(), blockposition.getZ()) < 32 * 32 && this.player.serverLevel().isLoadedAndInBounds(blockposition))
++                        {
++                            tileentity = this.player.level().getBlockEntity(blockposition);
++                        }
++                        // Paper end
+ 
+-                    if (tileentity != null) {
+-                        tileentity.saveToItem(itemstack);
++                        if (tileentity != null) {
++                            tileentity.saveToItem(itemstack);
++                        }
+                     }
++                    // Scissors end
+                 }
+             }
+ 

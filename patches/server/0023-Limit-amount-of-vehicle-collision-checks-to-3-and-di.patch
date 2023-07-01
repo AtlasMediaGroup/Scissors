@@ -1,19 +1,19 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Telesphoreo <me@telesphoreo.me>
-Date: Sat, 10 Dec 2022 23:44:05 -0600
+From: Allink <arclicious@vivaldi.net>
+Date: Thu, 21 Apr 2022 13:52:32 +0100
 Subject: [PATCH] Limit amount of vehicle collision checks to 3 and discard
  vehicles if they collide with more than 15 other entities
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java
-index 9948a28dae4edba877c13ef0156be5ff58df3fa2..93f359c71659c0b2fdf25b1c76c072bf9209db2a 100644
+index 9948a28dae4edba877c13ef0156be5ff58df3fa2..9e25d4a3384d0157b99f7bd4d5f7edce032ece6b 100644
 --- a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java
 +++ b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java
 @@ -8,6 +8,7 @@ import com.mojang.datafixers.util.Pair;
  import java.util.Iterator;
  import java.util.List;
  import java.util.Map;
-+import java.util.concurrent.TimeUnit;
++import java.util.concurrent.TimeUnit; // Scissors
  import javax.annotation.Nullable;
  import net.minecraft.BlockUtil;
  import net.minecraft.Util;
@@ -31,39 +31,37 @@ index 9948a28dae4edba877c13ef0156be5ff58df3fa2..93f359c71659c0b2fdf25b1c76c072bf
  
 -                if (!list.isEmpty()) {
 -                    for (int l = 0; l < list.size(); ++l) {
-+                // Scissors - Add a collision debounce
++                // Scissors start
 +                if (!list.isEmpty() && (System.currentTimeMillis() - lastLargeCollision) >= TimeUnit.SECONDS.toMillis(5)) { // Using TimeUnit for better code readability
-+                    // Scissors - Limit amount of vehicle collision checks to 3 maximum
 +                    for (int l = 0; l < Math.min(3, list.size()); ++l) {
++                // Scissors end
                          Entity entity = (Entity) list.get(l);
  
                          if (!(entity instanceof Player) && !(entity instanceof IronGolem) && !(entity instanceof AbstractMinecart) && !this.isVehicle() && !entity.isPassenger()) {
-@@ -462,6 +466,16 @@ public abstract class AbstractMinecart extends Entity {
+@@ -462,6 +466,14 @@ public abstract class AbstractMinecart extends Entity {
                              entity.push(this);
                          }
                      }
 +
-+                    // Scissors - Add a collision debounce
-+                    if (list.size() > 3) {
-+                        lastLargeCollision = System.currentTimeMillis();
-+                    }
-+
-+                    // Scissors - Delete entity if the collision amount is over 15
++                    // Scissors start - Add a collision debounce
 +                    if (list.size() > 15) {
 +                        this.discard();
++                    } else if (list.size() > 3) {
++                        lastLargeCollision = System.currentTimeMillis();
 +                    }
++                    // Scissors end
                  }
              } else {
                  Iterator iterator = this.level().getEntities(this, this.getBoundingBox().inflate(0.20000000298023224D, 0.0D, 0.20000000298023224D)).iterator();
 diff --git a/src/main/java/net/minecraft/world/entity/vehicle/Boat.java b/src/main/java/net/minecraft/world/entity/vehicle/Boat.java
-index 35aeba4e8430e6419caa9db4a0b931a994228618..11b337298ac824adce04cf0608f8f960e59640c9 100644
+index 35aeba4e8430e6419caa9db4a0b931a994228618..289eb39b15a283b0d9dbc33823f3a73f87202907 100644
 --- a/src/main/java/net/minecraft/world/entity/vehicle/Boat.java
 +++ b/src/main/java/net/minecraft/world/entity/vehicle/Boat.java
 @@ -5,6 +5,7 @@ import com.google.common.collect.UnmodifiableIterator;
  import java.util.Iterator;
  import java.util.List;
  import java.util.function.IntFunction;
-+import java.util.concurrent.TimeUnit;
++import java.util.concurrent.TimeUnit; // Scissors
  import javax.annotation.Nullable;
  import net.minecraft.BlockUtil;
  import net.minecraft.core.BlockPos;
@@ -75,35 +73,31 @@ index 35aeba4e8430e6419caa9db4a0b931a994228618..11b337298ac824adce04cf0608f8f960
  
      public Boat(EntityType<? extends Boat> type, Level world) {
          super(type, world);
-@@ -421,10 +423,12 @@ public class Boat extends Entity implements VariantHolder<Boat.Type> {
+@@ -421,10 +423,10 @@ public class Boat extends Entity implements VariantHolder<Boat.Type> {
          this.checkInsideBlocks();
          List<Entity> list = this.level().getEntities((Entity) this, this.getBoundingBox().inflate(0.20000000298023224D, -0.009999999776482582D, 0.20000000298023224D), EntitySelector.pushableBy(this));
  
 -        if (!list.isEmpty()) {
-+        // Scissors - Add collision debounce
-+        if (!list.isEmpty() && (System.currentTimeMillis() - lastLargeCollision) >= TimeUnit.SECONDS.toMillis(5)) { // Using TimeUnit for better code readability
++        if (!list.isEmpty() && (System.currentTimeMillis() - lastLargeCollision) >= TimeUnit.SECONDS.toMillis(5)) { // Scissors - add collision debounce, using TimeUnit for better code readability
              boolean flag = !this.level().isClientSide && !(this.getControllingPassenger() instanceof Player);
  
 -            for (int j = 0; j < list.size(); ++j) {
-+            // Scissors - Limit amount of vehicle collision checks to 3 maximum
-+            for (int j = 0; j < Math.min(3, list.size()); ++j) {
++            for (int j = 0; j < Math.min(3, list.size()); ++j) { // Scissors - Limit amount of vehicle collision checks to 3 maximum
                  Entity entity = (Entity) list.get(j);
  
                  if (!entity.hasPassenger((Entity) this)) {
-@@ -435,6 +439,16 @@ public class Boat extends Entity implements VariantHolder<Boat.Type> {
+@@ -435,6 +437,14 @@ public class Boat extends Entity implements VariantHolder<Boat.Type> {
                      }
                  }
              }
 +
-+            // Scissors - Add collision debounce
-+            if (list.size() > 3) {
-+                lastLargeCollision = System.currentTimeMillis();
-+            }
-+
-+            // Scissors - Delete entity if the collision amount is over 15
++            // Scissors start - Add collision debounce
 +            if (list.size() > 15) {
 +                this.discard();
++            } else if (list.size() > 3) {
++                lastLargeCollision = System.currentTimeMillis();
 +            }
++            // Scissors end
          }
  
      }
