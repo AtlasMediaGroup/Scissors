@@ -18,7 +18,8 @@ pipeline {
                 }
                 sh """
                     #!/bin/sh
-                    mv \${WORKSPACE}/build/libs/Scissors-*.jar \${WORKSPACE}/build/libs/scissors-\${BRANCH_NAME}-\${BUILD_NUMBER}.jar
+                    BRANCH=\$(echo "\${BRANCH_NAME}" | sed 's/\\//_/g')
+                    mv \${WORKSPACE}/build/libs/Scissors-*.jar \${WORKSPACE}/build/libs/scissors-\${BRANCH}-\${BUILD_NUMBER}.jar
                     """
             }
         }
