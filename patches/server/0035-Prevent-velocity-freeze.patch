@@ -5,7 +5,7 @@ Subject: [PATCH] Prevent velocity freeze
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java b/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java
-index 6c9a8f062f989db022154155e8a05b334a0510da..bc9887dc8d0ad709538add157bd4d37d45335a4f 100644
+index 6c9a8f062f989db022154155e8a05b334a0510da..978fad27ad17de03d108ade2c2bfa464b7d83491 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java
 @@ -1,5 +1,6 @@
@@ -75,7 +75,7 @@ index 6c9a8f062f989db022154155e8a05b334a0510da..bc9887dc8d0ad709538add157bd4d37d
              }
          }
  
-@@ -184,9 +212,12 @@ public abstract class AbstractHurtingProjectile extends Projectile {
+@@ -184,9 +212,13 @@ public abstract class AbstractHurtingProjectile extends Projectile {
                      Vec3 vec3d = entity.getLookAngle();
  
                      this.setDeltaMovement(vec3d);
@@ -86,6 +86,7 @@ index 6c9a8f062f989db022154155e8a05b334a0510da..bc9887dc8d0ad709538add157bd4d37d
 +                    //this.xPower = vec3d.x * 0.1D;
 +                    //this.yPower = vec3d.y * 0.1D;
 +                    //this.zPower = vec3d.z * 0.1D;
++
 +                    setPower(vec3d.x * 0.1D, vec3d.y * 0.1D, vec3d.z * 0.1D);
 +                    // Scissors end
                      this.setOwner(entity);

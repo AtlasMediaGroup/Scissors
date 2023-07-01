@@ -6,7 +6,7 @@ Subject: [PATCH] Validate coordinates before attempting to get block entities
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 2a609e43370e68943c580083f7f7d8c9b0972955..a38c677b01dc4a18ac63d2e5f63cd40d07cc02d9 100644
+index 2a609e43370e68943c580083f7f7d8c9b0972955..9d9bcf537ba9ae67cdcfec33f983c0983aaf889e 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -1923,6 +1923,18 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
@@ -28,7 +28,7 @@ index 2a609e43370e68943c580083f7f7d8c9b0972955..a38c677b01dc4a18ac63d2e5f63cd40d
      @Override
      public void handleUseItemOn(ServerboundUseItemOnPacket packet) {
          PacketUtils.ensureRunningOnSameThread(packet, this, this.player.serverLevel());
-@@ -3349,16 +3361,22 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -3349,16 +3361,21 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
                  BlockPos blockposition = BlockEntity.getPosFromTag(nbttagcompound);
  
                  if (this.player.level().isLoaded(blockposition)) {
@@ -50,8 +50,7 @@ index 2a609e43370e68943c580083f7f7d8c9b0972955..a38c677b01dc4a18ac63d2e5f63cd40d
  
 -                    if (tileentity != null) {
 -                        tileentity.saveToItem(itemstack);
-+                        if (tileentity != null)
-+                        {
++                        if (tileentity != null) {
 +                            tileentity.saveToItem(itemstack);
 +                        }
                      }
