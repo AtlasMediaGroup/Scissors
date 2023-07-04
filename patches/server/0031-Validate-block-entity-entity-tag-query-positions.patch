@@ -5,7 +5,7 @@ Subject: [PATCH] Validate block entity/entity tag query positions
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 682f3940659b48fd04e5ec65d5557a679eb8b267..f13b3e0a44b7a3f69fa7cc2e51ccb68c9d81082f 100644
+index 26a92bcb1c6577b6982fe723fc65f64adddbce4f..52fb4163e8d7e0b9d859ac5d2827f8695f6b867f 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -1362,7 +1362,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
@@ -13,7 +13,7 @@ index 682f3940659b48fd04e5ec65d5557a679eb8b267..f13b3e0a44b7a3f69fa7cc2e51ccb68c
              Entity entity = this.player.level().getEntity(packet.getEntityId());
  
 -            if (entity != null) {
-+            if (entity != null && !isOutsideOfReach(entity.position().x, entity.position().y, entity.position().z)) { // Scissors - Validate block entity tag query positions
++            if (entity != null && this.player.distanceToSqr(entity.position().x, entity.position().y, entity.position().z) < 32 * 32) { // Scissors - Validate entity tag query positions
                  CompoundTag nbttagcompound = entity.saveWithoutId(new CompoundTag());
  
                  this.player.connection.send(new ClientboundTagQueryPacket(packet.getTransactionId(), nbttagcompound));
@@ -24,7 +24,7 @@ index 682f3940659b48fd04e5ec65d5557a679eb8b267..f13b3e0a44b7a3f69fa7cc2e51ccb68c
 -        if (this.player.hasPermissions(2)) {
 +        // Scissors start - Validate block entity tag query positions
 +        if (this.player.hasPermissions(2) && this.player.level().isLoadedAndInBounds(packet.getPos())
-+            && !isOutsideOfReach(packet.getPos().getX(), packet.getPos().getY(), packet.getPos().getZ())) { 
++            && this.player.distanceToSqr(packet.getPos().getX(), packet.getPos().getY(), packet.getPos().getZ()) < 32 * 32) { 
 +        // Scissors end
              BlockEntity tileentity = this.player.level().getBlockEntity(packet.getPos());
              CompoundTag nbttagcompound = tileentity != null ? tileentity.saveWithoutMetadata() : null;

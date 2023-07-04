@@ -5,7 +5,7 @@ Subject: [PATCH] Patch invalid entity rotation log spam
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index c19ea0dd30c39b1e7a30ab5bcc32820a5ee3d16a..dd1e22aa7c7195201ee09cc9d3529ca64a1e6509 100644
+index 8ac82a6e81f77edbebcf073d34ee3c246a3f424c..7256f7a5f178ac3a8e153f0491bcac7fd48186fa 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -4640,7 +4640,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
