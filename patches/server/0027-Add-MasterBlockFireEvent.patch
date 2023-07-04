@@ -5,7 +5,7 @@ Subject: [PATCH] Add MasterBlockFireEvent
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/CommandBlock.java b/src/main/java/net/minecraft/world/level/block/CommandBlock.java
-index 2e7c03b00bc941b86df6a7f1b2b188c9f0aede22..6d4defceae65290a60a84561293d5b4095c4dcaa 100644
+index 2e7c03b00bc941b86df6a7f1b2b188c9f0aede22..0ae03d3934ad7b2b38afa45a65c7753dcbe796d2 100644
 --- a/src/main/java/net/minecraft/world/level/block/CommandBlock.java
 +++ b/src/main/java/net/minecraft/world/level/block/CommandBlock.java
 @@ -1,5 +1,6 @@
