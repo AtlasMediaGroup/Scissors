@@ -5,18 +5,28 @@ Subject: [PATCH] Validate block entity tag query positions
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index a102586b42ac408a3f655f7c0d069ab0990ec7fc..3e6160650a2e22f9d4232d4656a176007b5bea9e 100644
+index a102586b42ac408a3f655f7c0d069ab0990ec7fc..1c56ca1f7ed3064bfd3352cf46741fc64bbee4eb 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -1252,8 +1252,10 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+@@ -1240,7 +1240,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+         if (this.player.hasPermissions(2)) {
+             Entity entity = this.player.getLevel().getEntity(packet.getEntityId());
+ 
+-            if (entity != null) {
++            if (entity != null && !isOutsideOfReach(entity.position().x, entity.position().y, entity.position().z)) { // Scissors - Prevent querying of entities out of reach
+                 CompoundTag nbttagcompound = entity.saveWithoutId(new CompoundTag());
+ 
+                 this.player.connection.send(new ClientboundTagQueryPacket(packet.getTransactionId(), nbttagcompound));
+@@ -1252,8 +1252,11 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
      @Override
      public void handleBlockEntityTagQuery(ServerboundBlockEntityTagQuery packet) {
          PacketUtils.ensureRunningOnSameThread(packet, this, this.player.getLevel());
 -        if (this.player.hasPermissions(2)) {
 -            BlockEntity tileentity = this.player.getLevel().getBlockEntity(packet.getPos());
-+        // Scissors start - Validate block entity tag query positions
-+        if (this.player.hasPermissions(2) && Level.isInSpawnableBounds(packet.getPos())) {
-+            BlockEntity tileentity = this.player.getLevel().isLoaded(packet.getPos()) ? this.player.getLevel().getBlockEntity(packet.getPos()) : null;
++        // Scissors start - Validate block entity tag query positions, prevent querying block entities out of reach
++        final BlockPos pos = packet.getPos();
++        if (this.player.hasPermissions(2) && Level.isInSpawnableBounds(pos) && !isOutsideOfReach(pos.getX(), pos.getY(), pos.getZ())) {
++            BlockEntity tileentity = this.player.getLevel().isLoaded(pos) ? this.player.getLevel().getBlockEntity(pos) : null;
 +            // Scissors end
              CompoundTag nbttagcompound = tileentity != null ? tileentity.save(new CompoundTag()) : null;
  
