@@ -1,0 +1,158 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Allink <arclicious@vivaldi.net>
+Date: Mon, 4 Jul 2022 22:12:19 +0100
+Subject: [PATCH] Add MasterBlockFireEvent
+
+
+diff --git a/src/main/java/net/minecraft/world/level/block/CommandBlock.java b/src/main/java/net/minecraft/world/level/block/CommandBlock.java
+index 2e7c03b00bc941b86df6a7f1b2b188c9f0aede22..32b86081edcdcf29070fb53a99bd186ff376fb00 100644
+--- a/src/main/java/net/minecraft/world/level/block/CommandBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/CommandBlock.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.world.level.block;
+ 
++import me.totalfreedom.scissors.event.block.MasterBlockFireEvent; // Scissors
+ import com.mojang.logging.LogUtils;
+ import net.minecraft.core.BlockPos;
+ import net.minecraft.core.Direction;
+@@ -25,6 +26,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+ import net.minecraft.world.level.block.state.properties.BooleanProperty;
+ import net.minecraft.world.level.block.state.properties.DirectionProperty;
+ import net.minecraft.world.phys.BlockHitResult;
++import org.bukkit.Location; // Scissors
+ import org.slf4j.Logger;
+ 
+ import org.bukkit.event.block.BlockRedstoneEvent; // CraftBukkit
+@@ -117,6 +119,15 @@ public class CommandBlock extends BaseEntityBlock implements GameMasterBlock {
+     }
+ 
+     private void execute(BlockState state, Level world, BlockPos pos, BaseCommandBlock executor, boolean hasCommand) {
++        // Scissors - Add master block fire event
++        final MasterBlockFireEvent event = new MasterBlockFireEvent(new Location(world.getWorld(), pos.getX(), pos.getY(), pos.getZ()));
++
++        if (!event.callEvent())
++        {
++            return;
++        }
++        // Scissors end
++
+         if (hasCommand) {
+             executor.performCommand(world);
+         } else {
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/JigsawBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/JigsawBlockEntity.java
+index 182e16c1d968707a11329150d71b7d01df6c6e52..e58facc2138af7323ddf54c1a2c4e9258832c48c 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/JigsawBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/JigsawBlockEntity.java
+@@ -2,6 +2,7 @@ package net.minecraft.world.level.block.entity;
+ 
+ import java.util.Arrays;
+ import java.util.Optional;
++import me.totalfreedom.scissors.event.block.MasterBlockFireEvent; // Scissors
+ import net.minecraft.core.BlockPos;
+ import net.minecraft.core.Holder;
+ import net.minecraft.core.Registry;
+@@ -17,6 +18,7 @@ import net.minecraft.world.level.block.JigsawBlock;
+ import net.minecraft.world.level.block.state.BlockState;
+ import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
+ import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
++import org.bukkit.Location;
+ 
+ public class JigsawBlockEntity extends BlockEntity {
+     public static final String TARGET = "target";
+@@ -107,6 +109,16 @@ public class JigsawBlockEntity extends BlockEntity {
+     }
+ 
+     public void generate(ServerLevel world, int maxDepth, boolean keepJigsaws) {
++        // Scissors - Add master block fire event
++        final BlockPos pos = this.getBlockPos();
++        final MasterBlockFireEvent event = new MasterBlockFireEvent(new Location(this.getLevel().getWorld(), pos.getX(), pos.getY(), pos.getZ()));
++
++        if (!event.callEvent())
++        {
++            return;
++        }
++        // Scissors end
++
+         BlockPos blockPos = this.getBlockPos().relative(this.getBlockState().getValue(JigsawBlock.ORIENTATION).front());
+         Registry<StructureTemplatePool> registry = world.registryAccess().registryOrThrow(Registries.TEMPLATE_POOL);
+         // Paper start - Replace getHolderOrThrow with a null check
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/StructureBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/StructureBlockEntity.java
+index 9792bf3ee083f571f1f4089d30beb586839f5f6b..94c4ed75f2f9911450f72d27e6ae2deac3b33621 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/StructureBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/StructureBlockEntity.java
+@@ -5,6 +5,7 @@ import java.util.Objects;
+ import java.util.Optional;
+ import java.util.stream.Stream;
+ import javax.annotation.Nullable;
++import me.totalfreedom.scissors.event.block.MasterBlockFireEvent; // Scissors
+ import net.minecraft.ResourceLocationException;
+ import net.minecraft.Util;
+ import net.minecraft.core.BlockPos;
+@@ -29,6 +30,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.BlockRotProce
+ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
++import org.bukkit.Location; // Scissors
+ 
+ public class StructureBlockEntity extends BlockEntity {
+     private static final int SCAN_CORNER_BLOCKS_RANGE = 5;
+@@ -264,7 +266,7 @@ public class StructureBlockEntity extends BlockEntity {
+             return false;
+         } else {
+             BlockPos blockPos = this.getBlockPos();
+-            int i = 80;
++            // Scissors - Obfuscation fixes
+             BlockPos blockPos2 = new BlockPos(blockPos.getX() - 80, this.level.getMinBuildHeight(), blockPos.getZ() - 80);
+             BlockPos blockPos3 = new BlockPos(blockPos.getX() + 80, this.level.getMaxBuildHeight() - 1, blockPos.getZ() + 80);
+             Stream<BlockPos> stream = this.getRelatedCorners(blockPos2, blockPos3);
+@@ -321,6 +323,16 @@ public class StructureBlockEntity extends BlockEntity {
+ 
+     public boolean saveStructure(boolean bl) {
+         if (this.mode == StructureMode.SAVE && !this.level.isClientSide && this.structureName != null) {
++            // Scissors - Add master block fire event
++            final BlockPos pos = this.getBlockPos();
++            final MasterBlockFireEvent event = new MasterBlockFireEvent(new Location(this.getLevel().getWorld(), pos.getX(), pos.getY(), pos.getZ()));
++
++            if (!event.callEvent())
++            {
++                return false;
++            }
++            // Scissors end
++
+             BlockPos blockPos = this.getBlockPos().offset(this.structurePos);
+             ServerLevel serverLevel = (ServerLevel)this.level;
+             StructureTemplateManager structureTemplateManager = serverLevel.getStructureManager();
+@@ -358,6 +370,16 @@ public class StructureBlockEntity extends BlockEntity {
+ 
+     public boolean loadStructure(ServerLevel world, boolean bl) {
+         if (this.mode == StructureMode.LOAD && this.structureName != null) {
++            // Scissors - Add master block fire event
++            final BlockPos blockPos = this.getBlockPos();
++            final MasterBlockFireEvent event = new MasterBlockFireEvent(new Location(this.getLevel().getWorld(), blockPos.getX(), blockPos.getY(), blockPos.getZ()));
++
++            if (!event.callEvent())
++            {
++                return false;
++            }
++            // Scissors end
++
+             StructureTemplateManager structureTemplateManager = world.getStructureManager();
+ 
+             Optional<StructureTemplate> optional;
+@@ -403,6 +425,16 @@ public class StructureBlockEntity extends BlockEntity {
+     }
+ 
+     public void unloadStructure() {
++        // Scissors - Add master block fire event
++        final BlockPos blockPos = this.getBlockPos();
++        final MasterBlockFireEvent event = new MasterBlockFireEvent(new Location(this.getLevel().getWorld(), blockPos.getX(), blockPos.getY(), blockPos.getZ()));
++
++        if (!event.callEvent())
++        {
++            return;
++        }
++        // Scissors end
++
+         if (this.structureName != null) {
+             ServerLevel serverLevel = (ServerLevel)this.level;
+             StructureTemplateManager structureTemplateManager = serverLevel.getStructureManager();
