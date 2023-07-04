@@ -5,7 +5,7 @@ Subject: [PATCH] Block server-side chunkbans
 
 
 diff --git a/src/main/java/net/minecraft/network/PacketEncoder.java b/src/main/java/net/minecraft/network/PacketEncoder.java
-index fbfadeb83719b81f42724e79c59e92ed88fdece7..1d4f58ff4f87b293b7cb2b5500ccaba29be49dce 100644
+index fbfadeb83719b81f42724e79c59e92ed88fdece7..c9c0652a22760716f9dbb5fc73bc6fce5148b800 100644
 --- a/src/main/java/net/minecraft/network/PacketEncoder.java
 +++ b/src/main/java/net/minecraft/network/PacketEncoder.java
 @@ -6,9 +6,17 @@ import io.netty.channel.ChannelHandlerContext;
@@ -22,7 +22,7 @@ index fbfadeb83719b81f42724e79c59e92ed88fdece7..1d4f58ff4f87b293b7cb2b5500ccaba2
  import net.minecraft.network.protocol.PacketFlow;
 +import net.minecraft.network.protocol.game.*; // Scissors
  import net.minecraft.util.profiling.jfr.JvmProfiler;
-+import net.minecraft.world.item.ItemStack;
++import net.minecraft.world.item.ItemStack; // Scissors
  import org.slf4j.Logger;
  
  public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
@@ -50,13 +50,13 @@ index fbfadeb83719b81f42724e79c59e92ed88fdece7..1d4f58ff4f87b293b7cb2b5500ccaba2
      protected void encode(ChannelHandlerContext channelHandlerContext, Packet<?> packet, ByteBuf byteBuf) throws Exception {
          ConnectionProtocol connectionProtocol = channelHandlerContext.channel().attr(Connection.ATTRIBUTE_PROTOCOL).get();
          if (connectionProtocol == null) {
-@@ -33,38 +58,87 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
+@@ -33,38 +58,66 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
                  throw new IOException("Can't serialize unregistered packet");
              } else {
                  FriendlyByteBuf friendlyByteBuf = new FriendlyByteBuf(byteBuf);
 -                friendlyByteBuf.writeVarInt(i);
 -                friendlyByteBuf.adventure$locale = channelHandlerContext.channel().attr(PaperAdventure.LOCALE_ATTRIBUTE).get(); // Paper
--
+ 
 +                // Scissors start
 +                int k;
                  try {
@@ -98,46 +98,26 @@ index fbfadeb83719b81f42724e79c59e92ed88fdece7..1d4f58ff4f87b293b7cb2b5500ccaba2
      }
  
 +    // Scissors start
-+    private static Packet capPacket(Packet packet, int i)
-+    {
-+        if (packet instanceof ClientboundBlockEntityDataPacket blockEntityDataPacket)
-+        {
++    private static Packet capPacket(Packet packet, int i) {
++        if (packet instanceof ClientboundBlockEntityDataPacket blockEntityDataPacket) {
 +            packet = new ClientboundBlockEntityDataPacket(blockEntityDataPacket.getPos(), blockEntityDataPacket.getType(), new CompoundTag());
-+        }
-+        else if (packet instanceof ClientboundLevelChunkPacketData chunkPacket)
-+        {
++        } else if (packet instanceof ClientboundLevelChunkPacketData chunkPacket) {
 +            chunkPacket.clearNBT();
-+        }
-+        else if (packet instanceof ClientboundSetEntityDataPacket)
-+        {
++        } else if (packet instanceof ClientboundSetEntityDataPacket) {
 +            return null; // Skip
-+        }
-+        else if (packet instanceof ClientboundContainerSetContentPacket containerSetContentPacket)
-+        {
++        } else if (packet instanceof ClientboundContainerSetContentPacket containerSetContentPacket) {
 +            packet = new ClientboundContainerSetContentPacket(containerSetContentPacket.getContainerId(), containerSetContentPacket.getStateId(), NonNullList.create(), ItemStack.EMPTY);
-+        }
-+        else if (packet instanceof ClientboundSetEquipmentPacket setEquipmentPacket)
-+        {
++        } else if (packet instanceof ClientboundSetEquipmentPacket setEquipmentPacket) {
 +            packet = new ClientboundSetEquipmentPacket(setEquipmentPacket.getEntity(), Collections.emptyList());
-+        }
-+        else if (packet instanceof ClientboundContainerSetSlotPacket containerSetSlotPacket)
-+        {
++        } else if (packet instanceof ClientboundContainerSetSlotPacket containerSetSlotPacket) {
 +            packet = new ClientboundContainerSetSlotPacket(containerSetSlotPacket.getContainerId(), containerSetSlotPacket.getStateId(), containerSetSlotPacket.getSlot(), ItemStack.EMPTY);
-+        }
-+        else if (packet instanceof ClientboundMapItemDataPacket mapItemDataPacket)
-+        {
++        } else if (packet instanceof ClientboundMapItemDataPacket mapItemDataPacket) {
 +            packet = new ClientboundMapItemDataPacket(mapItemDataPacket.getMapId(), mapItemDataPacket.getScale(), mapItemDataPacket.isLocked(), null, null);
-+        }
-+        else if (packet instanceof ClientboundSystemChatPacket)
-+        {
++        } else if (packet instanceof ClientboundSystemChatPacket) {
 +            return null;
-+        }
-+        else if (packet instanceof ClientboundDisguisedChatPacket)
-+        {
++        } else if (packet instanceof ClientboundDisguisedChatPacket) {
 +            return null;
-+        }
-+        else if (packet instanceof ClientboundPlayerChatPacket playerChatPacket)
-+        {
++        } else if (packet instanceof ClientboundPlayerChatPacket playerChatPacket) {
 +            final SignedMessageBody.Packed body = playerChatPacket.body();
 +            packet = new ClientboundPlayerChatPacket(playerChatPacket.sender(), // Not sending this packet results in a kick when someone says something.
 +                playerChatPacket.index(),
@@ -147,9 +127,7 @@ index fbfadeb83719b81f42724e79c59e92ed88fdece7..1d4f58ff4f87b293b7cb2b5500ccaba2
 +                playerChatPacket.filterMask(),
 +                playerChatPacket.chatType()
 +            );
-+        }
-+        else
-+        {
++        } else {
 +            LOGGER.error("Packet with ID {} was too large and was not caught. Please report this to the Scissors developers.", i);
 +            return null;
 +        }
@@ -175,16 +153,15 @@ index 3944852921335c78a04a9dc301882ab5b152b1ed..96ee53c7cc862e059328c5cdf5e07f30
          this.type = blockEntityType;
          this.tag = nbt.isEmpty() ? null : nbt;
 diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java
-index f3fa2678796c33f3a408a02a1995ad117eac9169..ccc02aa58d7f02099d03e518c25b10f721dbdab7 100644
+index f3fa2678796c33f3a408a02a1995ad117eac9169..2d912c6e332706371d0e8431685fe038a567e86e 100644
 --- a/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java
 +++ b/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java
-@@ -33,6 +33,14 @@ public class ClientboundLevelChunkPacketData {
+@@ -33,6 +33,13 @@ public class ClientboundLevelChunkPacketData {
      }
      // Paper end
  
 +    // Scissors start
-+    public void clearNBT()
-+    {
++    public void clearNBT() {
 +        this.blockEntitiesData.clear();
 +        this.extraPackets.clear();
 +    }
@@ -193,7 +170,7 @@ index f3fa2678796c33f3a408a02a1995ad117eac9169..ccc02aa58d7f02099d03e518c25b10f7
      // Paper start - Anti-Xray - Add chunk packet info
      @Deprecated @io.papermc.paper.annotation.DoNotUse public ClientboundLevelChunkPacketData(LevelChunk chunk) { this(chunk, null); }
      public ClientboundLevelChunkPacketData(LevelChunk chunk, com.destroystokyo.paper.antixray.ChunkPacketInfo<net.minecraft.world.level.block.state.BlockState> chunkPacketInfo) {
-@@ -58,6 +66,7 @@ public class ClientboundLevelChunkPacketData {
+@@ -58,6 +65,7 @@ public class ClientboundLevelChunkPacketData {
          int totalTileEntities = 0; // Paper
  
          for(Map.Entry<BlockPos, BlockEntity> entry2 : chunk.getBlockEntities().entrySet()) {

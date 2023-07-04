@@ -5,7 +5,7 @@ Subject: [PATCH] Prevent velocity freeze
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java b/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java
-index 2096e8a0bdbcfc865f175f3a01ab688542481531..d5a87dc005fdc963dfc17e2c97c33014fa9f19b0 100644
+index 2096e8a0bdbcfc865f175f3a01ab688542481531..2ad58d4e4fd361d17803f57c3496a92bd233c857 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java
 @@ -1,5 +1,6 @@
@@ -26,9 +26,9 @@ index 2096e8a0bdbcfc865f175f3a01ab688542481531..d5a87dc005fdc963dfc17e2c97c33014
 +            //this.xPower = d3 / d6 * 0.1D;
 +            //this.yPower = d4 / d6 * 0.1D;
 +            //this.zPower = d5 / d6 * 0.1D;
-+            // Scissors end
 +
 +            setPower(d3 / d6 * .1d, d4 / d6 * .1d, d5 / d6 * .1d);
++            // Scissors end
          }
  
      }

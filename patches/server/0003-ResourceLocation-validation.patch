@@ -87,6 +87,24 @@ index 02cb6b8c1d59855ff4a8aad3024fe12007eca0ee..3f4788b7efec73929e1326f0e54a94f8
              this.lootTableSeed = nbt.getLong("DeathLootTableSeed");
          }
  
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
+index a3f073066f6e2eea8964461ad2b0409ade202f35..6eecd2e609532bbdde69c0ddc5d6bc2e2e01d1ff 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
+@@ -289,7 +289,12 @@ public abstract class AbstractFurnaceBlockEntity extends BaseContainerBlockEntit
+         while (iterator.hasNext()) {
+             String s = (String) iterator.next();
+ 
+-            this.recipesUsed.put(new ResourceLocation(s), nbttagcompound1.getInt(s));
++            // Scissors start
++            final ResourceLocation rl = ResourceLocation.tryParse(s);
++            if (rl != null) {
++                this.recipesUsed.put(rl, nbttagcompound1.getInt(s));
++            }
++            // Scissors end
+         }
+ 
+         // Paper start - cook speed API
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
 index 79b01e32f89defb6b78f4764600d33d4945af592..af6ae368e6871d9db23bd1f13cf7a915005adf6c 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
@@ -143,19 +161,15 @@ index 0dd0ce9a9b3253e87eda12354249ec2fd2a33cf2..b6920f9432ca1736afbe775186fbbcf1
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
-index 18b9b0dc70f6872a9d71c120bcd2edca531b0ac4..fa0c023b3a88bd797f563e0e675d70966ff7dbd3 100644
+index 18b9b0dc70f6872a9d71c120bcd2edca531b0ac4..4732fff6d1198e5fc4875b4d4523aa2d152817ea 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
-@@ -80,8 +80,18 @@ public abstract class CraftMob extends CraftLivingEntity implements Mob {
+@@ -80,8 +80,14 @@ public abstract class CraftMob extends CraftLivingEntity implements Mob {
  
      @Override
      public LootTable getLootTable() {
 -        NamespacedKey key = CraftNamespacedKey.fromMinecraft(this.getHandle().getLootTable());
 -        return Bukkit.getLootTable(key);
-+        if (this.getHandle().lootTable == null) {
-+            this.getHandle().lootTable = this.getHandle().getDefaultLootTable();
-+        }
-+
 +        // Scissors start - Return a null loot table if the specified loot table is not valid
 +        try {
 +            NamespacedKey key = CraftNamespacedKey.fromMinecraft(this.getHandle().getLootTable());

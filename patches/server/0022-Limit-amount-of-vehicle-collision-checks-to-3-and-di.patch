@@ -54,7 +54,7 @@ index ee4f924afe15c9a4d96af7a55b357076c7b28501..602337661d96a21d13c4da66622b7d84
              } else {
                  Iterator iterator = this.level.getEntities(this, this.getBoundingBox().inflate(0.20000000298023224D, 0.0D, 0.20000000298023224D)).iterator();
 diff --git a/src/main/java/net/minecraft/world/entity/vehicle/Boat.java b/src/main/java/net/minecraft/world/entity/vehicle/Boat.java
-index 12e3209c5246ede89daaf8455fe70b4a517e12f6..53a56e0a14675e2646928b1cb34c0996afe591c7 100644
+index 12e3209c5246ede89daaf8455fe70b4a517e12f6..c5bc5e38ea6b856b1cc3e9c3907f697235b32c50 100644
 --- a/src/main/java/net/minecraft/world/entity/vehicle/Boat.java
 +++ b/src/main/java/net/minecraft/world/entity/vehicle/Boat.java
 @@ -5,6 +5,7 @@ import com.google.common.collect.UnmodifiableIterator;
@@ -86,20 +86,18 @@ index 12e3209c5246ede89daaf8455fe70b4a517e12f6..53a56e0a14675e2646928b1cb34c0996
                  Entity entity = (Entity) list.get(j);
  
                  if (!entity.hasPassenger((Entity) this)) {
-@@ -435,6 +437,16 @@ public class Boat extends Entity implements VariantHolder<Boat.Type> {
+@@ -435,6 +437,14 @@ public class Boat extends Entity implements VariantHolder<Boat.Type> {
                      }
                  }
              }
 +
-+            // Scissors - Add collision debounce
-+            if (list.size() > 3) {
-+                lastLargeCollision = System.currentTimeMillis();
-+            }
-+
-+            // Scissors - Delete entity if the collision amount is over 15
++            // Scissors start - Add collision debounce
 +            if (list.size() > 15) {
 +                this.discard();
++            } else if (list.size() > 3) {
++                lastLargeCollision = System.currentTimeMillis();
 +            }
++            // Scissors end
          }
  
      }

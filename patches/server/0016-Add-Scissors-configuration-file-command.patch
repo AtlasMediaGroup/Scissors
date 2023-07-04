@@ -447,7 +447,7 @@ index a7e133f3495e9132a5fdae2c24f225e7b026295a..16f0daad2456ce23f8d73389f62aac9f
          this.setFlightAllowed(dedicatedserverproperties.allowFlight);
          this.setMotd(dedicatedserverproperties.motd);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index c5e22893b1a570e582fc4d0c36a04470639411d9..bf3f6253aa1f90c39d63119dd3140dae6a85217a 100644
+index 247db707879b53c6ff7259efd76b9e8ff18a9d09..9bddf6e8deb1e74c6076b5190c0b9b72e39fa2a7 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -978,6 +978,7 @@ public final class CraftServer implements Server {
@@ -466,24 +466,26 @@ index c5e22893b1a570e582fc4d0c36a04470639411d9..bf3f6253aa1f90c39d63119dd3140dae
          this.overrideAllCommandBlockCommands = this.commandsConfiguration.getStringList("command-block-overrides").contains("*");
          this.ignoreVanillaPermissions = this.commandsConfiguration.getBoolean("ignore-vanilla-permissions");
  
-@@ -2763,6 +2765,12 @@ public final class CraftServer implements Server {
+@@ -2763,6 +2765,14 @@ public final class CraftServer implements Server {
              return CraftServer.this.console.paperConfigurations.createLegacyObject(CraftServer.this.console);
          }
  
++        // Scissors start
 +        @Override
 +        public YamlConfiguration getScissorsConfig()
 +        {
 +            return me.totalfreedom.scissors.ScissorsConfig.config;
 +        }
++        // Scissors end
 +
          @Override
          public void restart() {
              org.spigotmc.RestartCommand.restart();
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index 1fe26cb620e8b550790c3e110e2a1180cf0838fd..6305c9cf0cec52bee5a327ba3dd1531a8198eec4 100644
+index 1fe26cb620e8b550790c3e110e2a1180cf0838fd..c3ecf912ce83810e07e95de1df4a565018429881 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
-@@ -180,9 +180,27 @@ public class Main {
+@@ -180,6 +180,20 @@ public class Main {
                          .defaultsTo("Unknown Server")
                          .describedAs("Name");
                  // Paper end
@@ -494,9 +496,7 @@ index 1fe26cb620e8b550790c3e110e2a1180cf0838fd..6305c9cf0cec52bee5a327ba3dd1531a
 +                    .ofType(File.class)
 +                    .defaultsTo(new File(io.papermc.paper.configuration.PaperConfigurations.CONFIG_DIR))
 +                    .describedAs("Config directory");
-+                // Scissors end
 +
-+                // Scissors start
 +                acceptsAll(asList("scissors", "scissors-settings"), "File for Scissors settings")
 +                    .withRequiredArg()
 +                    .ofType(File.class)
@@ -506,8 +506,3 @@ index 1fe26cb620e8b550790c3e110e2a1180cf0838fd..6305c9cf0cec52bee5a327ba3dd1531a
              }
          };
  
-+
-+
-         OptionSet options = null;
- 
-         // Paper start - preload logger classes to avoid plugins mixing versions

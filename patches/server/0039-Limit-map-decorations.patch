@@ -5,18 +5,18 @@ Subject: [PATCH] Limit map decorations
 
 
 diff --git a/src/main/java/net/minecraft/world/level/saveddata/maps/MapDecoration.java b/src/main/java/net/minecraft/world/level/saveddata/maps/MapDecoration.java
-index 347d2914f9560a3ee8cea59444bc0dfbb7cf3456..b225f770869832775c9a8a79ffaf89e98245cc2e 100644
+index 347d2914f9560a3ee8cea59444bc0dfbb7cf3456..b6a38b1458957bd444fea439fa81d2976ffb86e0 100644
 --- a/src/main/java/net/minecraft/world/level/saveddata/maps/MapDecoration.java
 +++ b/src/main/java/net/minecraft/world/level/saveddata/maps/MapDecoration.java
 @@ -2,6 +2,7 @@ package net.minecraft.world.level.saveddata.maps;
  
  import java.util.Objects;
  import javax.annotation.Nullable;
-+import net.minecraft.ChatFormatting;
++import net.minecraft.ChatFormatting; // Scissors
  import net.minecraft.network.chat.Component;
  import net.minecraft.util.Mth;
  
-@@ -14,6 +15,12 @@ public class MapDecoration {
+@@ -14,6 +15,11 @@ public class MapDecoration {
      private final Component name;
  
      public MapDecoration(MapDecoration.Type type, byte x, byte z, byte rotation, @Nullable Component text) {
@@ -25,15 +25,14 @@ index 347d2914f9560a3ee8cea59444bc0dfbb7cf3456..b225f770869832775c9a8a79ffaf89e9
 +            text = null;
 +        }
 +        // Scissors end
-+
          this.type = type;
          this.x = x;
          this.y = z;
 diff --git a/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java b/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java
-index 25a64250ce57fe4cd90f8b95d1e003d961662152..60e013d418b1aa8c154ca9474186191aa5c9041d 100644
+index 25a64250ce57fe4cd90f8b95d1e003d961662152..65c2b553711e9f9ded87a422c4a0aacd7de8d8c1 100644
 --- a/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java
 +++ b/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java
-@@ -356,6 +356,12 @@ public class MapItemSavedData extends SavedData {
+@@ -356,6 +356,11 @@ public class MapItemSavedData extends SavedData {
      }
  
      private void addDecoration(MapDecoration.Type type, @Nullable LevelAccessor world, String key, double x, double z, double rotation, @Nullable Component text) {
@@ -42,7 +41,6 @@ index 25a64250ce57fe4cd90f8b95d1e003d961662152..60e013d418b1aa8c154ca9474186191a
 +            return;
 +        }
 +        // Scissors end
-+
          int i = 1 << this.scale;
          float f = (float) (x - (double) this.centerX) / (float) i;
          float f1 = (float) (z - (double) this.centerZ) / (float) i;

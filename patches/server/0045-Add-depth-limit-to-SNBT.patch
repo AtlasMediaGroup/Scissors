@@ -5,18 +5,16 @@ Subject: [PATCH] Add depth limit to SNBT
 
 
 diff --git a/src/main/java/net/minecraft/nbt/TagParser.java b/src/main/java/net/minecraft/nbt/TagParser.java
-index fbfe810e8be6cb159742f7fd85e7491b9cefa4dc..82b1d851e310504e7373a967dfb5b0b096d36693 100644
+index fbfe810e8be6cb159742f7fd85e7491b9cefa4dc..426425e38698b06d46c5e6a41b39d362176a4ee3 100644
 --- a/src/main/java/net/minecraft/nbt/TagParser.java
 +++ b/src/main/java/net/minecraft/nbt/TagParser.java
-@@ -169,8 +169,58 @@ public class TagParser {
+@@ -169,8 +169,56 @@ public class TagParser {
          }
  
          this.expect('}');
 -        return compoundTag;
 +
-+        // Scissors start - Add depth limit to SNBT
-+        return exceedsDepthLimit(compoundTag) ? new CompoundTag() : compoundTag;
-+        // Scissors end
++        return exceedsDepthLimit(compoundTag) ? new CompoundTag() : compoundTag; // Scissors - Add depth limit to SNBT
 +    }
 +
 +    // Scissors start - Add depth limit to SNBT
@@ -68,20 +66,16 @@ index fbfe810e8be6cb159742f7fd85e7491b9cefa4dc..82b1d851e310504e7373a967dfb5b0b0
  
      private Tag readListTag() throws CommandSyntaxException {
          this.expect('[');
-@@ -203,7 +253,11 @@ public class TagParser {
+@@ -203,7 +251,7 @@ public class TagParser {
              }
  
              this.expect(']');
 -            return listTag;
-+
-+            // Scissors start - Add depth limit to SNBT
-+            return exceedsDepthLimit(listTag) ? new ListTag() : listTag;
-+            // return listTag;
-+            // Scissors end
++            return exceedsDepthLimit(listTag) ? new ListTag() : listTag; // Scissors - Add depth limit to SNBT
          }
      }
  
-@@ -228,7 +282,7 @@ public class TagParser {
+@@ -228,7 +276,7 @@ public class TagParser {
      }
  
      private <T extends Number> List<T> readArray(TagType<?> arrayTypeReader, TagType<?> typeReader) throws CommandSyntaxException {
@@ -90,7 +84,7 @@ index fbfe810e8be6cb159742f7fd85e7491b9cefa4dc..82b1d851e310504e7373a967dfb5b0b0
  
          while(true) {
              if (this.reader.peek() != ']') {
-@@ -241,11 +295,11 @@ public class TagParser {
+@@ -241,11 +289,11 @@ public class TagParser {
                  }
  
                  if (typeReader == ByteTag.TYPE) {
@@ -105,7 +99,7 @@ index fbfe810e8be6cb159742f7fd85e7491b9cefa4dc..82b1d851e310504e7373a967dfb5b0b0
                  }
  
                  if (this.hasElementSeparator()) {
-@@ -257,7 +311,7 @@ public class TagParser {
+@@ -257,7 +305,7 @@ public class TagParser {
              }
  
              this.expect(']');
