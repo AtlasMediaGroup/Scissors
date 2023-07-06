@@ -31,19 +31,10 @@ index 2ee4ee14ab3345486dad6b24fd9a4fcc6c746b99..c5ac6cda91a81d3075f5c763e30dc009
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java b/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
-index 91e0328f847a2464a1cf65134520244a4cec705f..77ae3bc5fd6cf34aae7bd3baa563f3e23e57de26 100644
+index 8e4cb2fa787feca47dd4ba2fbb44e6193bac2431..000aa76e3f4dce8129dbd1868cfc244515997c0c 100644
 --- a/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
 +++ b/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
-@@ -145,7 +145,7 @@ public class AreaEffectCloud extends Entity implements TraceableEntity {
-     }
- 
-     public void setPotionType(String string) {
--        this.setPotion(BuiltInRegistries.POTION.get(new ResourceLocation(string)));
-+        this.setPotion(BuiltInRegistries.POTION.get(ResourceLocation.tryParse(string))); // Scissors - Validate resource locations
-     }
-     // CraftBukkit end
- 
-@@ -425,7 +425,7 @@ public class AreaEffectCloud extends Entity implements TraceableEntity {
+@@ -408,7 +408,7 @@ public class AreaEffectCloud extends Entity implements TraceableEntity {
              try {
                  this.setParticle(ParticleArgument.readParticle(new StringReader(nbt.getString("Particle")), (HolderLookup) BuiltInRegistries.PARTICLE_TYPE.asLookup()));
              } catch (CommandSyntaxException commandsyntaxexception) {
