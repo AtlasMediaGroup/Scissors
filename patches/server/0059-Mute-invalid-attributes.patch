@@ -1,0 +1,32 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Allink <arclicious@vivaldi.net>
+Date: Thu, 6 Jul 2023 23:01:12 +0100
+Subject: [PATCH] Mute invalid attributes
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/ai/attributes/AttributeMap.java b/src/main/java/net/minecraft/world/entity/ai/attributes/AttributeMap.java
+index 9cbfda029782385d1a7987f5be46d450bd8a758e..2421573bbc738ce5c2ac0e5a3013a4813d807dc5 100644
+--- a/src/main/java/net/minecraft/world/entity/ai/attributes/AttributeMap.java
++++ b/src/main/java/net/minecraft/world/entity/ai/attributes/AttributeMap.java
+@@ -127,7 +127,7 @@ public class AttributeMap {
+                 }
+ 
+             }, () -> {
+-                LOGGER.warn("Ignoring unknown attribute '{}'", (Object)string);
++                // LOGGER.warn("Ignoring unknown attribute '{}'", (Object)string); // Scissors - Mute invalid attributes
+             });
+         }
+ 
+diff --git a/src/main/java/net/minecraft/world/entity/ai/attributes/AttributeModifier.java b/src/main/java/net/minecraft/world/entity/ai/attributes/AttributeModifier.java
+index 5f94be8e8793f0b5b99e630882f53199d688eadf..7da1c212ff15940c849ac27061d47c5d9ffb1a30 100644
+--- a/src/main/java/net/minecraft/world/entity/ai/attributes/AttributeModifier.java
++++ b/src/main/java/net/minecraft/world/entity/ai/attributes/AttributeModifier.java
+@@ -90,7 +90,7 @@ public class AttributeModifier {
+             AttributeModifier.Operation operation = AttributeModifier.Operation.fromValue(nbt.getInt("Operation"));
+             return new AttributeModifier(uUID, nbt.getString("Name"), nbt.getDouble("Amount"), operation);
+         } catch (Exception var3) {
+-            LOGGER.warn("Unable to create attribute: {}", (Object)var3.getMessage());
++            // LOGGER.warn("Unable to create attribute: {}", (Object)var3.getMessage()); // Scissors - Mute invalid attributes
+             return null;
+         }
+     }
