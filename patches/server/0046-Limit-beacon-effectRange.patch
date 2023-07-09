@@ -5,7 +5,7 @@ Subject: [PATCH] Limit beacon effectRange
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java
-index 5005a0ad5f703727ea9c618ae4b769a77d5655b5..8645ebb37dfab4e76b238a3660816a59018d3dde 100644
+index 3b866e2c20ee7bfc981ff09b29065530de993778..cbffd654a25a5c498ea96059aa97ef0c012c923c 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java
 @@ -83,7 +83,7 @@ public class BeaconBlockEntity extends BlockEntity implements MenuProvider, Name
@@ -17,7 +17,7 @@ index 5005a0ad5f703727ea9c618ae4b769a77d5655b5..8645ebb37dfab4e76b238a3660816a59
              return this.levels * 10 + 10;
          } else {
              return effectRange;
-@@ -415,6 +415,7 @@ public class BeaconBlockEntity extends BlockEntity implements MenuProvider, Name
+@@ -424,6 +424,7 @@ public class BeaconBlockEntity extends BlockEntity implements MenuProvider, Name
  
          this.lockKey = LockCode.fromTag(nbt);
          this.effectRange = nbt.contains(PAPER_RANGE_TAG, 6) ? nbt.getDouble(PAPER_RANGE_TAG) : -1; // Paper

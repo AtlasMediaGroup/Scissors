@@ -5,7 +5,7 @@ Subject: [PATCH] Fix ClickEvents on Signs bypassing permissions
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
-index 0521240dddde12d78cc05deda7fac11690f5d155..694d99d345025450bebc4c207392151c2f0085e3 100644
+index f356196aaeb498a6d2c9ad2112329cef5a3103d6..a8d8445be1cfb67de1adcaf64847d0bfaf8c503d 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
 @@ -8,8 +8,10 @@ import java.util.Objects;
@@ -43,7 +43,7 @@ index 0521240dddde12d78cc05deda7fac11690f5d155..694d99d345025450bebc4c207392151c
  
  public class SignBlockEntity extends BlockEntity implements CommandSource { // CraftBukkit - implements
  
-@@ -286,6 +291,21 @@ public class SignBlockEntity extends BlockEntity implements CommandSource { // C
+@@ -291,6 +296,21 @@ public class SignBlockEntity extends BlockEntity implements CommandSource { // C
                  }
                  player.getServer().getCommands().performPrefixedCommand(this.createCommandSourceStack(((org.bukkit.craftbukkit.entity.CraftPlayer) event.getPlayer()).getHandle(), world, pos), event.getMessage());
                  // Paper end
