@@ -41,10 +41,10 @@ index 0000000000000000000000000000000000000000..754b578b575137a9c48cb20dee965a93
 +}
 diff --git a/src/main/java/me/totalfreedom/scissors/NbtUtility.java b/src/main/java/me/totalfreedom/scissors/NbtUtility.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..b724baaef8d565e41db1af6393d0890e919a5aa8
+index 0000000000000000000000000000000000000000..b3efac47ee700d5a7ff26452d6bcbf2f687a32cf
 --- /dev/null
 +++ b/src/main/java/me/totalfreedom/scissors/NbtUtility.java
-@@ -0,0 +1,74 @@
+@@ -0,0 +1,75 @@
 +package me.totalfreedom.scissors;
 +
 +import java.nio.charset.StandardCharsets;
@@ -75,6 +75,7 @@ index 0000000000000000000000000000000000000000..b724baaef8d565e41db1af6393d0890e
 +            CompoundTag compoundTag = (CompoundTag) tag;
 +            for (String key : compoundTag.getAllKeys())
 +            {
++                size += key.getBytes(StandardCharsets.UTF_8).length;
 +                size += getTagSize(compoundTag.get(key), depth + 1);
 +            }
 +        }
