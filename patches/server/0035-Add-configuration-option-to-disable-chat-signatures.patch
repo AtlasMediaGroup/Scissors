@@ -5,7 +5,7 @@ Subject: [PATCH] Add configuration option to disable chat signatures
 
 
 diff --git a/src/main/java/net/minecraft/network/chat/OutgoingChatMessage.java b/src/main/java/net/minecraft/network/chat/OutgoingChatMessage.java
-index 74cf1c043beef03cfd5adf481414a5ee78bef2a6..1a44bad14ce764d6c09f38065ee8e5f0da4975aa 100644
+index 74cf1c043beef03cfd5adf481414a5ee78bef2a6..516c61cbb8299828b2f28d4564d08ae1829649b5 100644
 --- a/src/main/java/net/minecraft/network/chat/OutgoingChatMessage.java
 +++ b/src/main/java/net/minecraft/network/chat/OutgoingChatMessage.java
 @@ -1,5 +1,6 @@
@@ -15,7 +15,7 @@ index 74cf1c043beef03cfd5adf481414a5ee78bef2a6..1a44bad14ce764d6c09f38065ee8e5f0
  import net.minecraft.server.level.ServerPlayer;
  
  public interface OutgoingChatMessage {
-@@ -44,10 +45,25 @@ public interface OutgoingChatMessage {
+@@ -44,10 +45,21 @@ public interface OutgoingChatMessage {
              // Paper end
              PlayerChatMessage playerChatMessage = this.message.filter(filterMaskEnabled);
              playerChatMessage = unsigned != null ? playerChatMessage.withUnsignedContent(unsigned) : playerChatMessage; // Paper
@@ -26,18 +26,14 @@ index 74cf1c043beef03cfd5adf481414a5ee78bef2a6..1a44bad14ce764d6c09f38065ee8e5f0
 +                return;
              }
  
-+            if (sender.getServer().server.getOnlineMode()) {
-+                sender.connection.sendDisguisedChatMessage(playerChatMessage.decoratedContent(), params);
-+            } else {
-+                sender.connection.sendPlayerChatMessage(new PlayerChatMessage(
-+                    SignedMessageLink.unsigned(playerChatMessage.sender()),
-+                    null,
-+                    SignedMessageBody.unsigned(playerChatMessage.signedContent()),
-+                    unsigned,
-+                    playerChatMessage.filterMask(),
-+                    playerChatMessage.result()
-+                ), params);
-+            }
++            sender.connection.sendPlayerChatMessage(new PlayerChatMessage(
++                SignedMessageLink.unsigned(playerChatMessage.sender()),
++                null,
++                SignedMessageBody.unsigned(playerChatMessage.signedContent()),
++                unsigned,
++                playerChatMessage.filterMask(),
++                playerChatMessage.result()
++            ), params);
 +            // Scissors end
          }
      }
@@ -64,7 +60,7 @@ index c0a80824a0307ea673805015119cc834b268f0dc..9f28f86b1b56ea55ab39f6ac988c1f47
                      }
  
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index d428490171bb1c0209ca9a279c2b1e1e1dfcf914..8274514733caf0fb3c3db5836a3ab9bd204c4378 100644
+index d428490171bb1c0209ca9a279c2b1e1e1dfcf914..9e9e299b491d9b3641a87c12f7a4ec74b17517fe 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -1,5 +1,6 @@
@@ -99,3 +95,11 @@ index d428490171bb1c0209ca9a279c2b1e1e1dfcf914..8274514733caf0fb3c3db5836a3ab9bd
                  ServerGamePacketListenerImpl.LOGGER.warn("Failed to validate message acknowledgements from {}", this.player.getName().getString());
                  this.disconnect(ServerGamePacketListenerImpl.CHAT_VALIDATION_FAILED, org.bukkit.event.player.PlayerKickEvent.Cause.CHAT_VALIDATION_FAILED); // Paper - kick event causes
              }
+@@ -3641,6 +3644,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+     @Override
+     public void handleChatSessionUpdate(ServerboundChatSessionUpdatePacket packet) {
+         PacketUtils.ensureRunningOnSameThread(packet, this, this.player.getLevel());
++        if (!ScissorsConfig.chatSignaturesEnabled) return; // Scissors
+         RemoteChatSession.Data remotechatsession_a = packet.chatSession();
+         ProfilePublicKey.Data profilepublickey_a = this.chatSession != null ? this.chatSession.profilePublicKey().data() : null;
+         ProfilePublicKey.Data profilepublickey_a1 = remotechatsession_a.profilePublicKey();
