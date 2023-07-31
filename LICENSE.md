@@ -16,5 +16,6 @@ should submit a pull request to this project to add their name.
 
 ```text
 Allink (allinkdev) <arclicious@vivaldi.net>
+Luna (LunaWasFlaggedAgain) <lunahatesgogle@gmail.com>
 Telesphoreo <me@telesphoreo.me>
 ```
