@@ -59,7 +59,7 @@ index 4092c7a8c2b0d9d26e6f4d97386735236300d132..04c47cf1a920ae6c356449df801227ee
              }
          }
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index ae9b821d71d2868ba4eb3c73558fdcd6caf264e3..744c21ddc67ad3172bbc71e000b092a189dfafb8 100644
+index 879cc823d56625867eb73bb621db6a13f40ad81c..e61958a69bbccd08093932cd7fe74139b1054514 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
 @@ -21,6 +21,7 @@ import java.util.function.Predicate;
@@ -83,7 +83,7 @@ index ae9b821d71d2868ba4eb3c73558fdcd6caf264e3..744c21ddc67ad3172bbc71e000b092a1
          this.item = (Item) BuiltInRegistries.ITEM.get(new ResourceLocation(nbttagcompound.getString("id")));
          this.count = nbttagcompound.getByte("Count");
          if (nbttagcompound.contains("tag", 10)) {
-@@ -551,7 +558,11 @@ public final class ItemStack {
+@@ -555,7 +562,11 @@ public final class ItemStack {
          nbt.putString("id", minecraftkey == null ? "minecraft:air" : minecraftkey.toString());
          nbt.putByte("Count", (byte) this.count);
          if (this.tag != null) {
@@ -96,7 +96,7 @@ index ae9b821d71d2868ba4eb3c73558fdcd6caf264e3..744c21ddc67ad3172bbc71e000b092a1
          }
  
          return nbt;
-@@ -881,6 +892,7 @@ public final class ItemStack {
+@@ -885,6 +896,7 @@ public final class ItemStack {
      // Paper end
  
      public void setTag(@Nullable CompoundTag nbt) {
@@ -252,7 +252,7 @@ index 881379681c39230a00b3a1f11cd87498984396c7..d0513b72cdaec3b67b9341d251367b19
      }
  
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
-index a8a26a0a37a08b6bbeb5a1fde417d6f448d3c79f..45e92e5cb10300de9072997cca06968e2c059083 100644
+index b11f51762ca289d99eaa49e66e31e58595bcea4e..06adfdc61f1064c1ec0db34632a8740fc09a1782 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 @@ -6,6 +6,7 @@ import java.util.function.BooleanSupplier;
