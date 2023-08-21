@@ -31,7 +31,7 @@ index 2ee4ee14ab3345486dad6b24fd9a4fcc6c746b99..c5ac6cda91a81d3075f5c763e30dc009
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java b/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
-index 8e4cb2fa787feca47dd4ba2fbb44e6193bac2431..000aa76e3f4dce8129dbd1868cfc244515997c0c 100644
+index a178f00744ad2e27c0f35d69803574e5a16ec294..a971a7efc8e2a318d596f668e35a933de90b0525 100644
 --- a/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
 +++ b/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
 @@ -408,7 +408,7 @@ public class AreaEffectCloud extends Entity implements TraceableEntity {
