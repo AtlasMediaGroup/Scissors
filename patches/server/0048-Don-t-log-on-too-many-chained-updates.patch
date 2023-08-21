@@ -5,10 +5,10 @@ Subject: [PATCH] Don't log on too many chained updates
 
 
 diff --git a/src/main/java/net/minecraft/world/level/redstone/CollectingNeighborUpdater.java b/src/main/java/net/minecraft/world/level/redstone/CollectingNeighborUpdater.java
-index ec81be70cd6f92bbf9011395cb361f0ce54c5ad0..97da1db83dca24759b52fc2d0a360187dbef86f1 100644
+index 5ddd8108e077bc7c1a9524854ac591c6ab99c174..b6577352c043b44df2e32a35a6af2711339f15eb 100644
 --- a/src/main/java/net/minecraft/world/level/redstone/CollectingNeighborUpdater.java
 +++ b/src/main/java/net/minecraft/world/level/redstone/CollectingNeighborUpdater.java
-@@ -56,7 +56,7 @@ public class CollectingNeighborUpdater implements NeighborUpdater {
+@@ -57,7 +57,7 @@ public class CollectingNeighborUpdater implements NeighborUpdater {
                  this.stack.push(entry);
              }
          } else if (this.count - 1 == this.maxChainedNeighborUpdates) {

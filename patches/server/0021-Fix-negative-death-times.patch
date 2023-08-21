@@ -5,15 +5,15 @@ Subject: [PATCH] Fix negative death times
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index e11d7283662834047b2ff81a2fd25a4263792deb..4bd7eea49a0720063db2a8ed10f53bd19e9499ad 100644
+index f636bdf1075fa784ce7ee25478d4d94bacb05677..77275e948b3636d21cca8f59c35834e8fdb339c7 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -629,7 +629,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
- 
+@@ -637,7 +637,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
+     public boolean broadcastedDeath = false; // Folia - region threading
      protected void tickDeath() {
          ++this.deathTime;
--        if (this.deathTime >= 20 && !this.level().isClientSide() && !this.isRemoved()) {
-+        if ((this.deathTime >= 20 || this.deathTime <= 0) && !this.level().isClientSide() && !this.isRemoved()) { // Scissors
+-        if (this.deathTime >= 20 && !this.level().isClientSide() && !this.isRemoved() && !this.broadcastedDeath) { // Folia - region threading
++        if ((this.deathTime >= 20 || this.deathTime <= 0) && !this.level().isClientSide() && !this.isRemoved() && !this.broadcastedDeath) { // Scissors // Folia - region threading
              this.level().broadcastEntityEvent(this, (byte) 60);
-             this.remove(Entity.RemovalReason.KILLED);
-         }
+             this.broadcastedDeath = true; // Folia - region threading - death has been broadcasted
+             if (!(this instanceof ServerPlayer)) this.remove(Entity.RemovalReason.KILLED); // Folia - region threading - don't remove, we want the tick scheduler to be running
