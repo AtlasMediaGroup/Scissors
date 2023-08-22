@@ -5,7 +5,7 @@ Subject: [PATCH] Add spectator teleport event
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 80e050603e36134754136a8ee2bd14624f976e91..a25b87311883c2fc2e9bd3707c79b88cbab0c3d9 100644
+index 3c0651fa5a5db880202c9a3805a6455269c5f16d..d7ddd44fb9b571850515edc6ee2e6801092f6446 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -1,5 +1,6 @@
@@ -15,7 +15,7 @@ index 80e050603e36134754136a8ee2bd14624f976e91..a25b87311883c2fc2e9bd3707c79b88c
  import com.google.common.collect.Lists;
  import com.google.common.primitives.Floats;
  import com.mojang.brigadier.ParseResults;
-@@ -2101,6 +2102,14 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -2113,6 +2114,14 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
                  Entity entity = packet.getEntity(worldserver);
  
                  if (entity != null) {
