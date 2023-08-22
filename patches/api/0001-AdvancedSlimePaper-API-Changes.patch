@@ -31,17 +31,3 @@ index 8045f92ffdfb4164bcbef99c41359590c45f9006..51e49260927f6840c3640275ff26e739
      api("com.google.guava:guava:31.1-jre")
      api("com.google.code.gson:gson:2.10")
      api("net.md-5:bungeecord-chat:$bungeeCordChatVersion-deprecated+build.14") // Paper
-diff --git a/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java b/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
-index 13da387d3b59bc67c0d73e3fbd3a4034b1281527..8678af261060575e2c138b84dc7c198e8d9cf1a9 100644
---- a/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
-+++ b/src/main/java/org/bukkit/plugin/java/PluginClassLoader.java
-@@ -251,7 +251,9 @@ public final class PluginClassLoader extends URLClassLoader implements io.paperm
-             // Paper end
-             super.close();
-         } finally {
-+            if (this.plugin == null || !this.plugin.getName().equals("SlimeWorldManager")) { // ASWM - Don't close
-             jar.close();
-+            } // ASWM - Don't close
-         }
-     }
- 
