@@ -6,7 +6,7 @@ Subject: [PATCH] Prevent attributes with invalid namespaces from being applied
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
-index 3903ca3970db787d96053f8b40044c1dac2c909b..0bc117a53ecf2851d5b89d8082b549bc0de7ffda 100644
+index f9741039dada19391e80d9623f2d8cabc1089506..38238d9e6d464990caf10557997c6ca88ee100c0 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 @@ -46,6 +46,7 @@ import net.minecraft.nbt.NbtIo;
@@ -17,7 +17,7 @@ index 3903ca3970db787d96053f8b40044c1dac2c909b..0bc117a53ecf2851d5b89d8082b549bc
  import net.minecraft.world.item.BlockItem;
  import net.minecraft.world.level.block.state.BlockState;
  import org.apache.commons.lang3.EnumUtils;
-@@ -484,7 +485,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
+@@ -486,7 +487,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
              AttributeModifier attribMod = CraftAttributeInstance.convert(nmsModifier);
  
              String attributeName = CraftAttributeMap.convertIfNeeded(entry.getString(ATTRIBUTES_IDENTIFIER.NBT)); // Paper

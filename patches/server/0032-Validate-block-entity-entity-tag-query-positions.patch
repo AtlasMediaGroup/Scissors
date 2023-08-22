@@ -5,10 +5,10 @@ Subject: [PATCH] Validate block entity/entity tag query positions
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index e3691dfadf6290775eaedd24383e02aeec5d0a9f..054f25b360a46330391cd22ed9888ccc8c40de4d 100644
+index 3c4825e295eefc7fcd628ba804fcc7dd5f160f28..280ebeee9bfae3059b6681873fa5633a9e929161 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -1364,7 +1364,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -1376,7 +1376,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
          if (this.player.hasPermissions(2)) {
              Entity entity = this.player.level().getEntity(packet.getEntityId());
  
@@ -17,7 +17,7 @@ index e3691dfadf6290775eaedd24383e02aeec5d0a9f..054f25b360a46330391cd22ed9888ccc
                  CompoundTag nbttagcompound = entity.saveWithoutId(new CompoundTag());
  
                  this.player.connection.send(new ClientboundTagQueryPacket(packet.getTransactionId(), nbttagcompound));
-@@ -1376,7 +1376,10 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -1388,7 +1388,10 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
      @Override
      public void handleBlockEntityTagQuery(ServerboundBlockEntityTagQuery packet) {
          PacketUtils.ensureRunningOnSameThread(packet, this, this.player.serverLevel());
