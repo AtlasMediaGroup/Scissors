@@ -4,9 +4,9 @@ pipeline {
         GITHUB_BRANCH = "${BRANCH_NAME}"
     }
     stages {
-        stage("clone") {
+        stage('checkout') {
             steps {
-                sh 'git submodule update --recursive'
+                checkout scmGit(branches: [[name: '*/slime/1.20.1']], extensions: [submodule(parentCredentials: true, recursiveSubmodules: true, reference: 'https://github.com/InfernalSuite/AdvancedSlimePaper')], userRemoteConfigs: [[url: 'https://github.com/AtlasMediaGroup/Scissors']])
             }
         }
         stage('applyPatches') {
