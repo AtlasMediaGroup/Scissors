@@ -5,7 +5,9 @@ pipeline {
     }
     stages {
         stage("clone") {
-            checkout scmGit(branches: [[name: '*/slime/1.20.1']], extensions: [submodule(parentCredentials: true, recursiveSubmodules: true, reference: '')], userRemoteConfigs: [[url: 'https://github.com/AtlasMediaGroup/Scissors']])
+            steps {
+                checkout scmGit(branches: [[name: '*/slime/1.20.1']], extensions: [submodule(parentCredentials: true, recursiveSubmodules: true, reference: '')], userRemoteConfigs: [[url: 'https://github.com/AtlasMediaGroup/Scissors']])
+            }
         }
         stage('applyPatches') {
             steps {
