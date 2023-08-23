@@ -7,4 +7,4 @@ pluginManagement {
 
 rootProject.name = "Scissors"
 
-include("Scissors-API", "Scissors-Server")
+include("aswm-api", "aswm-core", "Scissors-API", "Scissors-Server")

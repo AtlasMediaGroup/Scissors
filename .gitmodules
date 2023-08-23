@@ -1,0 +1,3 @@
+[submodule "submodules/AdvancedSlimePaper"]
+	path = submodules/AdvancedSlimePaper
+	url = git@github.com:InfernalSuite/AdvancedSlimePaper.git
