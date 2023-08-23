@@ -1,4 +1,5 @@
 pipeline {
+    options { skipDefaultCheckout() }
     agent any
     environment {
         GITHUB_BRANCH = "${BRANCH_NAME}"
