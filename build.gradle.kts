@@ -49,6 +49,7 @@ subprojects {
     repositories {
         mavenCentral()
         maven(paperMavenPublicUrl)
+        maven("https://repo.rapture.pw/repository/maven-releases/")
     }
 }
 

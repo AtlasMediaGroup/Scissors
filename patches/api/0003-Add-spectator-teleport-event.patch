@@ -6,7 +6,7 @@ Subject: [PATCH] Add spectator teleport event
 
 diff --git a/src/main/java/me/totalfreedom/scissors/event/player/SpectatorTeleportEvent.java b/src/main/java/me/totalfreedom/scissors/event/player/SpectatorTeleportEvent.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..d7efa63c316ed99c3eccfeadc1b0873b2ccb5d8a
+index 0000000000000000000000000000000000000000..e4c9256c78f8b395aea86e9ea1a112f8e7426c1f
 --- /dev/null
 +++ b/src/main/java/me/totalfreedom/scissors/event/player/SpectatorTeleportEvent.java
 @@ -0,0 +1,60 @@
