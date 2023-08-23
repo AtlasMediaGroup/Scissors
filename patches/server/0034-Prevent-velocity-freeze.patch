@@ -5,7 +5,7 @@ Subject: [PATCH] Prevent velocity freeze
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java b/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java
-index 6c9a8f062f989db022154155e8a05b334a0510da..978fad27ad17de03d108ade2c2bfa464b7d83491 100644
+index 77f55bcb120295fa11140681f63175d37d8a78e2..fbdc893c2e8c3b668ad65d1304c889a2cc8eca27 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/AbstractHurtingProjectile.java
 @@ -1,5 +1,6 @@
@@ -32,7 +32,7 @@ index 6c9a8f062f989db022154155e8a05b334a0510da..978fad27ad17de03d108ade2c2bfa464
          }
  
      }
-@@ -141,6 +146,25 @@ public abstract class AbstractHurtingProjectile extends Projectile {
+@@ -146,6 +151,25 @@ public abstract class AbstractHurtingProjectile extends Projectile {
          nbt.put("power", this.newDoubleList(new double[]{this.xPower, this.yPower, this.zPower}));
      }
  
@@ -58,7 +58,7 @@ index 6c9a8f062f989db022154155e8a05b334a0510da..978fad27ad17de03d108ade2c2bfa464
      @Override
      public void readAdditionalSaveData(CompoundTag nbt) {
          super.readAdditionalSaveData(nbt);
-@@ -148,9 +172,13 @@ public abstract class AbstractHurtingProjectile extends Projectile {
+@@ -153,9 +177,13 @@ public abstract class AbstractHurtingProjectile extends Projectile {
              ListTag nbttaglist = nbt.getList("power", 6);
  
              if (nbttaglist.size() == 3) {
@@ -75,7 +75,7 @@ index 6c9a8f062f989db022154155e8a05b334a0510da..978fad27ad17de03d108ade2c2bfa464
              }
          }
  
-@@ -184,9 +212,13 @@ public abstract class AbstractHurtingProjectile extends Projectile {
+@@ -189,9 +217,13 @@ public abstract class AbstractHurtingProjectile extends Projectile {
                      Vec3 vec3d = entity.getLookAngle();
  
                      this.setDeltaMovement(vec3d);

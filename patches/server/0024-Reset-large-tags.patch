@@ -59,7 +59,7 @@ index 4092c7a8c2b0d9d26e6f4d97386735236300d132..04c47cf1a920ae6c356449df801227ee
              }
          }
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index 879cc823d56625867eb73bb621db6a13f40ad81c..e61958a69bbccd08093932cd7fe74139b1054514 100644
+index d30156d5cb888b8cf2af9aee9b94e242a6510192..7fb7337256a0c3cdde587fb5a9222bb8faa322ec 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
 @@ -21,6 +21,7 @@ import java.util.function.Predicate;
@@ -83,7 +83,7 @@ index 879cc823d56625867eb73bb621db6a13f40ad81c..e61958a69bbccd08093932cd7fe74139
          this.item = (Item) BuiltInRegistries.ITEM.get(new ResourceLocation(nbttagcompound.getString("id")));
          this.count = nbttagcompound.getByte("Count");
          if (nbttagcompound.contains("tag", 10)) {
-@@ -555,7 +562,11 @@ public final class ItemStack {
+@@ -556,7 +563,11 @@ public final class ItemStack {
          nbt.putString("id", minecraftkey == null ? "minecraft:air" : minecraftkey.toString());
          nbt.putByte("Count", (byte) this.count);
          if (this.tag != null) {
@@ -96,7 +96,7 @@ index 879cc823d56625867eb73bb621db6a13f40ad81c..e61958a69bbccd08093932cd7fe74139
          }
  
          return nbt;
-@@ -885,6 +896,7 @@ public final class ItemStack {
+@@ -886,6 +897,7 @@ public final class ItemStack {
      // Paper end
  
      public void setTag(@Nullable CompoundTag nbt) {
@@ -164,7 +164,7 @@ index 416aa989ebb18a8741cc9d605a1180ab830f6643..a9a8c9e68e5b767dec2c26495685da88
      }
  
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java
-index c57efcb9a79337ec791e4e8f6671612f0a82b441..2cbb8170953cb555411db8c171a3d1d91eb799bb 100644
+index 526d1bfd5ad0de7bcfd0c2da902515f3dec94c54..2cf0e645aeae983ec6db9b1a25401120fd968f06 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java
 @@ -3,6 +3,7 @@ package net.minecraft.world.level.block.entity;
@@ -252,7 +252,7 @@ index 881379681c39230a00b3a1f11cd87498984396c7..d0513b72cdaec3b67b9341d251367b19
      }
  
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
-index b11f51762ca289d99eaa49e66e31e58595bcea4e..06adfdc61f1064c1ec0db34632a8740fc09a1782 100644
+index 1eebd3969735bff3e5559ed01ab4a2ec1c3c2de6..a7d8a6beb45bcc8be3e4a444ab1020783fba1635 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 @@ -6,6 +6,7 @@ import java.util.function.BooleanSupplier;

@@ -426,7 +426,7 @@ index dae36c6452ccd57a436dd918547b64d59957ab0a..d450cf3cf8ab5cbb5d32a28ee2e4a671
  
              if (optionset.has("initSettings")) { // CraftBukkit
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index 9f422cbeaa52b3e6a0a27af4f8ad4ddb7808483f..bbfb536ddec7f44d2a75d35ab495be26104678a1 100644
+index 78ada86028bac06b62a7d70776a29705a3b11a06..085eebadc3aa8ef717d96333277a941d4bd152e9 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 @@ -222,6 +222,16 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
@@ -447,10 +447,10 @@ index 9f422cbeaa52b3e6a0a27af4f8ad4ddb7808483f..bbfb536ddec7f44d2a75d35ab495be26
          this.setFlightAllowed(dedicatedserverproperties.allowFlight);
          this.setMotd(dedicatedserverproperties.motd);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 45f43dc72647f2f3fa91dad767b949d851f7dd46..c59e7ca3c5faaa4a5347699f5e66084103f89443 100644
+index 442cbb83e520df2ba890b291a618b5bb4ad8dc9d..2ca411f29e68c94b9086776ac3200e2807c12c0b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -1056,6 +1056,7 @@ public final class CraftServer implements Server {
+@@ -1097,6 +1097,7 @@ public final class CraftServer implements Server {
          }
  
          org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
@@ -458,7 +458,7 @@ index 45f43dc72647f2f3fa91dad767b949d851f7dd46..c59e7ca3c5faaa4a5347699f5e660841
          this.console.paperConfigurations.reloadConfigs(this.console);
          for (ServerLevel world : this.console.getAllLevels()) {
              // world.serverLevelData.setDifficulty(config.difficulty); // Paper - per level difficulty
-@@ -1087,6 +1088,7 @@ public final class CraftServer implements Server {
+@@ -1128,6 +1129,7 @@ public final class CraftServer implements Server {
          this.reloadData();
          org.spigotmc.SpigotConfig.registerCommands(); // Spigot
          io.papermc.paper.command.PaperCommands.registerCommands(this.console); // Paper
@@ -466,7 +466,7 @@ index 45f43dc72647f2f3fa91dad767b949d851f7dd46..c59e7ca3c5faaa4a5347699f5e660841
          this.overrideAllCommandBlockCommands = this.commandsConfiguration.getStringList("command-block-overrides").contains("*");
          this.ignoreVanillaPermissions = this.commandsConfiguration.getBoolean("ignore-vanilla-permissions");
  
-@@ -2932,6 +2934,14 @@ public final class CraftServer implements Server {
+@@ -2945,6 +2947,14 @@ public final class CraftServer implements Server {
              return CraftServer.this.console.paperConfigurations.createLegacyObject(CraftServer.this.console);
          }
  

@@ -31,7 +31,7 @@ index 2ee4ee14ab3345486dad6b24fd9a4fcc6c746b99..c5ac6cda91a81d3075f5c763e30dc009
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java b/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
-index 8e4cb2fa787feca47dd4ba2fbb44e6193bac2431..000aa76e3f4dce8129dbd1868cfc244515997c0c 100644
+index a178f00744ad2e27c0f35d69803574e5a16ec294..a971a7efc8e2a318d596f668e35a933de90b0525 100644
 --- a/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
 +++ b/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
 @@ -408,7 +408,7 @@ public class AreaEffectCloud extends Entity implements TraceableEntity {
@@ -66,10 +66,10 @@ index 9afc81ccb237c3655d64cdbe8a0db9a4d7791043..7b0aed8ed3a150b7c10fa246bb0b5192
  
      @Nullable
 diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index e2a25c29ec74147b3e66aa0b3deb85a8f6ee53a5..0bb87ca2556ca41e0b14503d3ae62e0fc133a209 100644
+index a21edc7df32a59a6cb1af3865d2ce35f72cf8afc..0b272b0cf56dcb1c509fa63ff0f6e526c5536748 100644
 --- a/src/main/java/net/minecraft/world/entity/Mob.java
 +++ b/src/main/java/net/minecraft/world/entity/Mob.java
-@@ -618,7 +618,7 @@ public abstract class Mob extends LivingEntity implements Targeting {
+@@ -638,7 +638,7 @@ public abstract class Mob extends LivingEntity implements Targeting {
  
          this.setLeftHanded(nbt.getBoolean("LeftHanded"));
          if (nbt.contains("DeathLootTable", 8)) {
@@ -157,10 +157,10 @@ index e49eece9bff3a53469673d03a7bbf8f9cf8776b8..a49f32e9649155b6af4b1f236e4e8142
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftMinecartContainer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftMinecartContainer.java
-index 0dd0ce9a9b3253e87eda12354249ec2fd2a33cf2..b6920f9432ca1736afbe775186fbbcf11cf046fb 100644
+index b7d0892953f357e58665e87fbcf794a75f1c0980..e65232cb1abd59b896650e249a2b2ad8b0828712 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftMinecartContainer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftMinecartContainer.java
-@@ -33,8 +33,14 @@ public abstract class CraftMinecartContainer extends CraftMinecart implements Lo
+@@ -41,8 +41,14 @@ public abstract class CraftMinecartContainer extends CraftMinecart implements Lo
              return null; // return empty loot table?
          }
  
@@ -178,10 +178,10 @@ index 0dd0ce9a9b3253e87eda12354249ec2fd2a33cf2..b6920f9432ca1736afbe775186fbbcf1
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
-index 18b9b0dc70f6872a9d71c120bcd2edca531b0ac4..4732fff6d1198e5fc4875b4d4523aa2d152817ea 100644
+index 148d0393b093a326f76fc34c035768f4758f3f1b..43034806bf8dcd940e1ec47edd3875adb9cefe0f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
-@@ -80,8 +80,14 @@ public abstract class CraftMob extends CraftLivingEntity implements Mob {
+@@ -88,8 +88,14 @@ public abstract class CraftMob extends CraftLivingEntity implements Mob {
  
      @Override
      public LootTable getLootTable() {

@@ -5,10 +5,10 @@ Subject: [PATCH] Don't warn on duplicate entity UUIDs
 
 
 diff --git a/src/main/java/io/papermc/paper/chunk/system/entity/EntityLookup.java b/src/main/java/io/papermc/paper/chunk/system/entity/EntityLookup.java
-index 41791c7331c80d496cde4e3d1846a178bef0bbe3..d04181bda85dbaa77d3b55b04b25519496bec4ff 100644
+index 0cdf092d5c3f65a23e26f201768c0e2fea1ffe09..cfed22910f3b73c0dc115b7887bd5b117749a939 100644
 --- a/src/main/java/io/papermc/paper/chunk/system/entity/EntityLookup.java
 +++ b/src/main/java/io/papermc/paper/chunk/system/entity/EntityLookup.java
-@@ -372,7 +372,7 @@ public final class EntityLookup implements LevelEntityGetter<Entity> {
+@@ -416,7 +416,7 @@ public final class EntityLookup implements LevelEntityGetter<Entity> {
                  return false;
              }
              if (this.entityByUUID.containsKey(entity.getUUID())) {

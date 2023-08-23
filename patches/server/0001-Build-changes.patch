@@ -5,25 +5,27 @@ Subject: [PATCH] Build changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index fb98936bb8a5488db75d676c5bcb4060597fbbf8..904bf48288e0865db9bbe8d2ca183b8385f73407 100644
+index 9ee90bc753e65f9dd532f28ec75cc16bf16486c8..9ca282a17c94d1314c625ca4ad15bb899cd6e02f 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -13,8 +13,12 @@ configurations.named(log4jPlugins.compileClasspathConfigurationName) {
+@@ -13,12 +13,12 @@ configurations.named(log4jPlugins.compileClasspathConfigurationName) {
  val alsoShade: Configuration by configurations.creating
  
  dependencies {
--    implementation(project(":paper-api"))
--    implementation(project(":paper-mojangapi"))
+-    // Folia start
+-    implementation(project(":folia-api"))
+-    implementation("io.papermc.paper:paper-mojangapi:1.19.3-R0.1-SNAPSHOT") {
 +    // Scissors start
 +    implementation(project(":Scissors-API"))
 +    implementation("io.papermc.paper:paper-mojangapi:1.20.1-R0.1-SNAPSHOT") {
-+        exclude("io.papermc.paper", "paper-api")
-+    }
+         exclude("io.papermc.paper", "paper-api")
+     }
+-    // Folia end
 +    // Scissors end
      // Paper start
      implementation("org.jline:jline-terminal-jansi:3.21.0")
      implementation("net.minecrell:terminalconsoleappender:1.3.0")
-@@ -68,11 +72,19 @@ tasks.jar {
+@@ -72,11 +72,19 @@ tasks.jar {
          val gitHash = git("rev-parse", "--short=7", "HEAD").getText().trim()
          val implementationVersion = System.getenv("BUILD_NUMBER") ?: "\"$gitHash\""
          val date = git("show", "-s", "--format=%ci", gitHash).getText().trim() // Paper
@@ -40,30 +42,21 @@ index fb98936bb8a5488db75d676c5bcb4060597fbbf8..904bf48288e0865db9bbe8d2ca183b83
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",
              "Implementation-Title" to "CraftBukkit",
--            "Implementation-Version" to "git-Paper-$implementationVersion",
-+            "Implementation-Version" to "git-Scissors-$implementationVersion", // Scissors
+-            "Implementation-Version" to "git-Folia-$implementationVersion", // Folia
++            "Implementation-Version" to "git-Scissors-$implementationVersion", // Scissors // Folia
              "Implementation-Vendor" to date, // Paper
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
-@@ -149,7 +161,7 @@ fun TaskContainer.registerRunTask(
-     name: String,
-     block: JavaExec.() -> Unit
- ): TaskProvider<JavaExec> = register<JavaExec>(name) {
--    group = "paper"
-+    group = "paperweight" // Scissors
-     mainClass.set("org.bukkit.craftbukkit.Main")
-     standardInput = System.`in`
-     workingDir = rootProject.layout.projectDirectory
 diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
-index 4b002e8b75d117b726b0de274a76d3596fce015b..a46d3f40642bbf249c2d24e689f474d07175ca09 100644
+index cb60d58d4a7556dd896f31d0cd249f860bb3ef84..f7038ee0d3475ee9c187da8feb12ff4553130e1d 100644
 --- a/src/main/java/com/destroystokyo/paper/Metrics.java
 +++ b/src/main/java/com/destroystokyo/paper/Metrics.java
 @@ -593,7 +593,7 @@ public class Metrics {
              boolean logFailedRequests = config.getBoolean("logFailedRequests", false);
              // Only start Metrics, if it's enabled in the config
              if (config.getBoolean("enabled", true)) {
--                Metrics metrics = new Metrics("Paper", serverUUID, logFailedRequests, Bukkit.getLogger());
-+                Metrics metrics = new Metrics("Scissors", serverUUID, logFailedRequests, Bukkit.getLogger()); // Scissors
+-                Metrics metrics = new Metrics("Folia", serverUUID, logFailedRequests, Bukkit.getLogger()); // Folia - we have our own bstats page
++                Metrics metrics = new Metrics("Scissors", serverUUID, logFailedRequests, Bukkit.getLogger()); // Scissors // Folia - we have our own bstats page
  
                  metrics.addCustomChart(new Metrics.SimplePie("minecraft_version", () -> {
                      String minecraftVersion = Bukkit.getVersion();
@@ -71,13 +64,13 @@ index 4b002e8b75d117b726b0de274a76d3596fce015b..a46d3f40642bbf249c2d24e689f474d0
                  final String implVersion = org.bukkit.craftbukkit.Main.class.getPackage().getImplementationVersion();
                  if (implVersion != null) {
                      final String buildOrHash = implVersion.substring(implVersion.lastIndexOf('-') + 1);
--                    paperVersion = "git-Paper-%s-%s".formatted(Bukkit.getServer().getMinecraftVersion(), buildOrHash);
-+                    paperVersion = "git-Scissors-%s-%s".formatted(Bukkit.getServer().getMinecraftVersion(), buildOrHash); // Scissors
+-                    paperVersion = "git-Folia-%s-%s".formatted(Bukkit.getServer().getMinecraftVersion(), buildOrHash); // Folia - we have our own bstats page
++                    paperVersion = "git-Scissors-%s-%s".formatted(Bukkit.getServer().getMinecraftVersion(), buildOrHash); // Scissors // Folia - we have our own bstats page
                  } else {
                      paperVersion = "unknown";
                  }
--                metrics.addCustomChart(new Metrics.SimplePie("paper_version", () -> paperVersion));
-+                metrics.addCustomChart(new Metrics.SimplePie("scissors_version", () -> paperVersion)); // Scissors
+-                metrics.addCustomChart(new Metrics.SimplePie("folia_version", () -> paperVersion)); // Folia - we have our own bstats page
++                metrics.addCustomChart(new Metrics.SimplePie("scissors_version", () -> paperVersion)); // Scissors // Folia - we have our own bstats page
  
                  metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
                      Map<String, Map<String, Integer>> map = new HashMap<>();
@@ -95,41 +88,41 @@ index c5d5648f4ca603ef2b1df723b58f9caf4dd3c722..21ded7c14c56a40feaa7741131be5166
                  .completer(new ConsoleCommandCompleter(this.server))
                  .option(LineReader.Option.COMPLETE_IN_WORD, true);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 3238cbcba567b1242c77e41f6b6f19a8d157fb4e..dd4dc6b29e37a4db459779fa8d4adc231e44d144 100644
+index 355acd1dd3b2e9f2a086a8d95928cdebbf63d06f..840105551533aef45583f0c36ee7fc41bcd0d2d0 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1693,7 +1693,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1812,7 +1812,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
--        return "Paper"; // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
-+        return "Scissors"; // Scissors - Scissors > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
+-        return "Folia"; // Folia - Folia > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
++        return "Scissors"; // Scissors - Scissors > // Folia - Folia > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
      }
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 54f27d91f941235a99e341ed84531ad7f0840728..3758aab606498e7b5fe322bb49ac0731815269e7 100644
+index 9485d754ec6ce4031d88734e327abda240d9db90..442cbb83e520df2ba890b291a618b5bb4ad8dc9d 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -265,7 +265,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {
--    private final String serverName = "Paper"; // Paper
-+    private final String serverName = "Scissors"; // Scissors // Paper
+-    private final String serverName = "Folia"; // Folia // Paper
++    private final String serverName = "Scissors"; // Scissors // Folia // Paper
      private final String serverVersion;
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 774556a62eb240da42e84db4502e2ed43495be17..741c76c4dfa0bb34cc23bd795c194bdea10418cc 100644
+index e9b6ca3aa25e140467ae866d572483050ea3fa0e..bb37db7715b7c5eb497f4d5f5a32668ad947943b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -11,7 +11,7 @@ public final class Versioning {
      public static String getBukkitVersion() {
          String result = "Unknown-Version";
  
--        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/io.papermc.paper/paper-api/pom.properties");
-+        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/me.totalfreedom.scissors/Scissors-API/pom.properties"); // Scissors
+-        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/dev.folia/folia-api/pom.properties"); // Folia
++        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/me.totalfreedom.scissors/Scissors-API/pom.properties"); // Folia // Scissors
          Properties properties = new Properties();
  
          if (stream != null) {

@@ -58,8 +58,13 @@ paperweight {
     remapRepo.set(paperMavenPublicUrl)
     decompileRepo.set(paperMavenPublicUrl)
 
-    usePaperUpstream(providers.gradleProperty("paperRef")) {
-        withPaperPatcher {
+    useStandardUpstream("Folia") {
+        url.set(github("PaperMC", "Folia"))
+        ref.set(providers.gradleProperty("foliaRef"))
+
+        withStandardPatcher {
+            baseName("Folia")
+
             apiPatchDir.set(layout.projectDirectory.dir("patches/api"))
             apiOutputDir.set(layout.projectDirectory.dir("Scissors-API"))
 
