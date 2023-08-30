@@ -1972,7 +1972,7 @@ index 7e8dc9e8f381abfdcce2746edc93122d623622d1..148db7995f8bb8bef8f1eeeadc338dff
      public FullChunkStatus status;
  
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 435f5ee3388f5da93df938c43ea2578f7d586407..9d636e893885a411cde5fb72f9a79da0d2f7cbf9 100644
+index 67ee3a4ca8a6cdeb275653d492a1fea8037c51fb..e62ebbb2e69df4a79b87cac542482ca913681b02 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -272,7 +272,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -1984,7 +1984,7 @@ index 435f5ee3388f5da93df938c43ea2578f7d586407..9d636e893885a411cde5fb72f9a79da0
      private final CustomBossEvents customBossEvents;
      private final ServerFunctionManager functionManager;
      private final FrameTimer frameTimer;
-@@ -462,18 +462,21 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -461,18 +461,21 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
              if (dimensionKey == LevelStem.NETHER) {
                  if (this.isNetherEnabled()) {
                      dimension = -1;
@@ -2007,7 +2007,7 @@ index 435f5ee3388f5da93df938c43ea2578f7d586407..9d636e893885a411cde5fb72f9a79da0
              String worldType = (dimension == -999) ? dimensionKey.location().getNamespace() + "_" + dimensionKey.location().getPath() : org.bukkit.World.Environment.getEnvironment(dimension).toString().toLowerCase();
              String name = (dimensionKey == LevelStem.OVERWORLD) ? s : s + "_" + worldType;
 diff --git a/src/main/java/net/minecraft/server/level/ServerChunkCache.java b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
-index 488a253e218409b5f0b4a872cee0928578fa7582..62bcf1ebadc12145ef6bca531b17603f74e801b0 100644
+index acbcdc8cb1523044b1657e03a141fae6389a3686..84dab69bf6cc279131ab1a3b5eb7a93c4e1e8f15 100644
 --- a/src/main/java/net/minecraft/server/level/ServerChunkCache.java
 +++ b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
 @@ -168,7 +168,11 @@ public class ServerChunkCache extends ChunkSource {
