@@ -426,7 +426,7 @@ index dae36c6452ccd57a436dd918547b64d59957ab0a..d450cf3cf8ab5cbb5d32a28ee2e4a671
  
              if (optionset.has("initSettings")) { // CraftBukkit
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index 78ada86028bac06b62a7d70776a29705a3b11a06..085eebadc3aa8ef717d96333277a941d4bd152e9 100644
+index c5dfd99a38a79fd19a2bf85fa297a28e40612b51..a2aee0bbd0ffcd3d86d33a4cea7b0d683736726b 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 @@ -222,6 +222,16 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
@@ -447,7 +447,7 @@ index 78ada86028bac06b62a7d70776a29705a3b11a06..085eebadc3aa8ef717d96333277a941d
          this.setFlightAllowed(dedicatedserverproperties.allowFlight);
          this.setMotd(dedicatedserverproperties.motd);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 442cbb83e520df2ba890b291a618b5bb4ad8dc9d..2ca411f29e68c94b9086776ac3200e2807c12c0b 100644
+index f9a2190b74121e510c8a234905ee5eb24e5ea7f7..d6eef122c2ee170d5c305524166e18b7315fe9f3 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -1097,6 +1097,7 @@ public final class CraftServer implements Server {
@@ -466,7 +466,7 @@ index 442cbb83e520df2ba890b291a618b5bb4ad8dc9d..2ca411f29e68c94b9086776ac3200e28
          this.overrideAllCommandBlockCommands = this.commandsConfiguration.getStringList("command-block-overrides").contains("*");
          this.ignoreVanillaPermissions = this.commandsConfiguration.getBoolean("ignore-vanilla-permissions");
  
-@@ -2945,6 +2947,14 @@ public final class CraftServer implements Server {
+@@ -2975,6 +2977,14 @@ public final class CraftServer implements Server {
              return CraftServer.this.console.paperConfigurations.createLegacyObject(CraftServer.this.console);
          }
  

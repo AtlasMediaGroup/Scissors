@@ -27,10 +27,10 @@ index c0633f9553fb5aa52e8ffc863159521d09cb3bd5..7449a024265c42f28a6c9a1ed8d8f4b9
              }
          }
 diff --git a/src/main/java/net/minecraft/world/entity/decoration/ItemFrame.java b/src/main/java/net/minecraft/world/entity/decoration/ItemFrame.java
-index 759ecd79534a7706f7d4a63eb9dacbefcfe54674..9afda54ad70d446672749506822c6abd729b8f1b 100644
+index 0344b1f77f23274c2932b5dce01b0ea6887078cf..d3d716e349df0edd28a4dabe528a332ea218b37f 100644
 --- a/src/main/java/net/minecraft/world/entity/decoration/ItemFrame.java
 +++ b/src/main/java/net/minecraft/world/entity/decoration/ItemFrame.java
-@@ -441,7 +441,7 @@ public class ItemFrame extends HangingEntity {
+@@ -443,7 +443,7 @@ public class ItemFrame extends HangingEntity {
              ItemStack itemstack = ItemStack.of(nbttagcompound1);
  
              if (itemstack.isEmpty()) {

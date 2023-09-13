@@ -5,10 +5,10 @@ Subject: [PATCH] Validate BlockState and SoundEvent values
 
 
 diff --git a/src/main/java/net/minecraft/nbt/NbtUtils.java b/src/main/java/net/minecraft/nbt/NbtUtils.java
-index a9c3c55eb622b18c74d8a9bd472e4e871d11b2aa..a78595e91cbb6a815c9ef6b4596cdb0e560f9e42 100644
+index efa800402413202d190926610d8264dfbf5019e7..1b3229128771adb85a7d007989891ef073a80278 100644
 --- a/src/main/java/net/minecraft/nbt/NbtUtils.java
 +++ b/src/main/java/net/minecraft/nbt/NbtUtils.java
-@@ -235,7 +235,7 @@ public final class NbtUtils {
+@@ -234,7 +234,7 @@ public final class NbtUtils {
          if (!nbt.contains("Name", 8)) {
              return Blocks.AIR.defaultBlockState();
          } else {
@@ -18,7 +18,7 @@ index a9c3c55eb622b18c74d8a9bd472e4e871d11b2aa..a78595e91cbb6a815c9ef6b4596cdb0e
              if (optional.isEmpty()) {
                  return Blocks.AIR.defaultBlockState();
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/AbstractArrow.java b/src/main/java/net/minecraft/world/entity/projectile/AbstractArrow.java
-index ea3d0a50ff4effdf61ec3c6c99c378cbd816c83c..b3ea5eecf351c89ef4e4019c07f46d88ff8ec395 100644
+index 270b37a34de47bc9846442d58827e8ff5e35178c..dbac57c9f6048779330f404d96ad213af5810707 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/AbstractArrow.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/AbstractArrow.java
 @@ -546,7 +546,7 @@ public abstract class AbstractArrow extends Projectile {
