@@ -60,7 +60,7 @@ index c0a80824a0307ea673805015119cc834b268f0dc..9f28f86b1b56ea55ab39f6ac988c1f47
                      }
  
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 280ebeee9bfae3059b6681873fa5633a9e929161..08390409bbaf9f3ae8260ab36ea5e0580e93b3e3 100644
+index 562289bbe08b8d8e75436ad94cfc02e7c0e95d2e..a98134b3b59e194c03bb8110652a9208263c420d 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -1,5 +1,6 @@
@@ -87,7 +87,7 @@ index 280ebeee9bfae3059b6681873fa5633a9e929161..08390409bbaf9f3ae8260ab36ea5e058
                  ServerGamePacketListenerImpl.LOGGER.warn("Failed to validate message acknowledgements from {}", this.player.getName().getString());
                  this.disconnect(ServerGamePacketListenerImpl.CHAT_VALIDATION_FAILED, org.bukkit.event.player.PlayerKickEvent.Cause.CHAT_VALIDATION_FAILED); // Paper - kick event causes
              }
-@@ -2653,6 +2655,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -2632,6 +2634,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
  
          synchronized (this.lastSeenMessages) {
              if (!this.lastSeenMessages.applyOffset(packet.offset())) {
@@ -95,7 +95,7 @@ index 280ebeee9bfae3059b6681873fa5633a9e929161..08390409bbaf9f3ae8260ab36ea5e058
                  ServerGamePacketListenerImpl.LOGGER.warn("Failed to validate message acknowledgements from {}", this.player.getName().getString());
                  this.disconnect(ServerGamePacketListenerImpl.CHAT_VALIDATION_FAILED, org.bukkit.event.player.PlayerKickEvent.Cause.CHAT_VALIDATION_FAILED); // Paper - kick event causes
              }
-@@ -3694,6 +3697,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -3673,6 +3676,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
      @Override
      public void handleChatSessionUpdate(ServerboundChatSessionUpdatePacket packet) {
          PacketUtils.ensureRunningOnSameThread(packet, this, this.player.serverLevel());
