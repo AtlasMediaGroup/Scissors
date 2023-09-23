@@ -21,7 +21,7 @@ pipeline {
         stage('paperclipJar') {
             steps {
                 withGradle {
-                    sh './gradlew createReobfPaperclipJar'
+                    sh './gradlew createReobfPaperclipJar --stacktrace --info'
                 }
                 sh """
                     #!/bin/sh
