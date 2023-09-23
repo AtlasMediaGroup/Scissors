@@ -4,17 +4,24 @@ pipeline {
         GITHUB_BRANCH = "${BRANCH_NAME}"
     }
     stages {
+        stage('clean') {
+            steps {
+                withGradle {
+                    sh './gradlew clean'
+                }
+            }
+        }
         stage('applyPatches') {
             steps {
                 withGradle {
-                    sh './gradlew applyPatches --no-daemon --refresh-dependencies'
+                    sh './gradlew applyPatches'
                 }
             }
         }
         stage('paperclipJar') {
             steps {
                 withGradle {
-                    sh './gradlew createReobfPaperclipJar --no-daemon --refresh-dependencies'
+                    sh './gradlew createReobfPaperclipJar'
                 }
                 sh """
                     #!/bin/sh
