@@ -59,7 +59,7 @@ index 4092c7a8c2b0d9d26e6f4d97386735236300d132..04c47cf1a920ae6c356449df801227ee
              }
          }
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index 879cc823d56625867eb73bb621db6a13f40ad81c..e61958a69bbccd08093932cd7fe74139b1054514 100644
+index d138660e459b2d09ba9dd7ae2bf3da499d9ae25c..8c5fe0166a5442a2fa4f212d7c53343c937f53f1 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
 @@ -21,6 +21,7 @@ import java.util.function.Predicate;
@@ -83,7 +83,7 @@ index 879cc823d56625867eb73bb621db6a13f40ad81c..e61958a69bbccd08093932cd7fe74139
          this.item = (Item) BuiltInRegistries.ITEM.get(new ResourceLocation(nbttagcompound.getString("id")));
          this.count = nbttagcompound.getByte("Count");
          if (nbttagcompound.contains("tag", 10)) {
-@@ -555,7 +562,11 @@ public final class ItemStack {
+@@ -556,7 +563,11 @@ public final class ItemStack {
          nbt.putString("id", minecraftkey == null ? "minecraft:air" : minecraftkey.toString());
          nbt.putByte("Count", (byte) this.count);
          if (this.tag != null) {
@@ -96,7 +96,7 @@ index 879cc823d56625867eb73bb621db6a13f40ad81c..e61958a69bbccd08093932cd7fe74139
          }
  
          return nbt;
-@@ -885,6 +896,7 @@ public final class ItemStack {
+@@ -886,6 +897,7 @@ public final class ItemStack {
      // Paper end
  
      public void setTag(@Nullable CompoundTag nbt) {
