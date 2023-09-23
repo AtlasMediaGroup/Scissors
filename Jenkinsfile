@@ -7,7 +7,7 @@ pipeline {
         stage('clean') {
             steps {
                 withGradle {
-                    sh './gradlew clean'
+                    sh './gradlew cleanCache'
                 }
             }
         }
