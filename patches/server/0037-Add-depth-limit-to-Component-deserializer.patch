@@ -5,7 +5,7 @@ Subject: [PATCH] Add depth limit to Component deserializer
 
 
 diff --git a/src/main/java/net/minecraft/network/chat/Component.java b/src/main/java/net/minecraft/network/chat/Component.java
-index a2149452ee461002ea74189c5aa49cddd943d0cf..f1d1501211a923c0ccab6b5982887c3a9262889b 100644
+index fa6151a2361684426bdd3bf3b433fe4dbd0cf47b..4dd93e02f2b18e5c75be14ff8f052220ca69f427 100644
 --- a/src/main/java/net/minecraft/network/chat/Component.java
 +++ b/src/main/java/net/minecraft/network/chat/Component.java
 @@ -26,6 +26,7 @@ import java.util.List;

@@ -24,7 +24,7 @@ index 55026e1731e41b4e3e4c6a8fef5d96a32051a556..4a8383d48da4fcf39ec528a00cd09417
  
          this.savedFlowerPos = null;
 diff --git a/src/main/java/net/minecraft/world/entity/monster/Vex.java b/src/main/java/net/minecraft/world/entity/monster/Vex.java
-index 65cb385ab294e362d666a6d03c4496cdc3b64890..42c3e946e51f6dcb100078969a4fb46c77f42b2d 100644
+index 90e577b1a89b02c38daff2845a63dafe5ed929e1..1a2b6ee032ab6952634c9f596820db3e7374fb50 100644
 --- a/src/main/java/net/minecraft/world/entity/monster/Vex.java
 +++ b/src/main/java/net/minecraft/world/entity/monster/Vex.java
 @@ -118,8 +118,12 @@ public class Vex extends Monster implements TraceableEntity {

@@ -5,10 +5,10 @@ Subject: [PATCH] Limit beacon effectRange
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java
-index 5c951ef93fe4cf4f085df86b0cefc02bc2610ab9..1d08e3a9493154e075a289d2eb9a8772289534af 100644
+index f13943db6f2fb923c52dcf9e8bf7000041d0a362..2fdcc47dd6a813d5f7a32dc58ca67b6b965c8749 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java
-@@ -83,7 +83,7 @@ public class BeaconBlockEntity extends BlockEntity implements MenuProvider, Name
+@@ -87,7 +87,7 @@ public class BeaconBlockEntity extends BlockEntity implements MenuProvider, Name
      private double effectRange = -1;
  
      public double getEffectRange() {
@@ -17,7 +17,7 @@ index 5c951ef93fe4cf4f085df86b0cefc02bc2610ab9..1d08e3a9493154e075a289d2eb9a8772
              return this.levels * 10 + 10;
          } else {
              return effectRange;
-@@ -428,6 +428,7 @@ public class BeaconBlockEntity extends BlockEntity implements MenuProvider, Name
+@@ -456,6 +456,7 @@ public class BeaconBlockEntity extends BlockEntity implements MenuProvider, Name
  
          this.lockKey = LockCode.fromTag(nbt);
          this.effectRange = nbt.contains(PAPER_RANGE_TAG, 6) ? nbt.getDouble(PAPER_RANGE_TAG) : -1; // Paper

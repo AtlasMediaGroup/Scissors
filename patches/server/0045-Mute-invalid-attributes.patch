@@ -5,10 +5,10 @@ Subject: [PATCH] Mute invalid attributes
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/ai/attributes/AttributeMap.java b/src/main/java/net/minecraft/world/entity/ai/attributes/AttributeMap.java
-index dd1102d5291ef6f18e82400a6d8a0a376cc071e9..d304612325d6c70a4100582d6c0fbfeecd8716d1 100644
+index 7204b973c3ad9239e82355513f6d538107102e48..2463444778f19f937b18173798c04d9d9788a824 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/attributes/AttributeMap.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/attributes/AttributeMap.java
-@@ -145,7 +145,7 @@ public class AttributeMap {
+@@ -147,7 +147,7 @@ public class AttributeMap {
                  }
  
              }, () -> {
@@ -18,10 +18,10 @@ index dd1102d5291ef6f18e82400a6d8a0a376cc071e9..d304612325d6c70a4100582d6c0fbfee
          }
  
 diff --git a/src/main/java/net/minecraft/world/entity/ai/attributes/AttributeModifier.java b/src/main/java/net/minecraft/world/entity/ai/attributes/AttributeModifier.java
-index 8de09eea46c27db9d8c472e84f768976769d1b0b..c8d05d35368e0cf593bcc3589b6c108a901bdc22 100644
+index a7380ce6dcbf64ad8a51dd047d178ae887518041..cb015941e5ea4618bd0964f4aa66a9f0fceb27a1 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/attributes/AttributeModifier.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/attributes/AttributeModifier.java
-@@ -90,7 +90,7 @@ public class AttributeModifier {
+@@ -92,7 +92,7 @@ public class AttributeModifier {
              AttributeModifier.Operation operation = AttributeModifier.Operation.fromValue(nbt.getInt("Operation"));
              return new AttributeModifier(uUID, nbt.getString("Name"), nbt.getDouble("Amount"), operation);
          } catch (Exception var3) {
