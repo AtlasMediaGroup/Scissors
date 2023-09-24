@@ -4,27 +4,8 @@ Date: Mon, 28 Mar 2022 13:19:43 -0600
 Subject: [PATCH] Better handling of invalid JSON components
 
 
-diff --git a/src/main/java/io/papermc/paper/util/MCUtil.java b/src/main/java/io/papermc/paper/util/MCUtil.java
-index c69088a2ec374b2d236fec61e267f42afa2967b1..7ca1ece926b0ef4598d4fa913b96d1e7a0e5bba4 100644
---- a/src/main/java/io/papermc/paper/util/MCUtil.java
-+++ b/src/main/java/io/papermc/paper/util/MCUtil.java
-@@ -559,13 +559,7 @@ public final class MCUtil {
-             return null;
-         }
-         String string = compound.getString(key);
--        try {
--            return Component.Serializer.fromJson(string);
--        } catch (com.google.gson.JsonParseException e) {
--            org.bukkit.Bukkit.getLogger().warning("Unable to parse " + key + " from " + compound +": " + e.getMessage());
--        }
--
--        return null;
-+        return Component.Serializer.fromJsonSafe(string);
-     }
- 
-     public static ChunkStatus getChunkStatus(ChunkHolder chunk) {
 diff --git a/src/main/java/net/minecraft/network/chat/Component.java b/src/main/java/net/minecraft/network/chat/Component.java
-index 37fc353c3e59dd5af2fd6c58ac084fb0e6e155d7..2873ed7c443ed8c8c57a8b1d3e444d229f10f07b 100644
+index b540ce21c65ad52ad7e94d2ca2b3926c0875bee1..9cb6fa8e35c89f73e7c95dbe219a4bf6d00b60a9 100644
 --- a/src/main/java/net/minecraft/network/chat/Component.java
 +++ b/src/main/java/net/minecraft/network/chat/Component.java
 @@ -26,6 +26,7 @@ import java.util.List;
@@ -128,10 +109,10 @@ index 97a2657bc98d41c3c1e376b266d2c85f685acc88..9d20f3f1af8e663a8c13714c8928d4a9
                      }
                  }).reduce((accumulator, current) -> {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index e8485fb900b25e911a858678a833852731cb2ace..842f8af14b2bd694a48ee6573d98e6cfcf910e16 100644
+index f20ae9153b7098980ce6c0e75fcbbb4da652661b..7f5b2787482f52114c62f8b9d19755f3baeaefa0 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -2487,12 +2487,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -2470,12 +2470,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
                      this.setRot(this.getYRot(), this.getXRot());
                      if (nbt.contains("CustomName", 8)) {
                          String s = nbt.getString("CustomName");
@@ -146,10 +127,10 @@ index e8485fb900b25e911a858678a833852731cb2ace..842f8af14b2bd694a48ee6573d98e6cf
  
                      this.setCustomNameVisible(nbt.getBoolean("CustomNameVisible"));
 diff --git a/src/main/java/net/minecraft/world/scores/ScoreboardSaveData.java b/src/main/java/net/minecraft/world/scores/ScoreboardSaveData.java
-index 2be7a697f08045b974579e6942b38571e744efac..84ec21c38bb44db1e9ff26c01d5c8af1a2417616 100644
+index 4def212655cea0fd998b52e924f8b671d6aeb559..4359fb5997f8a207c52a09aa61a9431fa3ff550e 100644
 --- a/src/main/java/net/minecraft/world/scores/ScoreboardSaveData.java
 +++ b/src/main/java/net/minecraft/world/scores/ScoreboardSaveData.java
-@@ -35,7 +35,7 @@ public class ScoreboardSaveData extends SavedData {
+@@ -38,7 +38,7 @@ public class ScoreboardSaveData extends SavedData {
              CompoundTag compoundTag = nbt.getCompound(i);
              String string = compoundTag.getString("Name");
              PlayerTeam playerTeam = this.scoreboard.addPlayerTeam(string);
@@ -158,7 +139,7 @@ index 2be7a697f08045b974579e6942b38571e744efac..84ec21c38bb44db1e9ff26c01d5c8af1
              if (component != null) {
                  playerTeam.setDisplayName(component);
              }
-@@ -53,14 +53,14 @@ public class ScoreboardSaveData extends SavedData {
+@@ -56,14 +56,14 @@ public class ScoreboardSaveData extends SavedData {
              }
  
              if (compoundTag.contains("MemberNamePrefix", 8)) {
@@ -175,12 +156,12 @@ index 2be7a697f08045b974579e6942b38571e744efac..84ec21c38bb44db1e9ff26c01d5c8af1
                  if (component3 != null) {
                      playerTeam.setPlayerSuffix(component3);
                  }
-@@ -115,7 +115,7 @@ public class ScoreboardSaveData extends SavedData {
-             CompoundTag compoundTag = nbt.getCompound(i);
-             ObjectiveCriteria.byName(compoundTag.getString("CriteriaName")).ifPresent((criterion) -> {
-                 String string = compoundTag.getString("Name");
--                Component component = Component.Serializer.fromJson(compoundTag.getString("DisplayName"));
-+                Component component = Component.Serializer.fromJsonSafe(compoundTag.getString("DisplayName")); // Scissors - Use safer method for getting Components from JSON
-                 ObjectiveCriteria.RenderType renderType = ObjectiveCriteria.RenderType.byId(compoundTag.getString("RenderType"));
-                 this.scoreboard.addObjective(string, criterion, component, renderType);
+@@ -123,7 +123,7 @@ public class ScoreboardSaveData extends SavedData {
+                 return ObjectiveCriteria.DUMMY;
              });
+             String string2 = compoundTag.getString("Name");
+-            Component component = Component.Serializer.fromJson(compoundTag.getString("DisplayName"));
++            Component component = Component.Serializer.fromJsonSafe(compoundTag.getString("DisplayName")); // Scissors - Use safer method for getting Components from JSON
+             ObjectiveCriteria.RenderType renderType = ObjectiveCriteria.RenderType.byId(compoundTag.getString("RenderType"));
+             this.scoreboard.addObjective(string2, objectiveCriteria, component, renderType);
+         }
