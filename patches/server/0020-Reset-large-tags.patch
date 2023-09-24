@@ -59,7 +59,7 @@ index 4092c7a8c2b0d9d26e6f4d97386735236300d132..04c47cf1a920ae6c356449df801227ee
              }
          }
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index d138660e459b2d09ba9dd7ae2bf3da499d9ae25c..8c5fe0166a5442a2fa4f212d7c53343c937f53f1 100644
+index 16f087adbf94b8fd6726ffd300b103dd709ad406..71c5d49bfe7c39c11f27e17b156dd4e6d0fef285 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
 @@ -21,6 +21,7 @@ import java.util.function.Predicate;
@@ -70,7 +70,7 @@ index d138660e459b2d09ba9dd7ae2bf3da499d9ae25c..8c5fe0166a5442a2fa4f212d7c53343c
  import net.minecraft.ChatFormatting;
  import net.minecraft.Util;
  import net.minecraft.advancements.CriteriaTriggers;
-@@ -253,6 +254,12 @@ public final class ItemStack {
+@@ -254,6 +255,12 @@ public final class ItemStack {
  
      // CraftBukkit - break into own method
      private void load(CompoundTag nbttagcompound) {
@@ -83,7 +83,7 @@ index d138660e459b2d09ba9dd7ae2bf3da499d9ae25c..8c5fe0166a5442a2fa4f212d7c53343c
          this.item = (Item) BuiltInRegistries.ITEM.get(new ResourceLocation(nbttagcompound.getString("id")));
          this.count = nbttagcompound.getByte("Count");
          if (nbttagcompound.contains("tag", 10)) {
-@@ -556,7 +563,11 @@ public final class ItemStack {
+@@ -561,7 +568,11 @@ public final class ItemStack {
          nbt.putString("id", minecraftkey == null ? "minecraft:air" : minecraftkey.toString());
          nbt.putByte("Count", (byte) this.count);
          if (this.tag != null) {
@@ -96,7 +96,7 @@ index d138660e459b2d09ba9dd7ae2bf3da499d9ae25c..8c5fe0166a5442a2fa4f212d7c53343c
          }
  
          return nbt;
-@@ -886,6 +897,7 @@ public final class ItemStack {
+@@ -891,6 +902,7 @@ public final class ItemStack {
      // Paper end
  
      public void setTag(@Nullable CompoundTag nbt) {
@@ -105,7 +105,7 @@ index d138660e459b2d09ba9dd7ae2bf3da499d9ae25c..8c5fe0166a5442a2fa4f212d7c53343c
          this.processEnchantOrder(this.tag); // Paper
          if (this.getItem().canBeDepleted()) {
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
-index 40e59b8db83aec1143e3c394427e916beea7c01f..f292aa0016e6f741b36ddc1417f6f63d248f987f 100644
+index f5ad7ddf13cbb6452c2927aef9b54eae3335b4c6..041e3c8fb7c9ca69a7c7c1c952ed9915a75d7752 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 @@ -9,6 +9,7 @@ import java.util.Iterator;
@@ -252,7 +252,7 @@ index 881379681c39230a00b3a1f11cd87498984396c7..d0513b72cdaec3b67b9341d251367b19
      }
  
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
-index b11f51762ca289d99eaa49e66e31e58595bcea4e..06adfdc61f1064c1ec0db34632a8740fc09a1782 100644
+index 1d9b23c6e458caddc2c738164e6c079cd85d3ce9..9bf6bcdae4c3f1cfd769d47dedd6cba140a80e09 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 @@ -6,6 +6,7 @@ import java.util.function.BooleanSupplier;
@@ -282,10 +282,10 @@ index b11f51762ca289d99eaa49e66e31e58595bcea4e..06adfdc61f1064c1ec0db34632a8740f
      }
  
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java
-index b7686fd63b7c5d88c3a12ec4ee9bc01a17f997e0..db3a4a8cd19da9775bb0884c33494f1e8591b1fa 100644
+index 1fa22445a4ecc8c08dbcf0cc6bd39dc5003604c4..9f12fbcd8d0c75de1d8c06bed2c64a0acdc877c9 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java
-@@ -3,6 +3,7 @@ package net.minecraft.world.level.block.entity;
+@@ -4,6 +4,7 @@ import java.util.Iterator;
  import java.util.List;
  import java.util.stream.IntStream;
  import javax.annotation.Nullable;
@@ -293,7 +293,7 @@ index b7686fd63b7c5d88c3a12ec4ee9bc01a17f997e0..db3a4a8cd19da9775bb0884c33494f1e
  import net.minecraft.core.BlockPos;
  import net.minecraft.core.Direction;
  import net.minecraft.core.NonNullList;
-@@ -60,6 +61,17 @@ public class ShulkerBoxBlockEntity extends RandomizableContainerBlockEntity impl
+@@ -61,6 +62,17 @@ public class ShulkerBoxBlockEntity extends RandomizableContainerBlockEntity impl
      public boolean opened;
  
      public List<ItemStack> getContents() {

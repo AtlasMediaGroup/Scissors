@@ -5,23 +5,38 @@ Subject: [PATCH] Patch large selector distance crash
 
 
 diff --git a/src/main/java/net/minecraft/advancements/critereon/MinMaxBounds.java b/src/main/java/net/minecraft/advancements/critereon/MinMaxBounds.java
-index 60d32afe2eecdfebdc91531ca3672f8f130ac30e..73b0f516f80ef810379860ea74697a3429c646e5 100644
+index 8897496323378080135127f53db004d576476c21..109fbcddd1814013692b1200d37fea09d069cfd5 100644
 --- a/src/main/java/net/minecraft/advancements/critereon/MinMaxBounds.java
 +++ b/src/main/java/net/minecraft/advancements/critereon/MinMaxBounds.java
-@@ -177,7 +177,7 @@ public abstract class MinMaxBounds<T extends Number> {
-             return value == null ? null : value * value;
+@@ -131,7 +131,7 @@ public interface MinMaxBounds<T extends Number> {
+         public static final MinMaxBounds.Doubles ANY = new MinMaxBounds.Doubles(Optional.empty(), Optional.empty());
+         public static final Codec<MinMaxBounds.Doubles> CODEC = MinMaxBounds.createCodec(Codec.DOUBLE, MinMaxBounds.Doubles::new);
+ 
+-        private Doubles(Optional<Double> optional, Optional<Double> optional2) {
++        public Doubles(Optional<Double> optional, Optional<Double> optional2) {
+             this(optional, optional2, squareOpt(optional), squareOpt(optional2));
          }
  
--        private Doubles(@Nullable Double min, @Nullable Double max) {
-+        public Doubles(@Nullable Double min, @Nullable Double max) { // Scissors - private -> public
-             super(min, max);
-             this.minSq = squareOpt(min);
-             this.maxSq = squareOpt(max);
+@@ -143,7 +143,7 @@ public interface MinMaxBounds<T extends Number> {
+             }
+         }
+ 
+-        private static Optional<Double> squareOpt(Optional<Double> optional) {
++        public static Optional<Double> squareOpt(Optional<Double> optional) {
+             return optional.map((double_) -> {
+                 return double_ * double_;
+             });
 diff --git a/src/main/java/net/minecraft/commands/arguments/selector/EntitySelector.java b/src/main/java/net/minecraft/commands/arguments/selector/EntitySelector.java
-index f25b9330e068c7d9e12cb57a7761cfef9ebaf7bc..e8cf963f0190438bbf65f827d144775ab0b02b63 100644
+index 73c15a0c56a103ba4e62f0a51af8d42566b07245..ef54de7a77cda9793c723ce58403fb1a610a7956 100644
 --- a/src/main/java/net/minecraft/commands/arguments/selector/EntitySelector.java
 +++ b/src/main/java/net/minecraft/commands/arguments/selector/EntitySelector.java
-@@ -10,6 +10,7 @@ import java.util.function.BiConsumer;
+@@ -5,11 +5,13 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
+ import java.util.Collections;
+ import java.util.Iterator;
+ import java.util.List;
++import java.util.Optional;
+ import java.util.UUID;
+ import java.util.function.BiConsumer;
  import java.util.function.Function;
  import java.util.function.Predicate;
  import javax.annotation.Nullable;
@@ -29,7 +44,7 @@ index f25b9330e068c7d9e12cb57a7761cfef9ebaf7bc..e8cf963f0190438bbf65f827d144775a
  import net.minecraft.advancements.critereon.MinMaxBounds;
  import net.minecraft.commands.CommandSourceStack;
  import net.minecraft.commands.arguments.EntityArgument;
-@@ -60,9 +61,27 @@ public class EntitySelector {
+@@ -60,9 +62,27 @@ public class EntitySelector {
          this.includesEntities = includesNonPlayers;
          this.worldLimited = localWorldOnly;
          this.predicate = basePredicate;
@@ -37,8 +52,8 @@ index f25b9330e068c7d9e12cb57a7761cfef9ebaf7bc..e8cf963f0190438bbf65f827d144775a
 +
 +        // Scissors start - Patch large selector distance crash
 +        this.range = new MinMaxBounds.Doubles(
-+            distance.getMin() != null ? Math.min(distance.getMin(), 1024) : null,
-+            distance.getMax() != null ? Math.min(distance.getMax(), 1024) : null
++            distance.min().isPresent() ? Optional.of(Math.min(distance.min().get(), 1024)) : null,
++            distance.max().isPresent() ? Optional.of(Math.min(distance.max().get(), 1024)) : null
 +        );
          this.position = positionOffset;
 -        this.aabb = box;

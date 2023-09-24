@@ -5,10 +5,10 @@ Subject: [PATCH] Reject oversized components from updating
 
 
 diff --git a/src/main/java/net/minecraft/network/chat/ComponentUtils.java b/src/main/java/net/minecraft/network/chat/ComponentUtils.java
-index 584a58659fae6ba3d8b53858890bc6ec509ffb0e..54a7dae26854d320d9e53f63eb411a85a2d78159 100644
+index 7daca712816a79cc4a30b084afbd3d07b5d3755f..a7e04eb4284e7d5148e1c7b991620d666785ec70 100644
 --- a/src/main/java/net/minecraft/network/chat/ComponentUtils.java
 +++ b/src/main/java/net/minecraft/network/chat/ComponentUtils.java
-@@ -39,8 +39,9 @@ public class ComponentUtils {
+@@ -38,8 +38,9 @@ public class ComponentUtils {
      }
  
      public static MutableComponent updateForEntity(@Nullable CommandSourceStack source, Component text, @Nullable Entity sender, int depth) throws CommandSyntaxException {
@@ -19,7 +19,7 @@ index 584a58659fae6ba3d8b53858890bc6ec509ffb0e..54a7dae26854d320d9e53f63eb411a85
          } else {
              // Paper start
              if (text instanceof io.papermc.paper.adventure.AdventureComponent adventureComponent) {
-@@ -53,8 +54,9 @@ public class ComponentUtils {
+@@ -52,8 +53,9 @@ public class ComponentUtils {
                  mutableComponent.append(updateForEntity(source, component, sender, depth + 1));
              }
  

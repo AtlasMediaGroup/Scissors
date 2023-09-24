@@ -77,7 +77,7 @@ index 182e16c1d968707a11329150d71b7d01df6c6e52..8582a9369cffe0eebeb82a81fc413d0b
          Registry<StructureTemplatePool> registry = world.registryAccess().registryOrThrow(Registries.TEMPLATE_POOL);
          // Paper start - Replace getHolderOrThrow with a null check
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/StructureBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/StructureBlockEntity.java
-index 9792bf3ee083f571f1f4089d30beb586839f5f6b..fa6592cdc916d3578fccc6c0075eb616fd3f73eb 100644
+index e8ecced687261861953899a3bea162dbc03977b4..30720203173b23ccdbb0789f7e2adbbe180c7c69 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/StructureBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/StructureBlockEntity.java
 @@ -5,6 +5,7 @@ import java.util.Objects;
@@ -107,7 +107,7 @@ index 9792bf3ee083f571f1f4089d30beb586839f5f6b..fa6592cdc916d3578fccc6c0075eb616
              Stream<BlockPos> stream = this.getRelatedCorners(blockPos2, blockPos3);
 @@ -321,6 +323,16 @@ public class StructureBlockEntity extends BlockEntity {
  
-     public boolean saveStructure(boolean bl) {
+     public boolean saveStructure(boolean interactive) {
          if (this.mode == StructureMode.SAVE && !this.level.isClientSide && this.structureName != null) {
 +            // Scissors start - Add master block fire event
 +            final BlockPos pos = this.getBlockPos();
@@ -124,7 +124,7 @@ index 9792bf3ee083f571f1f4089d30beb586839f5f6b..fa6592cdc916d3578fccc6c0075eb616
              StructureTemplateManager structureTemplateManager = serverLevel.getStructureManager();
 @@ -358,6 +370,16 @@ public class StructureBlockEntity extends BlockEntity {
  
-     public boolean loadStructure(ServerLevel world, boolean bl) {
+     public boolean loadStructure(ServerLevel world, boolean interactive) {
          if (this.mode == StructureMode.LOAD && this.structureName != null) {
 +            // Scissors start - Add master block fire event
 +            final BlockPos blockPos = this.getBlockPos();

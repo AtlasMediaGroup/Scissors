@@ -5,18 +5,18 @@ Subject: [PATCH] Prevent invalid container events
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index bf7cf2108c0273552a41a9734dfd66b6a68a24d4..1c102fa91711ed595626633e127c89a83ed6b6c5 100644
+index 8e1b95371ed0bac1a4fff2d6550de118ba399650..e6d7b277b3b305d5069c73d9107c20ff11e34b7c 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -30,6 +30,7 @@ import java.util.function.UnaryOperator;
- import java.util.stream.Collectors;
+@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
  import java.util.stream.Stream;
  import javax.annotation.Nullable;
+ import me.totalfreedom.scissors.event.player.SpectatorTeleportEvent;
 +import net.kyori.adventure.text.format.NamedTextColor; // Scissors
  import net.minecraft.ChatFormatting;
- import net.minecraft.CrashReport;
- import net.minecraft.CrashReportCategory;
-@@ -3037,6 +3038,18 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+ import net.minecraft.SharedConstants;
+ import net.minecraft.Util;
+@@ -2899,6 +2900,18 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
                          return;
                      }
  
