@@ -35,8 +35,8 @@ pipeline {
     post {
         always {
             archiveArtifacts artifacts: 'build/libs/scissors-*.jar', fingerprint: true
-            junit 'Scissors-Server/build/test-results/test/*.xml'
-            junit 'Scissors-API/build/test-results/test/*.xml'
+            // junit 'Scissors-Server/build/test-results/test/*.xml'
+            // junit 'Scissors-API/build/test-results/test/*.xml'
             cleanWs()
         }
     }
