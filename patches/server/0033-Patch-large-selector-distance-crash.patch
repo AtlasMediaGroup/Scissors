@@ -1,11 +1,11 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Luna <lunahatesgogle@gmail.com>
-Date: Sun, 2 Apr 2023 16:29:51 -0300
+From: Telesphoreo <me@telesphoreo.me>
+Date: Mon, 25 Sep 2023 18:58:34 -0500
 Subject: [PATCH] Patch large selector distance crash
 
 
 diff --git a/src/main/java/net/minecraft/advancements/critereon/MinMaxBounds.java b/src/main/java/net/minecraft/advancements/critereon/MinMaxBounds.java
-index 8897496323378080135127f53db004d576476c21..109fbcddd1814013692b1200d37fea09d069cfd5 100644
+index 8897496323378080135127f53db004d576476c21..a4de9cfcbe7d7d6b05feb3a6be683437e9b00c2b 100644
 --- a/src/main/java/net/minecraft/advancements/critereon/MinMaxBounds.java
 +++ b/src/main/java/net/minecraft/advancements/critereon/MinMaxBounds.java
 @@ -131,7 +131,7 @@ public interface MinMaxBounds<T extends Number> {
@@ -13,21 +13,12 @@ index 8897496323378080135127f53db004d576476c21..109fbcddd1814013692b1200d37fea09
          public static final Codec<MinMaxBounds.Doubles> CODEC = MinMaxBounds.createCodec(Codec.DOUBLE, MinMaxBounds.Doubles::new);
  
 -        private Doubles(Optional<Double> optional, Optional<Double> optional2) {
-+        public Doubles(Optional<Double> optional, Optional<Double> optional2) {
++        public Doubles(Optional<Double> optional, Optional<Double> optional2) { // Scissors - private -> public
              this(optional, optional2, squareOpt(optional), squareOpt(optional2));
          }
  
-@@ -143,7 +143,7 @@ public interface MinMaxBounds<T extends Number> {
-             }
-         }
- 
--        private static Optional<Double> squareOpt(Optional<Double> optional) {
-+        public static Optional<Double> squareOpt(Optional<Double> optional) {
-             return optional.map((double_) -> {
-                 return double_ * double_;
-             });
 diff --git a/src/main/java/net/minecraft/commands/arguments/selector/EntitySelector.java b/src/main/java/net/minecraft/commands/arguments/selector/EntitySelector.java
-index 73c15a0c56a103ba4e62f0a51af8d42566b07245..ef54de7a77cda9793c723ce58403fb1a610a7956 100644
+index 73c15a0c56a103ba4e62f0a51af8d42566b07245..0ea61a4c58bd6d126aff9872ba9c4dc27fb7c099 100644
 --- a/src/main/java/net/minecraft/commands/arguments/selector/EntitySelector.java
 +++ b/src/main/java/net/minecraft/commands/arguments/selector/EntitySelector.java
 @@ -5,11 +5,13 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -40,20 +31,19 @@ index 73c15a0c56a103ba4e62f0a51af8d42566b07245..ef54de7a77cda9793c723ce58403fb1a
  import java.util.function.Function;
  import java.util.function.Predicate;
  import javax.annotation.Nullable;
-+import me.totalfreedom.scissors.MathUtility; // Scissors
++import me.totalfreedom.scissors.MathUtility;
  import net.minecraft.advancements.critereon.MinMaxBounds;
  import net.minecraft.commands.CommandSourceStack;
  import net.minecraft.commands.arguments.EntityArgument;
-@@ -60,9 +62,27 @@ public class EntitySelector {
+@@ -60,9 +62,26 @@ public class EntitySelector {
          this.includesEntities = includesNonPlayers;
          this.worldLimited = localWorldOnly;
          this.predicate = basePredicate;
 -        this.range = distance;
-+
 +        // Scissors start - Patch large selector distance crash
 +        this.range = new MinMaxBounds.Doubles(
-+            distance.min().isPresent() ? Optional.of(Math.min(distance.min().get(), 1024)) : null,
-+            distance.max().isPresent() ? Optional.of(Math.min(distance.max().get(), 1024)) : null
++                Optional.of(distance.min().get() != null ? Math.min(distance.min().get(), 1024) : null),
++                Optional.of(distance.max().get() != null ? Math.min(distance.max().get(), 1024) : null)
 +        );
          this.position = positionOffset;
 -        this.aabb = box;
