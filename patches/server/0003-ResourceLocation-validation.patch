@@ -136,10 +136,10 @@ index 081691f9710ff1115e4308f79ed49fbc38941193..c29dfd15e147d5c4d9c9584ff7803c2a
              this.lootTableSeed = nbt.getLong("LootTableSeed");
              return false; // Paper - always load the items, table may still remain
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftLootable.java b/src/main/java/org/bukkit/craftbukkit/block/CraftLootable.java
-index e49eece9bff3a53469673d03a7bbf8f9cf8776b8..a49f32e9649155b6af4b1f236e4e8142d730e7e8 100644
+index 5b9ccbd767630abfee648a4653f33d8ac625bd0c..05830258ba0f7d19b1d86c0d8c85df8ffc94dfce 100644
 --- a/src/main/java/org/bukkit/craftbukkit/block/CraftLootable.java
 +++ b/src/main/java/org/bukkit/craftbukkit/block/CraftLootable.java
-@@ -30,8 +30,14 @@ public abstract class CraftLootable<T extends RandomizableContainerBlockEntity>
+@@ -34,8 +34,14 @@ public abstract class CraftLootable<T extends RandomizableContainerBlockEntity>
              return null;
          }
  

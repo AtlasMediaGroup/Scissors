@@ -16,4 +16,4 @@
 #minecraft net/minecraft/network/chat/contents/EntityDataSource
 minecraft net/minecraft/network/chat/HoverEvent
 minecraft net/minecraft/world/level/block/entity/DecoratedPotBlockEntity
-minecraft net/minecraft/advancements/critereon/MinMaxBounds
+#minecraft net/minecraft/advancements/critereon/MinMaxBounds
