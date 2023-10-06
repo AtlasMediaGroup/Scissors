@@ -1,0 +1,41 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Telesphoreo <me@telesphoreo.me>
+Date: Fri, 6 Oct 2023 02:29:32 -0500
+Subject: [PATCH] Build changes
+
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index 639651972fddce4dff63a0f0a7e566a15b9e2dd6..3152467db0ed68d2f077a738964da5cd08e1eb59 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -107,12 +107,12 @@ tasks.withType<Javadoc> {
+     options.isDocFilesSubDirs = true
+     options.links(
+         "https://guava.dev/releases/32.1.2-jre/api/docs/",
+-        "https://javadoc.io/doc/org.yaml/snakeyaml/2.2/",
+-        "https://javadoc.io/doc/org.jetbrains/annotations/$annotationsVersion/", // Paper - we don't want Java 5 annotations
++        // "https://javadoc.io/doc/org.yaml/snakeyaml/2.2/", // Scissors - comment out, webserver is down
++        // "https://javadoc.io/doc/org.jetbrains/annotations/$annotationsVersion/", // Scissors - comment out, webserver is down > // Paper - we don't want Java 5 annotations
+         // "https://javadoc.io/doc/net.md-5/bungeecord-chat/$bungeeCordChatVersion/", // Paper - don't link to bungee chat
+         // Paper start - add missing javadoc links
+-        "https://javadoc.io/doc/org.joml/joml/1.10.5/index.html",
+-        "https://www.javadoc.io/doc/com.google.code.gson/gson/2.10.1",
++        // "https://javadoc.io/doc/org.joml/joml/1.10.5/index.html", // Scissors - comment out, webserver is down
++        // "https://www.javadoc.io/doc/com.google.code.gson/gson/2.10.1", // Scissors - comment out, webserver is down
+         // Paper end
+         // Paper start
+         "https://jd.advntr.dev/api/$adventureVersion/",
+@@ -121,10 +121,10 @@ tasks.withType<Javadoc> {
+         "https://jd.advntr.dev/text-serializer-legacy/$adventureVersion/",
+         "https://jd.advntr.dev/text-serializer-plain/$adventureVersion/",
+         "https://jd.advntr.dev/text-logger-slf4j/$adventureVersion/",
+-        "https://javadoc.io/doc/org.slf4j/slf4j-api/$slf4jVersion/",
+-        "https://javadoc.io/doc/org.apache.logging.log4j/log4j-api/$log4jVersion/",
++        // "https://javadoc.io/doc/org.slf4j/slf4j-api/$slf4jVersion/", // Scissors - comment out, webserver is down
++        // "https://javadoc.io/doc/org.apache.logging.log4j/log4j-api/$log4jVersion/", // Scissors - comment out, webserver is down
+         // Paper end
+-        "https://javadoc.io/doc/org.apache.maven.resolver/maven-resolver-api/1.7.3", // Paper
++        // "https://javadoc.io/doc/org.apache.maven.resolver/maven-resolver-api/1.7.3", // Scissors - comment out, webserver is down > // Paper
+     )
+     options.tags("apiNote:a:API Note:")
+ 
