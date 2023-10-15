@@ -4,6 +4,24 @@ Date: Mon, 28 Mar 2022 13:19:43 -0600
 Subject: [PATCH] Better handling of invalid JSON components
 
 
+diff --git a/src/main/java/io/papermc/paper/util/MCUtil.java b/src/main/java/io/papermc/paper/util/MCUtil.java
+index d02546b18cb689724887b4e85e8d32a18828a4ad..f8ffd6a52ad8c13eb13f51afe3a864cd3595d7eb 100644
+--- a/src/main/java/io/papermc/paper/util/MCUtil.java
++++ b/src/main/java/io/papermc/paper/util/MCUtil.java
+@@ -655,12 +655,6 @@ public final class MCUtil {
+             return null;
+         }
+         String string = compound.getString(key);
+-        try {
+-            return net.minecraft.network.chat.Component.Serializer.fromJson(string);
+-        } catch (com.google.gson.JsonParseException e) {
+-            org.bukkit.Bukkit.getLogger().warning("Unable to parse " + key + " from " + compound +": " + e.getMessage());
+-        }
+-
+-        return null;
++        return net.minecraft.network.chat.Component.Serializer.fromJsonSafe(string);
+     }
+ }
 diff --git a/src/main/java/net/minecraft/network/chat/Component.java b/src/main/java/net/minecraft/network/chat/Component.java
 index b540ce21c65ad52ad7e94d2ca2b3926c0875bee1..9cb6fa8e35c89f73e7c95dbe219a4bf6d00b60a9 100644
 --- a/src/main/java/net/minecraft/network/chat/Component.java

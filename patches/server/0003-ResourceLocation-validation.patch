@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Telesphoreo <me@telesphoreo.me>
-Date: Sun, 24 Sep 2023 15:27:44 -0500
+From: Video <videogamesm12@gmail.com>
+Date: Sun, 13 Mar 2022 07:39:26 -0600
 Subject: [PATCH] ResourceLocation validation
 
 
@@ -109,19 +109,6 @@ index 0425151e688966442340ea1cf892aff34ffe0791..244b04e0020b1bd1e7be34a1b6266a8a
              this.lootTableSeed = nbt.getLong("LootTableSeed");
              return true;
          } else {
-diff --git a/src/main/java/net/minecraft/world/level/block/entity/DecoratedPotBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/DecoratedPotBlockEntity.java
-index 6f154e5c4321b761ffa210401885ee3a1dac351b..404585564325e2ec45fc17c5cca4be9356c50093 100644
---- a/src/main/java/net/minecraft/world/level/block/entity/DecoratedPotBlockEntity.java
-+++ b/src/main/java/net/minecraft/world/level/block/entity/DecoratedPotBlockEntity.java
-@@ -105,7 +105,7 @@ public class DecoratedPotBlockEntity extends BlockEntity {
-                 return Items.BRICK;
-             } else {
-                 Tag tag = list.get(index);
--                return BuiltInRegistries.ITEM.get(ResourceLocation.tryParse(tag.getAsString()));
-+                return BuiltInRegistries.ITEM.get(ResourceLocation.tryParse(tag.getAsString())); // Scissors
-             }
-         }
-     }
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
 index 081691f9710ff1115e4308f79ed49fbc38941193..c29dfd15e147d5c4d9c9584ff7803c2a52009f0d 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java

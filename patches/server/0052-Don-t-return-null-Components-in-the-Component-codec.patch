@@ -6,23 +6,11 @@ Subject: [PATCH] Don't return null Components in the Component codec
 Found by Sk8kman
 
 diff --git a/src/main/java/net/minecraft/util/ExtraCodecs.java b/src/main/java/net/minecraft/util/ExtraCodecs.java
-index 066d423dc908080157586555ba01053a2477d570..aa6e5de37ce69c9bc6b8e1e0b5ab0ee918fc27e2 100644
+index 607f32b856c6c1fb81d3f1604f3bf3fb240d713f..5afdc9d93e696568cc8a263ab0142fbac258e874 100644
 --- a/src/main/java/net/minecraft/util/ExtraCodecs.java
 +++ b/src/main/java/net/minecraft/util/ExtraCodecs.java
-@@ -62,7 +62,10 @@ public class ExtraCodecs {
-     });
-     public static final Codec<Component> COMPONENT = JSON.flatXmap((element) -> {
-         try {
--            return DataResult.success(Component.Serializer.fromJson(element));
-+            // Scissors start
-+            final Component component = Component.Serializer.fromJson(element);
-+            return DataResult.success(component != null ? component : Component.empty());
-+            // Scissors end
-         } catch (JsonParseException var2) {
-             return DataResult.error(var2::getMessage);
-         }
-@@ -75,7 +78,10 @@ public class ExtraCodecs {
-     });
+@@ -70,7 +70,10 @@ public class ExtraCodecs {
+     public static final Codec<Component> COMPONENT = adaptJsonSerializer(Component.Serializer::fromJson, Component.Serializer::toJsonTree);
      public static final Codec<Component> FLAT_COMPONENT = Codec.STRING.flatXmap((json) -> {
          try {
 -            return DataResult.success(Component.Serializer.fromJson(json));
@@ -33,7 +21,19 @@ index 066d423dc908080157586555ba01053a2477d570..aa6e5de37ce69c9bc6b8e1e0b5ab0ee9
          } catch (JsonParseException var2) {
              return DataResult.error(var2::getMessage);
          }
-@@ -246,7 +252,7 @@ public class ExtraCodecs {
+@@ -233,7 +236,10 @@ public class ExtraCodecs {
+     public static <T> Codec<T> adaptJsonSerializer(Function<JsonElement, T> deserializer, Function<T, JsonElement> serializer) {
+         return JSON.flatXmap((json) -> {
+             try {
+-                return DataResult.success(deserializer.apply(json));
++                // Scissors start
++                final T value = deserializer.apply(json);
++                return DataResult.success(value != null ? value : (T)Component.empty());
++                // Scissors end
+             } catch (JsonParseException var3) {
+                 return DataResult.error(var3::getMessage);
+             }
+@@ -260,7 +266,7 @@ public class ExtraCodecs {
          }, (pair) -> {
              return ImmutableList.of(leftFunction.apply(pair), rightFunction.apply(pair));
          });
@@ -42,7 +42,7 @@ index 066d423dc908080157586555ba01053a2477d570..aa6e5de37ce69c9bc6b8e1e0b5ab0ee9
              return instance.group(codec.fieldOf(leftFieldName).forGetter(Pair::getFirst), codec.fieldOf(rightFieldName).forGetter(Pair::getSecond)).apply(instance, Pair::of);
          }).comapFlatMap((pair) -> {
              return combineFunction.apply((P)pair.getFirst(), (P)pair.getSecond());
-@@ -278,7 +284,7 @@ public class ExtraCodecs {
+@@ -286,7 +292,7 @@ public class ExtraCodecs {
                  Optional<Pair<A, T>> optional = dataResult.resultOrPartial(mutableObject::setValue);
                  return optional.isPresent() ? dataResult : DataResult.error(() -> {
                      return "(" + (String)mutableObject.getValue() + " -> using default)";
@@ -51,12 +51,3 @@ index 066d423dc908080157586555ba01053a2477d570..aa6e5de37ce69c9bc6b8e1e0b5ab0ee9
              }
  
              public <T> DataResult<T> coApply(DynamicOps<T> dynamicOps, A objectx, DataResult<T> dataResult) {
-@@ -565,7 +571,7 @@ public class ExtraCodecs {
- 
-     static record LazyInitializedCodec<A>(Supplier<Codec<A>> delegate) implements Codec<A> {
-         LazyInitializedCodec {
--            supplier = Suppliers.memoize(supplier::get);
-+            delegate = Suppliers.memoize(delegate::get); // Scissors - Decompile error
-         }
- 
-         public <T> DataResult<Pair<A, T>> decode(DynamicOps<T> dynamicOps, T object) {

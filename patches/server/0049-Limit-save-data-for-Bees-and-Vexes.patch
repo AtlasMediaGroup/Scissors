@@ -5,7 +5,7 @@ Subject: [PATCH] Limit save data for Bees and Vexes
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/animal/Bee.java b/src/main/java/net/minecraft/world/entity/animal/Bee.java
-index 55026e1731e41b4e3e4c6a8fef5d96a32051a556..4a8383d48da4fcf39ec528a00cd09417f8d08c57 100644
+index 9a7956befc346e1b58f064213800fd099a052fc6..2ebedd806bafc6ff7c4bf5a962ead50ce2ad1a8a 100644
 --- a/src/main/java/net/minecraft/world/entity/animal/Bee.java
 +++ b/src/main/java/net/minecraft/world/entity/animal/Bee.java
 @@ -227,8 +227,12 @@ public class Bee extends Animal implements NeutralMob, FlyingAnimal {

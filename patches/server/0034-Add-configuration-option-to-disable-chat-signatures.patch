@@ -60,18 +60,17 @@ index c0a80824a0307ea673805015119cc834b268f0dc..9f28f86b1b56ea55ab39f6ac988c1f47
                      }
  
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 001b7ae2067809d7da1d84d7637639f21a1aa980..ad87d90de1679955cb5a9d1c925be7d281cc64c9 100644
+index 51331ad3f295b55631adcb6f47e34d0b03bd148a..19f573a1f62280bd9b67a4027962fcb7de6d2514 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -1,5 +1,7 @@
+@@ -1,5 +1,6 @@
  package net.minecraft.server.network;
  
 +import me.totalfreedom.scissors.ScissorsConfig; // Scissors
-+import me.totalfreedom.scissors.event.player.SpectatorTeleportEvent; // Scissors
+ import me.totalfreedom.scissors.event.player.SpectatorTeleportEvent; // Scissors
  import com.google.common.collect.Lists;
  import com.google.common.primitives.Floats;
- import com.mojang.authlib.GameProfile;
-@@ -2219,7 +2221,7 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
+@@ -2219,7 +2220,7 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
      }
  
      private void handleMessageDecodeFailure(SignedMessageChain.DecodeException exception) {
@@ -80,7 +79,7 @@ index 001b7ae2067809d7da1d84d7637639f21a1aa980..ad87d90de1679955cb5a9d1c925be7d2
              this.disconnect(exception.getComponent(), exception.kickCause); // Paper - kick event causes
          } else {
              this.player.sendSystemMessage(exception.getComponent().copy().withStyle(ChatFormatting.RED));
-@@ -2275,6 +2277,7 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
+@@ -2275,6 +2276,7 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
              Optional<LastSeenMessages> optional = this.lastSeenMessages.applyUpdate(acknowledgment);
  
              if (optional.isEmpty()) {
@@ -88,7 +87,7 @@ index 001b7ae2067809d7da1d84d7637639f21a1aa980..ad87d90de1679955cb5a9d1c925be7d2
                  ServerGamePacketListenerImpl.LOGGER.warn("Failed to validate message acknowledgements from {}", this.player.getName().getString());
                  this.disconnect(ServerGamePacketListenerImpl.CHAT_VALIDATION_FAILED, org.bukkit.event.player.PlayerKickEvent.Cause.CHAT_VALIDATION_FAILED); // Paper - kick event causes
              }
-@@ -2483,6 +2486,7 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
+@@ -2483,6 +2485,7 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
  
          synchronized (this.lastSeenMessages) {
              if (!this.lastSeenMessages.applyOffset(packet.offset())) {
@@ -96,7 +95,7 @@ index 001b7ae2067809d7da1d84d7637639f21a1aa980..ad87d90de1679955cb5a9d1c925be7d2
                  ServerGamePacketListenerImpl.LOGGER.warn("Failed to validate message acknowledgements from {}", this.player.getName().getString());
                  this.disconnect(ServerGamePacketListenerImpl.CHAT_VALIDATION_FAILED, org.bukkit.event.player.PlayerKickEvent.Cause.CHAT_VALIDATION_FAILED); // Paper - kick event causes
              }
-@@ -3456,6 +3460,7 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
+@@ -3455,6 +3458,7 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
      @Override
      public void handleChatSessionUpdate(ServerboundChatSessionUpdatePacket packet) {
          PacketUtils.ensureRunningOnSameThread(packet, this, this.player.serverLevel());

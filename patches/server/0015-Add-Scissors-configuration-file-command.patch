@@ -447,7 +447,7 @@ index dbccbcb9b44e4efacdf53c2d161115cc20b36cff..c3eb9eef724fa04ede965c5875b948c8
          this.setFlightAllowed(dedicatedserverproperties.allowFlight);
          this.setMotd(dedicatedserverproperties.motd);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 5d8b8b17854c1ae2a5e2ccfb8df1d7b927191f03..f14def6e5923afa4880ef3e5626cc973d4b01e48 100644
+index f7c3b65e0d6c76189aea00232b33722c4363d7dd..8b872a406752a72d49ff029e2586d4ac17d7be1f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -1038,6 +1038,7 @@ public final class CraftServer implements Server {
@@ -482,7 +482,7 @@ index 5d8b8b17854c1ae2a5e2ccfb8df1d7b927191f03..f14def6e5923afa4880ef3e5626cc973
          public void restart() {
              org.spigotmc.RestartCommand.restart();
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index e3c230fd2a054a8cb60328c9309410a2f53dad26..d2e06850ec9edadb76668e41403203c66731a961 100644
+index ebec18e919885f9220693a8a419d239e8cddd567..544698c044d9eef57abccfbd41cbfdd6873e4f55 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -180,6 +180,20 @@ public class Main {

@@ -5,12 +5,12 @@ Subject: [PATCH] Block server-side chunkbans
 
 
 diff --git a/src/main/java/net/minecraft/network/PacketEncoder.java b/src/main/java/net/minecraft/network/PacketEncoder.java
-index fbfadeb83719b81f42724e79c59e92ed88fdece7..7de21c9bcc1f3c556790da62f96cc44995e877b2 100644
+index 45b4f1c295eda2fcc5067a4b21de247218ef117f..f2e7585630ff724f966c7bcedc17e502d786870d 100644
 --- a/src/main/java/net/minecraft/network/PacketEncoder.java
 +++ b/src/main/java/net/minecraft/network/PacketEncoder.java
-@@ -6,9 +6,17 @@ import io.netty.channel.ChannelHandlerContext;
- import io.netty.handler.codec.MessageToByteEncoder;
- import io.papermc.paper.adventure.PaperAdventure; // Paper
+@@ -7,8 +7,16 @@ import io.netty.handler.codec.MessageToByteEncoder;
+ import io.netty.util.Attribute;
+ import io.netty.util.AttributeKey;
  import java.io.IOException;
 +import java.util.Collections; // Scissors
 +import net.minecraft.ChatFormatting; // Scissors
@@ -19,7 +19,6 @@ index fbfadeb83719b81f42724e79c59e92ed88fdece7..7de21c9bcc1f3c556790da62f96cc449
 +import net.minecraft.network.chat.Component; // Scissors
 +import net.minecraft.network.chat.SignedMessageBody; // Scissors
  import net.minecraft.network.protocol.Packet;
- import net.minecraft.network.protocol.PacketFlow;
 +import net.minecraft.network.protocol.game.*; // Scissors
  import net.minecraft.util.profiling.jfr.JvmProfiler;
 +import net.minecraft.world.item.ItemStack; // Scissors
@@ -27,20 +26,20 @@ index fbfadeb83719b81f42724e79c59e92ed88fdece7..7de21c9bcc1f3c556790da62f96cc449
  
  public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
 @@ -19,6 +27,23 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
-         this.flow = side;
+         this.codecKey = protocolKey;
      }
  
 +    // Scissors start
-+    private static int tryWrite(Packet packet, FriendlyByteBuf friendlyByteBuf, ChannelHandlerContext channelHandlerContext, int i) {
++    private int tryWrite(Packet packet, FriendlyByteBuf friendlyByteBuf, ChannelHandlerContext channelHandlerContext, int i) {
 +        friendlyByteBuf.writeVarInt(i);
-+        friendlyByteBuf.adventure$locale = channelHandlerContext.channel().attr(PaperAdventure.LOCALE_ATTRIBUTE).get();
++        friendlyByteBuf.adventure$locale = channelHandlerContext.channel().attr(io.papermc.paper.adventure.PaperAdventure.LOCALE_ATTRIBUTE).get(); // Paper
 +
 +        int j = friendlyByteBuf.writerIndex();
 +        packet.write(friendlyByteBuf);
 +        int k = friendlyByteBuf.writerIndex() - j;
 +        int packetLength = friendlyByteBuf.readableBytes();
-+        if (k > 8388608 || packetLength > MAX_PACKET_SIZE) {
-+            throw new SkipPacketException(new IllegalArgumentException("Packet too big (is " + k + "): " + packet));
++        if (packetLength > MAX_PACKET_SIZE) {
++            throw new PacketTooLargeException(packet, this.codecKey, packetLength);
 +        }
 +
 +        return k;
@@ -48,14 +47,14 @@ index fbfadeb83719b81f42724e79c59e92ed88fdece7..7de21c9bcc1f3c556790da62f96cc449
 +    // Scissors end
 +
      protected void encode(ChannelHandlerContext channelHandlerContext, Packet<?> packet, ByteBuf byteBuf) throws Exception {
-         ConnectionProtocol connectionProtocol = channelHandlerContext.channel().attr(Connection.ATTRIBUTE_PROTOCOL).get();
-         if (connectionProtocol == null) {
-@@ -33,38 +58,59 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
+         Attribute<ConnectionProtocol.CodecData<?>> attribute = channelHandlerContext.channel().attr(this.codecKey);
+         ConnectionProtocol.CodecData<?> codecData = attribute.get();
+@@ -34,39 +59,59 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
                  throw new IOException("Can't serialize unregistered packet");
              } else {
                  FriendlyByteBuf friendlyByteBuf = new FriendlyByteBuf(byteBuf);
 -                friendlyByteBuf.writeVarInt(i);
--                friendlyByteBuf.adventure$locale = channelHandlerContext.channel().attr(PaperAdventure.LOCALE_ATTRIBUTE).get(); // Paper
+-                friendlyByteBuf.adventure$locale = channelHandlerContext.channel().attr(io.papermc.paper.adventure.PaperAdventure.LOCALE_ATTRIBUTE).get(); // Paper
  
 +                // Scissors start
 +                int k;
@@ -65,33 +64,34 @@ index fbfadeb83719b81f42724e79c59e92ed88fdece7..7de21c9bcc1f3c556790da62f96cc449
 -                    int k = friendlyByteBuf.writerIndex() - j;
 -                    if (false && k > 8388608) { // Paper - disable
 -                        throw new IllegalArgumentException("Packet too big (is " + k + ", should be less than 8388608): " + packet);
--                    } else {
--                        int l = channelHandlerContext.channel().attr(Connection.ATTRIBUTE_PROTOCOL).get().getId();
--                        JvmProfiler.INSTANCE.onPacketSent(l, i, channelHandlerContext.channel().remoteAddress(), k);
 -                    }
-+                    k = tryWrite(packet, friendlyByteBuf, channelHandlerContext, i);
-                 } catch (Throwable var10) {
--                    LOGGER.error("Packet encoding of packet ID {} threw (skippable? {})", i, packet.isSkippable(), var10); // Paper - Give proper error message
+-
+-                    JvmProfiler.INSTANCE.onPacketSent(codecData.protocol(), i, channelHandlerContext.channel().remoteAddress(), k);
++                    k = this.tryWrite(packet, friendlyByteBuf, channelHandlerContext, i);
+                 } catch (Throwable var13) {
+-                    LOGGER.error("Packet encoding of packet ID {} threw (skippable? {})", i, packet.isSkippable(), var13); // Paper - Give proper error message
 -                    if (packet.isSkippable()) {
--                        throw new SkipPacketException(var10);
--                    } else {
--                        throw var10;
+-                        throw new SkipPacketException(var13);
 +                    packet = capPacket(packet, i);
 +                    if (packet == null) {
 +                        throw new SkipPacketException(new IllegalArgumentException("Packet too big: " + packet));
                      }
+-
+-                    throw var13;
+-                } finally {
+-                    // Paper start
+-                    int packetLength = friendlyByteBuf.readableBytes();
+-                    if (packetLength > MAX_PACKET_SIZE) {
+-                        throw new PacketTooLargeException(packet, this.codecKey, packetLength);
+-                    }
+-                    // Paper end
+-                    ProtocolSwapHandler.swapProtocolIfNeeded(attribute, packet);
 +                    friendlyByteBuf.clear();
-+                    k = tryWrite(packet, friendlyByteBuf, channelHandlerContext, i);
++                    k = this.tryWrite(packet, friendlyByteBuf, channelHandlerContext, i);
                  }
  
--                // Paper start
--                int packetLength = friendlyByteBuf.readableBytes();
--                if (packetLength > MAX_PACKET_SIZE) {
--                    throw new PacketTooLargeException(packet, packetLength);
--                }
--                // Paper end
-+                int l = channelHandlerContext.channel().attr(Connection.ATTRIBUTE_PROTOCOL).get().getId();
-+                JvmProfiler.INSTANCE.onPacketSent(l, i, channelHandlerContext.channel().remoteAddress(), k);
++                JvmProfiler.INSTANCE.onPacketSent(codecData.protocol(), i, channelHandlerContext.channel().remoteAddress(), k);
++                ProtocolSwapHandler.swapProtocolIfNeeded(attribute, packet);
 +                // Scissors end
              }
          }
@@ -146,7 +146,7 @@ index 3944852921335c78a04a9dc301882ab5b152b1ed..96ee53c7cc862e059328c5cdf5e07f30
          this.type = blockEntityType;
          this.tag = nbt.isEmpty() ? null : nbt;
 diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java
-index 39b879f21f958dbd91ab0f74e5d4f3c74928fc33..688287c637a0d4b28d630b7304a3c2cf339bdf54 100644
+index 51e24105facfe71ce9f2757c6c881a21b58dacfd..5692fbae221fb01d32d92edc7bea0f6312e24e1c 100644
 --- a/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java
 +++ b/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java
 @@ -33,6 +33,13 @@ public class ClientboundLevelChunkPacketData {
