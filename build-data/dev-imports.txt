@@ -8,14 +8,3 @@
 # To import classes from the vanilla Minecraft jar use `minecraft` as the artifactId:
 #     minecraft net.minecraft.world.level.entity.LevelEntityGetterAdapter
 #     minecraft net/minecraft/world/level/entity/LevelEntityGetter.java
-
-## Used in Scissors 1.19
-#minecraft net/minecraft/world/ContainerHelper
-#minecraft net/minecraft/network/chat/contents/NbtContents
-#minecraft net/minecraft/network/chat/ComponentUtils
-#minecraft net/minecraft/network/chat/contents/EntityDataSource
-
-## Used in Scissors 1.20.2
-#minecraft net/minecraft/network/chat/HoverEvent
-#minecraft net/minecraft/world/level/block/entity/DecoratedPotBlockEntity
-#minecraft net/minecraft/advancements/critereon/MinMaxBounds

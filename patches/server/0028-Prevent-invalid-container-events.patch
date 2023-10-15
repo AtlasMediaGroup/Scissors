@@ -5,13 +5,13 @@ Subject: [PATCH] Prevent invalid container events
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 8e1b95371ed0bac1a4fff2d6550de118ba399650..e6d7b277b3b305d5069c73d9107c20ff11e34b7c 100644
+index 40166e794ad1f2d2555bd47a442771db5bee79f9..0c878b99574b0e27f1463069f66d24bdecb01647 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
+@@ -30,6 +30,7 @@ import java.util.function.UnaryOperator;
+ import java.util.stream.Collectors;
  import java.util.stream.Stream;
  import javax.annotation.Nullable;
- import me.totalfreedom.scissors.event.player.SpectatorTeleportEvent;
 +import net.kyori.adventure.text.format.NamedTextColor; // Scissors
  import net.minecraft.ChatFormatting;
  import net.minecraft.SharedConstants;

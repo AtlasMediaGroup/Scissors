@@ -5,7 +5,7 @@ Subject: [PATCH] Build changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index c187641f0ec6444a10e0e1583e1697d07e8f0267..9d13bd2d5cb152c6aa5834ad735d1695c05c097e 100644
+index a79461457ea19339f47572c70705d655ebc55276..1ac1484fa13e1aadf6dfc964e7797534e2231950 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -13,8 +13,12 @@ configurations.named(log4jPlugins.compileClasspathConfigurationName) {
@@ -23,7 +23,7 @@ index c187641f0ec6444a10e0e1583e1697d07e8f0267..9d13bd2d5cb152c6aa5834ad735d1695
      // Paper start
      implementation("org.jline:jline-terminal-jansi:3.21.0")
      implementation("net.minecrell:terminalconsoleappender:1.3.0")
-@@ -68,11 +72,19 @@ tasks.jar {
+@@ -66,11 +70,19 @@ tasks.jar {
          val gitHash = git("rev-parse", "--short=7", "HEAD").getText().trim()
          val implementationVersion = System.getenv("BUILD_NUMBER") ?: "\"$gitHash\""
          val date = git("show", "-s", "--format=%ci", gitHash).getText().trim() // Paper
@@ -45,7 +45,7 @@ index c187641f0ec6444a10e0e1583e1697d07e8f0267..9d13bd2d5cb152c6aa5834ad735d1695
              "Implementation-Vendor" to date, // Paper
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
-@@ -156,7 +168,7 @@ fun TaskContainer.registerRunTask(
+@@ -154,7 +166,7 @@ fun TaskContainer.registerRunTask(
      name: String,
      block: JavaExec.() -> Unit
  ): TaskProvider<JavaExec> = register<JavaExec>(name) {
@@ -133,17 +133,3 @@ index 774556a62eb240da42e84db4502e2ed43495be17..741c76c4dfa0bb34cc23bd795c194bde
          Properties properties = new Properties();
  
          if (stream != null) {
-diff --git a/src/test/java/org/bukkit/craftbukkit/legacy/PersistentDataContainerLegacyTest.java b/src/test/java/org/bukkit/craftbukkit/legacy/PersistentDataContainerLegacyTest.java
-index 4afaac5928e55e6ef233deb058150e2ec63162c4..c7201e0d1d8fe664b461b1d443c21782bdbfa63c 100644
---- a/src/test/java/org/bukkit/craftbukkit/legacy/PersistentDataContainerLegacyTest.java
-+++ b/src/test/java/org/bukkit/craftbukkit/legacy/PersistentDataContainerLegacyTest.java
-@@ -49,7 +49,9 @@ public class PersistentDataContainerLegacyTest extends AbstractTestingBase {
-         assertEquals(Float.valueOf(Float.MAX_VALUE), pdc.get(this.key("float"), PersistentDataType.FLOAT), "legacy float was wrong");
-         assertEquals(Double.valueOf(Double.MAX_VALUE), pdc.get(this.key("double"), PersistentDataType.DOUBLE), "legacy double was wrong");
-         assertEquals("stringy", pdc.get(this.key("string_simple"), PersistentDataType.STRING), "legacy string-simple was wrong");
-+        /* This test fails for some reason and I don't know why
-         assertEquals("What a fun complex string 🔥", pdc.get(this.key("string_complex"), PersistentDataType.STRING), "legacy string-complex was wrong");
-+        */
- 
-         assertArrayEquals(new byte[]{Byte.MIN_VALUE}, pdc.get(this.key("byte_array"), PersistentDataType.BYTE_ARRAY), "legacy byte array was wrong");
- 
