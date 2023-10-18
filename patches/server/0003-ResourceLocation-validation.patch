@@ -1,0 +1,187 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Video <videogamesm12@gmail.com>
+Date: Sun, 13 Mar 2022 07:39:26 -0600
+Subject: [PATCH] ResourceLocation validation
+
+
+diff --git a/src/main/java/com/destroystokyo/paper/loottable/PaperContainerEntityLootableInventory.java b/src/main/java/com/destroystokyo/paper/loottable/PaperContainerEntityLootableInventory.java
+index 15173e715fa36546820d930a46e0f0c493d07cfc..356cc6f468975faa676db87db8fc0fa2df32f020 100644
+--- a/src/main/java/com/destroystokyo/paper/loottable/PaperContainerEntityLootableInventory.java
++++ b/src/main/java/com/destroystokyo/paper/loottable/PaperContainerEntityLootableInventory.java
+@@ -17,7 +17,7 @@ public class PaperContainerEntityLootableInventory implements PaperLootableEntit
+ 
+     @Override
+     public org.bukkit.loot.LootTable getLootTable() {
+-        return entity.getLootTable() != null && !entity.getLootTable().getPath().isEmpty() ? Bukkit.getLootTable(CraftNamespacedKey.fromMinecraft(entity.getLootTable())) : null;
++        return entity.getLootTable() != null && !entity.getLootTable().getPath().isEmpty() && entity.getLootTable().toString().length() < 256 ? Bukkit.getLootTable(CraftNamespacedKey.fromMinecraft(entity.getLootTable())) : null; // Scissors - Validate length of loot tables before even trying
+     }
+ 
+     @Override
+diff --git a/src/main/java/com/destroystokyo/paper/loottable/PaperTileEntityLootableInventory.java b/src/main/java/com/destroystokyo/paper/loottable/PaperTileEntityLootableInventory.java
+index 2ee4ee14ab3345486dad6b24fd9a4fcc6c746b99..c5ac6cda91a81d3075f5c763e30dc009b6be7936 100644
+--- a/src/main/java/com/destroystokyo/paper/loottable/PaperTileEntityLootableInventory.java
++++ b/src/main/java/com/destroystokyo/paper/loottable/PaperTileEntityLootableInventory.java
+@@ -15,7 +15,7 @@ public class PaperTileEntityLootableInventory implements PaperLootableBlockInven
+ 
+     @Override
+     public org.bukkit.loot.LootTable getLootTable() {
+-        return tileEntityLootable.lootTable != null && !tileEntityLootable.lootTable.getPath().isEmpty() ? Bukkit.getLootTable(CraftNamespacedKey.fromMinecraft(tileEntityLootable.lootTable)) : null;
++        return tileEntityLootable.lootTable != null && !tileEntityLootable.lootTable.getPath().isEmpty() && tileEntityLootable.lootTable.toString().length() < 256 ? Bukkit.getLootTable(CraftNamespacedKey.fromMinecraft(tileEntityLootable.lootTable)) : null; // Scissors - Validate length of loot tables before even trying
+     }
+ 
+     @Override
+diff --git a/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java b/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
+index 1f55185814125c691288294d18bf1580461c8066..259d65f8e21f9cf99585d416eafdc967dddccf57 100644
+--- a/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
++++ b/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
+@@ -409,7 +409,7 @@ public class AreaEffectCloud extends Entity implements TraceableEntity {
+             try {
+                 this.setParticle(ParticleArgument.readParticle(new StringReader(nbt.getString("Particle")), (HolderLookup) BuiltInRegistries.PARTICLE_TYPE.asLookup()));
+             } catch (CommandSyntaxException commandsyntaxexception) {
+-                AreaEffectCloud.LOGGER.warn("Couldn't load custom particle {}", nbt.getString("Particle"), commandsyntaxexception);
++                // Scissors - Don't log custom particle errors
+             }
+         }
+ 
+diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
+index 73871f456a85bda1e51f54986d0e61fb629822e8..df16049a70061c7c38d72b188d054339f5434e03 100644
+--- a/src/main/java/net/minecraft/world/entity/EntityType.java
++++ b/src/main/java/net/minecraft/world/entity/EntityType.java
+@@ -589,7 +589,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+         }), (entity) -> {
+             entity.load(nbt);
+         }, () -> {
+-            EntityType.LOGGER.warn("Skipping Entity with id {}", nbt.getString("id"));
++            // Scissors - Don't log invalid entities
+         });
+     }
+ 
+@@ -608,7 +608,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+     }
+ 
+     public static Optional<EntityType<?>> by(CompoundTag nbt) {
+-        return BuiltInRegistries.ENTITY_TYPE.getOptional(new ResourceLocation(nbt.getString("id")));
++        return BuiltInRegistries.ENTITY_TYPE.getOptional(ResourceLocation.tryParse(nbt.getString("id"))); // Scissors
+     }
+ 
+     @Nullable
+diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
+index d28c477171c1b6888a45175075017d960464b5cd..cc46185c05a735d4443b266423215f1f7a0c7741 100644
+--- a/src/main/java/net/minecraft/world/entity/Mob.java
++++ b/src/main/java/net/minecraft/world/entity/Mob.java
+@@ -619,7 +619,7 @@ public abstract class Mob extends LivingEntity implements Targeting {
+ 
+         this.setLeftHanded(nbt.getBoolean("LeftHanded"));
+         if (nbt.contains("DeathLootTable", 8)) {
+-            this.lootTable = new ResourceLocation(nbt.getString("DeathLootTable"));
++            this.lootTable = ResourceLocation.tryParse(nbt.getString("DeathLootTable")); // Scissors
+             this.lootTableSeed = nbt.getLong("DeathLootTableSeed");
+         }
+ 
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
+index a18aadbf7ae83713e1f2b21553185d8000bc7699..f5ad7ddf13cbb6452c2927aef9b54eae3335b4c6 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
+@@ -289,7 +289,12 @@ public abstract class AbstractFurnaceBlockEntity extends BaseContainerBlockEntit
+         while (iterator.hasNext()) {
+             String s = (String) iterator.next();
+ 
+-            this.recipesUsed.put(new ResourceLocation(s), nbttagcompound1.getInt(s));
++            // Scissors start
++            final ResourceLocation rl = ResourceLocation.tryParse(s);
++            if (rl != null) {
++                this.recipesUsed.put(rl, nbttagcompound1.getInt(s));
++            }
++            // Scissors end
+         }
+ 
+         // Paper start - cook speed API
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/BrushableBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BrushableBlockEntity.java
+index 0425151e688966442340ea1cf892aff34ffe0791..244b04e0020b1bd1e7be34a1b6266a8ac75d29fc 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/BrushableBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/BrushableBlockEntity.java
+@@ -199,7 +199,7 @@ public class BrushableBlockEntity extends BlockEntity {
+ 
+     private boolean tryLoadLootTable(CompoundTag nbt) {
+         if (nbt.contains("LootTable", 8)) {
+-            this.lootTable = new ResourceLocation(nbt.getString("LootTable"));
++            this.lootTable = ResourceLocation.tryParse(nbt.getString("LootTable")); // Scissors
+             this.lootTableSeed = nbt.getLong("LootTableSeed");
+             return true;
+         } else {
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
+index 081691f9710ff1115e4308f79ed49fbc38941193..c29dfd15e147d5c4d9c9584ff7803c2a52009f0d 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
+@@ -46,7 +46,7 @@ public abstract class RandomizableContainerBlockEntity extends BaseContainerBloc
+     protected boolean tryLoadLootTable(CompoundTag nbt) {
+         this.lootableData.loadNbt(nbt); // Paper
+         if (nbt.contains("LootTable", 8)) {
+-            this.lootTable = new ResourceLocation(nbt.getString("LootTable"));
++            this.lootTable = ResourceLocation.tryParse(nbt.getString("LootTable")); // Scissors - Validate loot tables
+             try { org.bukkit.craftbukkit.util.CraftNamespacedKey.fromMinecraft(this.lootTable); } catch (IllegalArgumentException ex) { this.lootTable = null; } // Paper - validate
+             this.lootTableSeed = nbt.getLong("LootTableSeed");
+             return false; // Paper - always load the items, table may still remain
+diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftLootable.java b/src/main/java/org/bukkit/craftbukkit/block/CraftLootable.java
+index 5b9ccbd767630abfee648a4653f33d8ac625bd0c..05830258ba0f7d19b1d86c0d8c85df8ffc94dfce 100644
+--- a/src/main/java/org/bukkit/craftbukkit/block/CraftLootable.java
++++ b/src/main/java/org/bukkit/craftbukkit/block/CraftLootable.java
+@@ -34,8 +34,14 @@ public abstract class CraftLootable<T extends RandomizableContainerBlockEntity>
+             return null;
+         }
+ 
+-        ResourceLocation key = getSnapshot().lootTable;
+-        return Bukkit.getLootTable(CraftNamespacedKey.fromMinecraft(key));
++        // Scissors start - Return a null loot table if the specified loot table is not valid
++        try {
++            ResourceLocation key = getSnapshot().lootTable;
++            return Bukkit.getLootTable(CraftNamespacedKey.fromMinecraft(key));
++        } catch (Exception ex) {
++            return null;
++        }
++        // Scissors end
+     }
+ 
+     @Override
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftMinecartContainer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftMinecartContainer.java
+index 0dd0ce9a9b3253e87eda12354249ec2fd2a33cf2..b6920f9432ca1736afbe775186fbbcf11cf046fb 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftMinecartContainer.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftMinecartContainer.java
+@@ -33,8 +33,14 @@ public abstract class CraftMinecartContainer extends CraftMinecart implements Lo
+             return null; // return empty loot table?
+         }
+ 
+-        NamespacedKey key = CraftNamespacedKey.fromMinecraft(nmsTable);
+-        return Bukkit.getLootTable(key);
++        // Scissors start - Return a null loot table if the specified loot table is not valid
++        try {
++            NamespacedKey key = CraftNamespacedKey.fromMinecraft(nmsTable);
++            return Bukkit.getLootTable(key);
++        } catch (Exception ex) {
++            return null;
++        }
++        // Scissors end
+     }
+ 
+     @Override
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
+index 153e4c88c168097eb4a78650e7c9c120bec202a3..4d6af55197bb6933daac50fc638f9c23fe652f39 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
+@@ -80,8 +80,14 @@ public abstract class CraftMob extends CraftLivingEntity implements Mob {
+ 
+     @Override
+     public LootTable getLootTable() {
+-        NamespacedKey key = CraftNamespacedKey.fromMinecraft(this.getHandle().getLootTable());
+-        return Bukkit.getLootTable(key);
++        // Scissors start - Return a null loot table if the specified loot table is not valid
++        try {
++            NamespacedKey key = CraftNamespacedKey.fromMinecraft(this.getHandle().getLootTable());
++            return Bukkit.getLootTable(key);
++        } catch (Exception ex) {
++            return null;
++        }
++        // Scissors end
+     }
+ 
+     @Override

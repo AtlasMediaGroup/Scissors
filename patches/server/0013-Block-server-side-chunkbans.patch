@@ -1,0 +1,173 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: ayunami2000 <spwilliamsiam@gmail.com>
+Date: Mon, 28 Mar 2022 17:02:21 -0400
+Subject: [PATCH] Block server-side chunkbans
+
+
+diff --git a/src/main/java/net/minecraft/network/PacketEncoder.java b/src/main/java/net/minecraft/network/PacketEncoder.java
+index 45b4f1c295eda2fcc5067a4b21de247218ef117f..f2e7585630ff724f966c7bcedc17e502d786870d 100644
+--- a/src/main/java/net/minecraft/network/PacketEncoder.java
++++ b/src/main/java/net/minecraft/network/PacketEncoder.java
+@@ -7,8 +7,16 @@ import io.netty.handler.codec.MessageToByteEncoder;
+ import io.netty.util.Attribute;
+ import io.netty.util.AttributeKey;
+ import java.io.IOException;
++import java.util.Collections; // Scissors
++import net.minecraft.ChatFormatting; // Scissors
++import net.minecraft.core.NonNullList; // Scissors
++import net.minecraft.nbt.CompoundTag; // Scissors
++import net.minecraft.network.chat.Component; // Scissors
++import net.minecraft.network.chat.SignedMessageBody; // Scissors
+ import net.minecraft.network.protocol.Packet;
++import net.minecraft.network.protocol.game.*; // Scissors
+ import net.minecraft.util.profiling.jfr.JvmProfiler;
++import net.minecraft.world.item.ItemStack; // Scissors
+ import org.slf4j.Logger;
+ 
+ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
+@@ -19,6 +27,23 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
+         this.codecKey = protocolKey;
+     }
+ 
++    // Scissors start
++    private int tryWrite(Packet packet, FriendlyByteBuf friendlyByteBuf, ChannelHandlerContext channelHandlerContext, int i) {
++        friendlyByteBuf.writeVarInt(i);
++        friendlyByteBuf.adventure$locale = channelHandlerContext.channel().attr(io.papermc.paper.adventure.PaperAdventure.LOCALE_ATTRIBUTE).get(); // Paper
++
++        int j = friendlyByteBuf.writerIndex();
++        packet.write(friendlyByteBuf);
++        int k = friendlyByteBuf.writerIndex() - j;
++        int packetLength = friendlyByteBuf.readableBytes();
++        if (packetLength > MAX_PACKET_SIZE) {
++            throw new PacketTooLargeException(packet, this.codecKey, packetLength);
++        }
++
++        return k;
++    }
++    // Scissors end
++
+     protected void encode(ChannelHandlerContext channelHandlerContext, Packet<?> packet, ByteBuf byteBuf) throws Exception {
+         Attribute<ConnectionProtocol.CodecData<?>> attribute = channelHandlerContext.channel().attr(this.codecKey);
+         ConnectionProtocol.CodecData<?> codecData = attribute.get();
+@@ -34,39 +59,59 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
+                 throw new IOException("Can't serialize unregistered packet");
+             } else {
+                 FriendlyByteBuf friendlyByteBuf = new FriendlyByteBuf(byteBuf);
+-                friendlyByteBuf.writeVarInt(i);
+-                friendlyByteBuf.adventure$locale = channelHandlerContext.channel().attr(io.papermc.paper.adventure.PaperAdventure.LOCALE_ATTRIBUTE).get(); // Paper
+ 
++                // Scissors start
++                int k;
+                 try {
+-                    int j = friendlyByteBuf.writerIndex();
+-                    packet.write(friendlyByteBuf);
+-                    int k = friendlyByteBuf.writerIndex() - j;
+-                    if (false && k > 8388608) { // Paper - disable
+-                        throw new IllegalArgumentException("Packet too big (is " + k + ", should be less than 8388608): " + packet);
+-                    }
+-
+-                    JvmProfiler.INSTANCE.onPacketSent(codecData.protocol(), i, channelHandlerContext.channel().remoteAddress(), k);
++                    k = this.tryWrite(packet, friendlyByteBuf, channelHandlerContext, i);
+                 } catch (Throwable var13) {
+-                    LOGGER.error("Packet encoding of packet ID {} threw (skippable? {})", i, packet.isSkippable(), var13); // Paper - Give proper error message
+-                    if (packet.isSkippable()) {
+-                        throw new SkipPacketException(var13);
++                    packet = capPacket(packet, i);
++                    if (packet == null) {
++                        throw new SkipPacketException(new IllegalArgumentException("Packet too big: " + packet));
+                     }
+-
+-                    throw var13;
+-                } finally {
+-                    // Paper start
+-                    int packetLength = friendlyByteBuf.readableBytes();
+-                    if (packetLength > MAX_PACKET_SIZE) {
+-                        throw new PacketTooLargeException(packet, this.codecKey, packetLength);
+-                    }
+-                    // Paper end
+-                    ProtocolSwapHandler.swapProtocolIfNeeded(attribute, packet);
++                    friendlyByteBuf.clear();
++                    k = this.tryWrite(packet, friendlyByteBuf, channelHandlerContext, i);
+                 }
+ 
++                JvmProfiler.INSTANCE.onPacketSent(codecData.protocol(), i, channelHandlerContext.channel().remoteAddress(), k);
++                ProtocolSwapHandler.swapProtocolIfNeeded(attribute, packet);
++                // Scissors end
+             }
+         }
+     }
+ 
++    // Scissors start
++    private static Packet capPacket(Packet packet, int i) {
++        if (packet instanceof ClientboundBlockEntityDataPacket blockEntityDataPacket) {
++            packet = new ClientboundBlockEntityDataPacket(blockEntityDataPacket.getPos(), blockEntityDataPacket.getType(), new CompoundTag());
++        } else if (packet instanceof ClientboundLevelChunkPacketData chunkPacket) {
++            chunkPacket.clearNBT();
++        } else if (packet instanceof ClientboundContainerSetContentPacket containerSetContentPacket) {
++            packet = new ClientboundContainerSetContentPacket(containerSetContentPacket.getContainerId(), containerSetContentPacket.getStateId(), NonNullList.create(), ItemStack.EMPTY);
++        } else if (packet instanceof ClientboundSetEquipmentPacket setEquipmentPacket) {
++            packet = new ClientboundSetEquipmentPacket(setEquipmentPacket.getEntity(), Collections.emptyList());
++        } else if (packet instanceof ClientboundContainerSetSlotPacket containerSetSlotPacket) {
++            packet = new ClientboundContainerSetSlotPacket(containerSetSlotPacket.getContainerId(), containerSetSlotPacket.getStateId(), containerSetSlotPacket.getSlot(), ItemStack.EMPTY);
++        } else if (packet instanceof ClientboundMapItemDataPacket mapItemDataPacket) {
++            packet = new ClientboundMapItemDataPacket(mapItemDataPacket.getMapId(), mapItemDataPacket.getScale(), mapItemDataPacket.isLocked(), null, null);
++        } else if (packet instanceof ClientboundPlayerChatPacket playerChatPacket) {
++            final SignedMessageBody.Packed body = playerChatPacket.body();
++            packet = new ClientboundPlayerChatPacket(playerChatPacket.sender(), // Not sending this packet results in a kick when someone says something.
++                playerChatPacket.index(),
++                playerChatPacket.signature(),
++                playerChatPacket.body(),
++                Component.empty().append("** Message too large **").withStyle(ChatFormatting.RED),
++                playerChatPacket.filterMask(),
++                playerChatPacket.chatType()
++            );
++        } else {
++            return null;
++        }
++
++        return packet;
++    }
++    // Scissors end
++
+     // Paper start
+     private static int MAX_PACKET_SIZE = 8388608;
+ 
+diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundBlockEntityDataPacket.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundBlockEntityDataPacket.java
+index 3944852921335c78a04a9dc301882ab5b152b1ed..96ee53c7cc862e059328c5cdf5e07f309df6a79e 100644
+--- a/src/main/java/net/minecraft/network/protocol/game/ClientboundBlockEntityDataPacket.java
++++ b/src/main/java/net/minecraft/network/protocol/game/ClientboundBlockEntityDataPacket.java
+@@ -24,7 +24,7 @@ public class ClientboundBlockEntityDataPacket implements Packet<ClientGamePacket
+         return create(blockEntity, BlockEntity::getUpdateTag);
+     }
+ 
+-    private ClientboundBlockEntityDataPacket(BlockPos pos, BlockEntityType<?> blockEntityType, CompoundTag nbt) {
++    public ClientboundBlockEntityDataPacket(BlockPos pos, BlockEntityType<?> blockEntityType, CompoundTag nbt) { // Scissors - private -> public
+         this.pos = pos;
+         this.type = blockEntityType;
+         this.tag = nbt.isEmpty() ? null : nbt;
+diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java
+index 51e24105facfe71ce9f2757c6c881a21b58dacfd..5692fbae221fb01d32d92edc7bea0f6312e24e1c 100644
+--- a/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java
++++ b/src/main/java/net/minecraft/network/protocol/game/ClientboundLevelChunkPacketData.java
+@@ -33,6 +33,13 @@ public class ClientboundLevelChunkPacketData {
+     }
+     // Paper end
+ 
++    // Scissors start
++    public void clearNBT() {
++        this.blockEntitiesData.clear();
++        this.extraPackets.clear();
++    }
++    // Scissors end
++
+     // Paper start - Anti-Xray - Add chunk packet info
+     @Deprecated @io.papermc.paper.annotation.DoNotUse public ClientboundLevelChunkPacketData(LevelChunk chunk) { this(chunk, null); }
+     public ClientboundLevelChunkPacketData(LevelChunk chunk, com.destroystokyo.paper.antixray.ChunkPacketInfo<net.minecraft.world.level.block.state.BlockState> chunkPacketInfo) {
+@@ -58,6 +65,7 @@ public class ClientboundLevelChunkPacketData {
+         int totalTileEntities = 0; // Paper
+ 
+         for(Map.Entry<BlockPos, BlockEntity> entry2 : chunk.getBlockEntities().entrySet()) {
++            if (this.extraPackets.size() > 50) break; // Scissors - Limit extraPackets size
+             // Paper start
+             if (++totalTileEntities > TE_LIMIT) {
+                 var packet = entry2.getValue().getUpdatePacket();
