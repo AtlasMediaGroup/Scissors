@@ -5,15 +5,16 @@ Subject: [PATCH] Build changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index a79461457ea19339f47572c70705d655ebc55276..1ac1484fa13e1aadf6dfc964e7797534e2231950 100644
+index a79461457ea19339f47572c70705d655ebc55276..321c6408bdaf7fb99d40e1130b2b687b97a2ad43 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -13,8 +13,12 @@ configurations.named(log4jPlugins.compileClasspathConfigurationName) {
+@@ -13,8 +13,13 @@ configurations.named(log4jPlugins.compileClasspathConfigurationName) {
  val alsoShade: Configuration by configurations.creating
  
  dependencies {
 -    implementation(project(":paper-api"))
 -    implementation(project(":paper-mojangapi"))
++    implementation(project(":aswm-core"))
 +    // Scissors start
 +    implementation(project(":Scissors-API"))
 +    implementation("io.papermc.paper:paper-mojangapi:1.20.2-R0.1-SNAPSHOT") {
@@ -23,7 +24,7 @@ index a79461457ea19339f47572c70705d655ebc55276..1ac1484fa13e1aadf6dfc964e7797534
      // Paper start
      implementation("org.jline:jline-terminal-jansi:3.21.0")
      implementation("net.minecrell:terminalconsoleappender:1.3.0")
-@@ -66,11 +70,19 @@ tasks.jar {
+@@ -66,11 +71,19 @@ tasks.jar {
          val gitHash = git("rev-parse", "--short=7", "HEAD").getText().trim()
          val implementationVersion = System.getenv("BUILD_NUMBER") ?: "\"$gitHash\""
          val date = git("show", "-s", "--format=%ci", gitHash).getText().trim() // Paper
@@ -45,7 +46,7 @@ index a79461457ea19339f47572c70705d655ebc55276..1ac1484fa13e1aadf6dfc964e7797534
              "Implementation-Vendor" to date, // Paper
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
-@@ -154,7 +166,7 @@ fun TaskContainer.registerRunTask(
+@@ -154,7 +167,7 @@ fun TaskContainer.registerRunTask(
      name: String,
      block: JavaExec.() -> Unit
  ): TaskProvider<JavaExec> = register<JavaExec>(name) {
@@ -95,10 +96,10 @@ index c5d5648f4ca603ef2b1df723b58f9caf4dd3c722..21ded7c14c56a40feaa7741131be5166
                  .completer(new ConsoleCommandCompleter(this.server))
                  .option(LineReader.Option.COMPLETE_IN_WORD, true);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 97745f0bab8d82d397c6c2a5775aed92bca0a034..2f511b9c5f48773c17a659c00a94ba3df82edf93 100644
+index 7a9373df55bdbd01eb30ac9c623561087bd6b43e..9f8b2fe4fd9377d48623e80f65dde03479f4fad0 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1697,7 +1697,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1712,7 +1712,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
