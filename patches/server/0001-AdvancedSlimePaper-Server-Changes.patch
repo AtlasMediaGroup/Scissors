@@ -1,7 +1,23 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Telesphoreo <me@telesphoreo.me>
-Date: Thu, 19 Oct 2023 00:00:51 -0500
+From: Owen1212055 <23108066+Owen1212055@users.noreply.github.com>
+Date: Mon, 26 Dec 2022 11:25:35 -0500
 Subject: [PATCH] AdvancedSlimePaper Server Changes
+
+AdvancedSlimePaper
+Copyright (C) 2023 InfernalSuite
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 diff --git a/src/main/java/com/infernalsuite/aswm/Converter.java b/src/main/java/com/infernalsuite/aswm/Converter.java
@@ -1825,3 +1841,976 @@ index 0000000000000000000000000000000000000000..3500005bb09dc484bc333f1e0799613d
 +    }
 +}
 \ No newline at end of file
+diff --git a/src/main/java/io/papermc/paper/chunk/system/scheduling/ChunkHolderManager.java b/src/main/java/io/papermc/paper/chunk/system/scheduling/ChunkHolderManager.java
+index abd0217cf0bff183c8e262edc173a53403797c1a..42170127cc1ed35cb2aec6bf7eb473a0137c63bb 100644
+--- a/src/main/java/io/papermc/paper/chunk/system/scheduling/ChunkHolderManager.java
++++ b/src/main/java/io/papermc/paper/chunk/system/scheduling/ChunkHolderManager.java
+@@ -165,7 +165,8 @@ public final class ChunkHolderManager {
+         return this.chunkHolders.size();
+     }
+ 
+-    public void close(final boolean save, final boolean halt) {
++    public void close(boolean save, final boolean halt) { // ASWM
++        if (this.world instanceof com.infernalsuite.aswm.level.SlimeLevelInstance) save = false; // ASWM
+         TickThread.ensureTickThread("Closing world off-main");
+         if (halt) {
+             LOGGER.info("Waiting 60s for chunk system to halt for world '" + this.world.getWorld().getName() + "'");
+@@ -1316,7 +1317,7 @@ public final class ChunkHolderManager {
+ 
+     public boolean processTicketUpdates() {
+         co.aikar.timings.MinecraftTimings.distanceManagerTick.startTiming(); try { // Paper - add timings for distance manager
+-        return this.processTicketUpdates(true, true, null);
++            return this.processTicketUpdates(true, true, null);
+         } finally { co.aikar.timings.MinecraftTimings.distanceManagerTick.stopTiming(); } // Paper - add timings for distance manager
+     }
+ 
+diff --git a/src/main/java/io/papermc/paper/chunk/system/scheduling/ChunkLoadTask.java b/src/main/java/io/papermc/paper/chunk/system/scheduling/ChunkLoadTask.java
+index e7fb084ddb88ab62f1d493a999cc82b9258d275e..943cdd570c9e5c87ee9f3984404e08b4cdffeca0 100644
+--- a/src/main/java/io/papermc/paper/chunk/system/scheduling/ChunkLoadTask.java
++++ b/src/main/java/io/papermc/paper/chunk/system/scheduling/ChunkLoadTask.java
+@@ -6,6 +6,7 @@ import ca.spottedleaf.concurrentutil.lock.ReentrantAreaLock;
+ import ca.spottedleaf.concurrentutil.util.ConcurrentUtil;
+ import ca.spottedleaf.dataconverter.minecraft.MCDataConverter;
+ import ca.spottedleaf.dataconverter.minecraft.datatypes.MCTypeRegistry;
++import com.infernalsuite.aswm.level.CommonLoadTask;
+ import com.mojang.logging.LogUtils;
+ import io.papermc.paper.chunk.system.io.RegionFileIOThread;
+ import io.papermc.paper.chunk.system.poi.PoiChunk;
+@@ -32,8 +33,8 @@ public final class ChunkLoadTask extends ChunkProgressionTask {
+ 
+     private static final Logger LOGGER = LogUtils.getClassLogger();
+ 
+-    private final NewChunkHolder chunkHolder;
+-    private final ChunkDataLoadTask loadTask;
++    public final NewChunkHolder chunkHolder; // ASWM
++    private final CommonLoadTask loadTask;
+ 
+     private volatile boolean cancelled;
+     private NewChunkHolder.GenericDataLoadTaskCallback entityLoadTask;
+@@ -45,11 +46,20 @@ public final class ChunkLoadTask extends ChunkProgressionTask {
+                             final NewChunkHolder chunkHolder, final PrioritisedExecutor.Priority priority) {
+         super(scheduler, world, chunkX, chunkZ);
+         this.chunkHolder = chunkHolder;
+-        this.loadTask = new ChunkDataLoadTask(scheduler, world, chunkX, chunkZ, priority);
+-        this.loadTask.addCallback((final GenericDataLoadTask.TaskResult<ChunkAccess, Throwable> result) -> {
+-            ChunkLoadTask.this.loadResult = result; // must be before getAndDecrement
+-            ChunkLoadTask.this.tryCompleteLoad();
+-        });
++        // ASWM start
++        if (world instanceof com.infernalsuite.aswm.level.SlimeLevelInstance levelInstance) {
++
++            this.loadTask = levelInstance.getLoadTask(this, scheduler, world, chunkX, chunkZ, priority, result -> {
++                ChunkLoadTask.this.complete(result == null ? null : result.left(), result == null ? null : result.right());
++            });
++        } else {
++            ChunkDataLoadTask task = new ChunkDataLoadTask(scheduler, world, chunkX, chunkZ, priority);
++            task.addCallback((final GenericDataLoadTask.TaskResult<ChunkAccess, Throwable> result) -> {
++                ChunkLoadTask.this.complete(result == null ? null : result.left(), result == null ? null : result.right());
++            });
++            this.loadTask = task;
++        }
++        // ASWM end
+     }
+ 
+     private void tryCompleteLoad() {
+@@ -274,7 +284,7 @@ public final class ChunkLoadTask extends ChunkProgressionTask {
+         }
+     }
+ 
+-    public static final class ChunkDataLoadTask extends CallbackDataLoadTask<ChunkAccess, ChunkAccess> {
++    public static final class ChunkDataLoadTask extends CallbackDataLoadTask<ChunkAccess, ChunkAccess> implements CommonLoadTask { // ASWM
+         protected ChunkDataLoadTask(final ChunkTaskScheduler scheduler, final ServerLevel world, final int chunkX,
+                                     final int chunkZ, final PrioritisedExecutor.Priority priority) {
+             super(scheduler, world, chunkX, chunkZ, RegionFileIOThread.RegionFileType.CHUNK_DATA, priority);
+diff --git a/src/main/java/io/papermc/paper/chunk/system/scheduling/NewChunkHolder.java b/src/main/java/io/papermc/paper/chunk/system/scheduling/NewChunkHolder.java
+index b66a7d4aab887309579154815a0d4abf9de506b0..2fe8a17cdc2a823548fa180f72cd70e4d5e5fdf3 100644
+--- a/src/main/java/io/papermc/paper/chunk/system/scheduling/NewChunkHolder.java
++++ b/src/main/java/io/papermc/paper/chunk/system/scheduling/NewChunkHolder.java
+@@ -1775,7 +1775,7 @@ public final class NewChunkHolder {
+         }
+ 
+         boolean canSaveChunk = !(chunk instanceof LevelChunk levelChunk && levelChunk.mustNotSave) &&
+-                                (chunk != null && ((shutdown || chunk instanceof LevelChunk) && chunk.isUnsaved()));
++            (chunk != null && ((shutdown || chunk instanceof LevelChunk) && chunk.isUnsaved()));
+         boolean canSavePOI = !(chunk instanceof LevelChunk levelChunk && levelChunk.mustNotSave) && (poi != null && poi.isDirty());
+         boolean canSaveEntities = entities != null;
+ 
+diff --git a/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java b/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java
+index 7e8dc9e8f381abfdcce2746edc93122d623622d1..12aadf4c981cdb1a6405de99016f4b40e83a04b8 100644
+--- a/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java
++++ b/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java
+@@ -36,7 +36,7 @@ public final class ChunkEntitySlices {
+     protected final EntityCollectionBySection allEntities;
+     protected final EntityCollectionBySection hardCollidingEntities;
+     protected final Reference2ObjectOpenHashMap<Class<? extends Entity>, EntityCollectionBySection> entitiesByClass;
+-    protected final EntityList entities = new EntityList();
++    public final EntityList entities = new EntityList(); // ASWM
+ 
+     public FullChunkStatus status;
+ 
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index 97745f0bab8d82d397c6c2a5775aed92bca0a034..7a9373df55bdbd01eb30ac9c623561087bd6b43e 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -268,7 +268,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+     private final PackRepository packRepository;
+     private final ServerScoreboard scoreboard;
+     @Nullable
+-    private CommandStorage commandStorage;
++    public CommandStorage commandStorage;
+     private final CustomBossEvents customBossEvents;
+     private final ServerFunctionManager functionManager;
+     private boolean enforceWhitelist;
+@@ -444,60 +444,75 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+         LevelStorageSource.LevelStorageAccess worldSession = this.storageSource;
+ 
+         Registry<LevelStem> dimensions = this.registries.compositeAccess().registryOrThrow(Registries.LEVEL_STEM);
+-        for (LevelStem worldDimension : dimensions) {
++        for(LevelStem worldDimension : dimensions) {
+             ResourceKey<LevelStem> dimensionKey = dimensions.getResourceKey(worldDimension).get();
+ 
+             ServerLevel world;
+             int dimension = 0;
+ 
+-            if (dimensionKey == LevelStem.NETHER) {
+-                if (this.isNetherEnabled()) {
++            if(dimensionKey == LevelStem.NETHER) {
++                if(this.isNetherEnabled()) {
+                     dimension = -1;
+-                } else {
++                    // ASWM START
++                    if(com.infernalsuite.aswm.SlimeNMSBridgeImpl.instance().loadNetherOverride()) {
++                        continue;
++                    }
++                    // ASWM END
++                }else{
+                     continue;
+                 }
+-            } else if (dimensionKey == LevelStem.END) {
+-                if (this.server.getAllowEnd()) {
++            }else if(dimensionKey == LevelStem.END) {
++                if(this.server.getAllowEnd()) {
+                     dimension = 1;
+-                } else {
++                    // ASWM START
++                    if(com.infernalsuite.aswm.SlimeNMSBridgeImpl.instance().loadEndOverride()) {
++                        continue;
++                    }
++                    // ASWM END
++                }else{
+                     continue;
+                 }
+-            } else if (dimensionKey != LevelStem.OVERWORLD) {
++            }else if(dimensionKey != LevelStem.OVERWORLD) {
+                 dimension = -999;
+             }
++            // ASWM START
++            else if(dimensionKey == LevelStem.OVERWORLD && com.infernalsuite.aswm.SlimeNMSBridgeImpl.instance().loadOverworldOverride()) {
++                continue;
++            }
++            // ASWM END
+ 
+             String worldType = (dimension == -999) ? dimensionKey.location().getNamespace() + "_" + dimensionKey.location().getPath() : org.bukkit.World.Environment.getEnvironment(dimension).toString().toLowerCase();
+             String name = (dimensionKey == LevelStem.OVERWORLD) ? s : s + "_" + worldType;
+-            if (dimension != 0) {
++            if(dimension != 0) {
+                 File newWorld = LevelStorageSource.getStorageFolder(new File(name).toPath(), dimensionKey).toFile();
+                 File oldWorld = LevelStorageSource.getStorageFolder(new File(s).toPath(), dimensionKey).toFile();
+                 File oldLevelDat = new File(new File(s), "level.dat"); // The data folders exist on first run as they are created in the PersistentCollection constructor above, but the level.dat won't
+ 
+-                if (!newWorld.isDirectory() && oldWorld.isDirectory() && oldLevelDat.isFile()) {
++                if(!newWorld.isDirectory() && oldWorld.isDirectory() && oldLevelDat.isFile()) {
+                     MinecraftServer.LOGGER.info("---- Migration of old " + worldType + " folder required ----");
+                     MinecraftServer.LOGGER.info("Unfortunately due to the way that Minecraft implemented multiworld support in 1.6, Bukkit requires that you move your " + worldType + " folder to a new location in order to operate correctly.");
+                     MinecraftServer.LOGGER.info("We will move this folder for you, but it will mean that you need to move it back should you wish to stop using Bukkit in the future.");
+                     MinecraftServer.LOGGER.info("Attempting to move " + oldWorld + " to " + newWorld + "...");
+ 
+-                    if (newWorld.exists()) {
++                    if(newWorld.exists()) {
+                         MinecraftServer.LOGGER.warn("A file or folder already exists at " + newWorld + "!");
+                         MinecraftServer.LOGGER.info("---- Migration of old " + worldType + " folder failed ----");
+-                    } else if (newWorld.getParentFile().mkdirs()) {
+-                        if (oldWorld.renameTo(newWorld)) {
++                    }else if(newWorld.getParentFile().mkdirs()) {
++                        if(oldWorld.renameTo(newWorld)) {
+                             MinecraftServer.LOGGER.info("Success! To restore " + worldType + " in the future, simply move " + newWorld + " to " + oldWorld);
+                             // Migrate world data too.
+                             try {
+                                 com.google.common.io.Files.copy(oldLevelDat, new File(new File(name), "level.dat"));
+                                 org.apache.commons.io.FileUtils.copyDirectory(new File(new File(s), "data"), new File(new File(name), "data"));
+-                            } catch (IOException exception) {
++                            } catch(IOException exception) {
+                                 MinecraftServer.LOGGER.warn("Unable to migrate world data.");
+                             }
+                             MinecraftServer.LOGGER.info("---- Migration of old " + worldType + " folder complete ----");
+-                        } else {
++                        }else{
+                             MinecraftServer.LOGGER.warn("Could not move folder " + oldWorld + " to " + newWorld + "!");
+                             MinecraftServer.LOGGER.info("---- Migration of old " + worldType + " folder failed ----");
+                         }
+-                    } else {
++                    }else{
+                         MinecraftServer.LOGGER.warn("Could not create path for " + newWorld + "!");
+                         MinecraftServer.LOGGER.info("---- Migration of old " + worldType + " folder failed ----");
+                     }
+@@ -505,7 +520,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+ 
+                 try {
+                     worldSession = LevelStorageSource.createDefault(this.server.getWorldContainer().toPath()).validateAndCreateAccess(name, dimensionKey);
+-                } catch (IOException | ContentValidationException ex) {
++                } catch(IOException | ContentValidationException ex) {
+                     throw new RuntimeException(ex);
+                 }
+             }
+@@ -519,18 +534,18 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+             DynamicOps<Tag> dynamicops = RegistryOps.create(NbtOps.INSTANCE, (HolderLookup.Provider) worldloader_a.datapackWorldgen());
+             Pair<WorldData, WorldDimensions.Complete> pair = worldSession.getDataTag(dynamicops, worldloader_a.dataConfiguration(), iregistry, worldloader_a.datapackWorldgen().allRegistriesLifecycle());
+ 
+-            if (pair != null) {
++            if(pair != null) {
+                 worlddata = (PrimaryLevelData) pair.getFirst();
+-            } else {
++            }else{
+                 LevelSettings worldsettings;
+                 WorldOptions worldoptions;
+                 WorldDimensions worlddimensions;
+ 
+-                if (this.isDemo()) {
++                if(this.isDemo()) {
+                     worldsettings = MinecraftServer.DEMO_SETTINGS;
+                     worldoptions = WorldOptions.DEMO_OPTIONS;
+                     worlddimensions = WorldPresets.createNormalWorldDimensions(worldloader_a.datapackWorldgen());
+-                } else {
++                }else{
+                     DedicatedServerProperties dedicatedserverproperties = ((DedicatedServer) this).getProperties();
+ 
+                     worldsettings = new LevelSettings(dedicatedserverproperties.levelName, dedicatedserverproperties.gamemode, dedicatedserverproperties.hardcore, dedicatedserverproperties.difficulty, false, new GameRules(), worldloader_a.dataConfiguration());
+@@ -555,12 +570,12 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+             LevelStem worlddimension = (LevelStem) dimensions.get(dimensionKey);
+ 
+             org.bukkit.generator.WorldInfo worldInfo = new org.bukkit.craftbukkit.generator.CraftWorldInfo(iworlddataserver, worldSession, org.bukkit.World.Environment.getEnvironment(dimension), worlddimension.type().value(), worlddimension.generator(), this.registryAccess()); // Paper
+-            if (biomeProvider == null && gen != null) {
++            if(biomeProvider == null && gen != null) {
+                 biomeProvider = gen.getDefaultBiomeProvider(worldInfo);
+             }
+ 
+             // Paper start - fix and optimise world upgrading
+-            if (options.has("forceUpgrade")) {
++            if(options.has("forceUpgrade")) {
+                 net.minecraft.server.Main.convertWorldButItWorks(
+                     dimensionKey, worldSession, DataFixers.getDataFixer(), worlddimension.generator().getTypeNameForDataFixer(), options.has("eraseCache")
+                 );
+@@ -568,7 +583,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+             // Paper end - fix and optimise world upgrading
+             ResourceKey<Level> worldKey = ResourceKey.create(Registries.DIMENSION, dimensionKey.location());
+ 
+-            if (dimensionKey == LevelStem.OVERWORLD) {
++            if(dimensionKey == LevelStem.OVERWORLD) {
+                 this.worldData = worlddata;
+                 this.worldData.setGameType(((DedicatedServer) this).getProperties().gamemode); // From DedicatedServer.init
+ 
+@@ -579,13 +594,13 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+                 this.readScoreboard(worldpersistentdata);
+                 this.server.scoreboardManager = new org.bukkit.craftbukkit.scoreboard.CraftScoreboardManager(this, world.getScoreboard());
+                 this.commandStorage = new CommandStorage(worldpersistentdata);
+-            } else {
++            }else{
+                 ChunkProgressListener worldloadlistener = this.progressListenerFactory.create(11);
+                 // Paper start - option to use the dimension_type to check if spawners should be added. I imagine mojang will add some datapack-y way of managing this in the future.
+                 final List<CustomSpawner> spawners;
+-                if (io.papermc.paper.configuration.GlobalConfiguration.get().misc.useDimensionTypeForCustomSpawners && this.registryAccess().registryOrThrow(Registries.DIMENSION_TYPE).getResourceKey(worlddimension.type().value()).orElseThrow() == net.minecraft.world.level.dimension.BuiltinDimensionTypes.OVERWORLD) {
++                if(io.papermc.paper.configuration.GlobalConfiguration.get().misc.useDimensionTypeForCustomSpawners && this.registryAccess().registryOrThrow(Registries.DIMENSION_TYPE).getResourceKey(worlddimension.type().value()).orElseThrow() == net.minecraft.world.level.dimension.BuiltinDimensionTypes.OVERWORLD) {
+                     spawners = list;
+-                } else {
++                }else{
+                     spawners = Collections.emptyList();
+                 }
+                 world = new ServerLevel(this, this.executor, worldSession, iworlddataserver, worldKey, worlddimension, worldloadlistener, flag, j, spawners, true, this.overworld().getRandomSequences(), org.bukkit.World.Environment.getEnvironment(dimension), gen, biomeProvider);
+@@ -599,12 +614,12 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+             // Paper - move up
+             this.getPlayerList().addWorldborderListener(world);
+ 
+-            if (worlddata.getCustomBossEvents() != null) {
++            if(worlddata.getCustomBossEvents() != null) {
+                 this.getCustomBossEvents().load(worlddata.getCustomBossEvents());
+             }
+         }
+         this.forceDifficulty();
+-        for (ServerLevel worldserver : this.getAllLevels()) {
++        for(ServerLevel worldserver : this.getAllLevels()) {
+             this.prepareLevels(worldserver.getChunkSource().chunkMap.progressListener, worldserver);
+             //worldserver.entityManager.tick(); // SPIGOT-6526: Load pending entities so they are available to the API // Paper - rewrite chunk system, not required to "tick" anything
+             this.server.getPluginManager().callEvent(new org.bukkit.event.world.WorldLoadEvent(worldserver.getWorld()));
+@@ -613,11 +628,11 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+         // Paper start - Handle collideRule team for player collision toggle
+         final ServerScoreboard scoreboard = this.getScoreboard();
+         final java.util.Collection<String> toRemove = scoreboard.getPlayerTeams().stream().filter(team -> team.getName().startsWith("collideRule_")).map(net.minecraft.world.scores.PlayerTeam::getName).collect(java.util.stream.Collectors.toList());
+-        for (String teamName : toRemove) {
++        for(String teamName : toRemove) {
+             scoreboard.removePlayerTeam(scoreboard.getPlayerTeam(teamName)); // Clean up after ourselves
+         }
+ 
+-        if (!io.papermc.paper.configuration.GlobalConfiguration.get().collisions.enablePlayerCollisions) {
++        if(!io.papermc.paper.configuration.GlobalConfiguration.get().collisions.enablePlayerCollisions) {
+             this.getPlayerList().collideRuleTeamName = org.apache.commons.lang3.StringUtils.left("collideRule_" + java.util.concurrent.ThreadLocalRandom.current().nextInt(), 16);
+             net.minecraft.world.scores.PlayerTeam collideTeam = scoreboard.addPlayerTeam(this.getPlayerList().collideRuleTeamName);
+             collideTeam.setSeeFriendlyInvisibles(false); // Because we want to mimic them not being on a team at all
+@@ -752,26 +767,26 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+         // CraftBukkit end
+         if (worldserver.getWorld().getKeepSpawnInMemory()) { // Paper
+ 
+-        MinecraftServer.LOGGER.info("Preparing start region for dimension {}", worldserver.dimension().location());
+-        BlockPos blockposition = worldserver.getSharedSpawnPos();
++            MinecraftServer.LOGGER.info("Preparing start region for dimension {}", worldserver.dimension().location());
++            BlockPos blockposition = worldserver.getSharedSpawnPos();
+ 
+-        worldloadlistener.updateSpawnPos(new ChunkPos(blockposition));
+-        //ChunkProviderServer chunkproviderserver = worldserver.getChunkProvider(); // Paper - move up
++            worldloadlistener.updateSpawnPos(new ChunkPos(blockposition));
++            //ChunkProviderServer chunkproviderserver = worldserver.getChunkProvider(); // Paper - move up
+ 
+-        this.nextTickTime = Util.getMillis();
+-        // Paper start - configurable spawn reason
+-        int radiusBlocks = worldserver.paperConfig().spawn.keepSpawnLoadedRange * 16;
+-        int radiusChunks = radiusBlocks / 16 + ((radiusBlocks & 15) != 0 ? 1 : 0);
+-        int totalChunks = ((radiusChunks) * 2 + 1);
+-        totalChunks *= totalChunks;
+-        worldloadlistener.setChunkRadius(radiusBlocks / 16);
+-
+-        worldserver.addTicketsForSpawn(radiusBlocks, blockposition);
+-        // Paper end
++            this.nextTickTime = Util.getMillis();
++            // Paper start - configurable spawn reason
++            int radiusBlocks = worldserver.paperConfig().spawn.keepSpawnLoadedRange * 16;
++            int radiusChunks = radiusBlocks / 16 + ((radiusBlocks & 15) != 0 ? 1 : 0);
++            int totalChunks = ((radiusChunks) * 2 + 1);
++            totalChunks *= totalChunks;
++            worldloadlistener.setChunkRadius(radiusBlocks / 16);
++
++            worldserver.addTicketsForSpawn(radiusBlocks, blockposition);
++            // Paper end
+ 
+-        // this.nextTickTime = SystemUtils.getMillis() + 10L;
+-        this.executeModerately();
+-        // Iterator iterator = this.levels.values().iterator();
++            // this.nextTickTime = SystemUtils.getMillis() + 10L;
++            this.executeModerately();
++            // Iterator iterator = this.levels.values().iterator();
+         }
+ 
+         if (true) {
+@@ -1121,7 +1136,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+                     long j = i / 50L;
+ 
+                     if (this.server.getWarnOnOverload()) // CraftBukkit
+-                    MinecraftServer.LOGGER.warn("Can't keep up! Is the server overloaded? Running {}ms or {} ticks behind", i, j);
++                        MinecraftServer.LOGGER.warn("Can't keep up! Is the server overloaded? Running {}ms or {} ticks behind", i, j);
+                     this.nextTickTime += j * 50L;
+                     this.lastOverloadWarning = this.nextTickTime;
+                 }
+@@ -2639,7 +2654,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+     }
+ 
+     public final java.util.concurrent.ExecutorService chatExecutor = java.util.concurrent.Executors.newCachedThreadPool(
+-            new com.google.common.util.concurrent.ThreadFactoryBuilder().setDaemon(true).setNameFormat("Async Chat Thread - #%d").setUncaughtExceptionHandler(new net.minecraft.DefaultUncaughtExceptionHandlerWithName(net.minecraft.server.MinecraftServer.LOGGER)).build()); // Paper
++        new com.google.common.util.concurrent.ThreadFactoryBuilder().setDaemon(true).setNameFormat("Async Chat Thread - #%d").setUncaughtExceptionHandler(new net.minecraft.DefaultUncaughtExceptionHandlerWithName(net.minecraft.server.MinecraftServer.LOGGER)).build()); // Paper
+ 
+     public ChatDecorator getChatDecorator() {
+         // Paper start - moved to ChatPreviewProcessor
+diff --git a/src/main/java/net/minecraft/server/level/ServerChunkCache.java b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
+index 17b6925b46f8386dcfc561483693de516465ec12..ebba74b64206722b3514797ef512ee591b4a3d60 100644
+--- a/src/main/java/net/minecraft/server/level/ServerChunkCache.java
++++ b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
+@@ -167,7 +167,11 @@ public class ServerChunkCache extends ChunkSource {
+     public final io.papermc.paper.util.maplist.IteratorSafeOrderedReferenceSet<LevelChunk> entityTickingChunks = new io.papermc.paper.util.maplist.IteratorSafeOrderedReferenceSet<>(4096, 0.75f, 4096, 0.15, true);
+     // Paper end
+ 
+-    public ServerChunkCache(ServerLevel world, LevelStorageSource.LevelStorageAccess session, DataFixer dataFixer, StructureTemplateManager structureTemplateManager, Executor workerExecutor, ChunkGenerator chunkGenerator, int viewDistance, int simulationDistance, boolean dsync, ChunkProgressListener worldGenerationProgressListener, ChunkStatusUpdateListener chunkStatusChangeListener, Supplier<DimensionDataStorage> persistentStateManagerFactory) {
++    // ASWM START
++    public final com.infernalsuite.aswm.level.SlimeBootstrap bootstrap;
++    public ServerChunkCache(com.infernalsuite.aswm.level.SlimeBootstrap bootstrap, ServerLevel world, LevelStorageSource.LevelStorageAccess session, DataFixer dataFixer, StructureTemplateManager structureTemplateManager, Executor workerExecutor, ChunkGenerator chunkGenerator, int viewDistance, int simulationDistance, boolean dsync, ChunkProgressListener worldGenerationProgressListener, ChunkStatusUpdateListener chunkStatusChangeListener, Supplier<DimensionDataStorage> persistentStateManagerFactory) { // ASWM
++        this.bootstrap = bootstrap;
++        // ASWM end
+         this.level = world;
+         this.mainThreadProcessor = new ServerChunkCache.MainThreadExecutor(world);
+         this.mainThread = Thread.currentThread();
+@@ -296,7 +300,7 @@ public class ServerChunkCache extends ChunkSource {
+                 // Paper end
+                 com.destroystokyo.paper.io.SyncLoadFinder.logSyncLoad(this.level, x1, z1); // Paper - sync load info
+                 this.level.timings.syncChunkLoad.startTiming(); // Paper
+-            chunkproviderserver_b.managedBlock(completablefuture::isDone);
++                chunkproviderserver_b.managedBlock(completablefuture::isDone);
+                 io.papermc.paper.chunk.system.scheduling.ChunkTaskScheduler.popChunkWait(); // Paper - async chunk debug  // Paper - rewrite chunk system
+                 this.level.timings.syncChunkLoad.stopTiming(); // Paper
+             } // Paper
+@@ -448,7 +452,7 @@ public class ServerChunkCache extends ChunkSource {
+     public void save(boolean flush) {
+         this.runDistanceManagerUpdates();
+         try (co.aikar.timings.Timing timed = level.timings.chunkSaveData.startTiming()) { // Paper - Timings
+-        this.chunkMap.saveAllChunks(flush);
++            this.chunkMap.saveAllChunks(flush);
+         } // Paper - Timings
+     }
+ 
+@@ -614,47 +618,47 @@ public class ServerChunkCache extends ChunkSource {
+                 iterator1 = shuffled.iterator();
+             }
+             try {
+-            // Paper end - optimise chunk tick iteration
+-            while (iterator1.hasNext()) {
+-                LevelChunk chunk1 = iterator1.next(); // Paper - optimise chunk tick iteration
+-                ChunkPos chunkcoordintpair = chunk1.getPos();
++                // Paper end - optimise chunk tick iteration
++                while (iterator1.hasNext()) {
++                    LevelChunk chunk1 = iterator1.next(); // Paper - optimise chunk tick iteration
++                    ChunkPos chunkcoordintpair = chunk1.getPos();
+ 
+-                // Paper start - optimise chunk tick iteration
+-                com.destroystokyo.paper.util.maplist.ReferenceList<ServerPlayer> playersNearby
+-                    = nearbyPlayers.getPlayers(chunkcoordintpair, io.papermc.paper.util.player.NearbyPlayers.NearbyMapType.SPAWN_RANGE);
+-                if (playersNearby == null) {
+-                    continue;
+-                }
+-                Object[] rawData = playersNearby.getRawData();
+-                boolean spawn = false;
+-                boolean tick = false;
+-                for (int itr = 0, len = playersNearby.size(); itr < len; ++itr) {
+-                    ServerPlayer player = (ServerPlayer)rawData[itr];
+-                    if (player.isSpectator()) {
++                    // Paper start - optimise chunk tick iteration
++                    com.destroystokyo.paper.util.maplist.ReferenceList<ServerPlayer> playersNearby
++                        = nearbyPlayers.getPlayers(chunkcoordintpair, io.papermc.paper.util.player.NearbyPlayers.NearbyMapType.SPAWN_RANGE);
++                    if (playersNearby == null) {
+                         continue;
+                     }
++                    Object[] rawData = playersNearby.getRawData();
++                    boolean spawn = false;
++                    boolean tick = false;
++                    for (int itr = 0, len = playersNearby.size(); itr < len; ++itr) {
++                        ServerPlayer player = (ServerPlayer)rawData[itr];
++                        if (player.isSpectator()) {
++                            continue;
++                        }
+ 
+-                    double distance = ChunkMap.euclideanDistanceSquared(chunkcoordintpair, player);
+-                    spawn |= player.lastEntitySpawnRadiusSquared >= distance;
+-                    tick |= ((double)io.papermc.paper.util.player.NearbyPlayers.SPAWN_RANGE_VIEW_DISTANCE_BLOCKS) * ((double)io.papermc.paper.util.player.NearbyPlayers.SPAWN_RANGE_VIEW_DISTANCE_BLOCKS) >= distance;
+-                    if (spawn & tick) {
+-                        break;
+-                    }
+-                }
+-                // Paper end - optimise chunk tick iteration
+-                if (tick && chunk1.chunkStatus.isOrAfter(net.minecraft.server.level.FullChunkStatus.ENTITY_TICKING)) { // Paper - optimise chunk tick iteration
+-                    chunk1.incrementInhabitedTime(j);
+-                    if (spawn && flag2 && (this.spawnEnemies || this.spawnFriendlies) && this.level.getWorldBorder().isWithinBounds(chunkcoordintpair)) { // Spigot // Paper - optimise chunk tick iteration
+-                        NaturalSpawner.spawnForChunk(this.level, chunk1, spawnercreature_d, this.spawnFriendlies, this.spawnEnemies, flag1);
++                        double distance = ChunkMap.euclideanDistanceSquared(chunkcoordintpair, player);
++                        spawn |= player.lastEntitySpawnRadiusSquared >= distance;
++                        tick |= ((double)io.papermc.paper.util.player.NearbyPlayers.SPAWN_RANGE_VIEW_DISTANCE_BLOCKS) * ((double)io.papermc.paper.util.player.NearbyPlayers.SPAWN_RANGE_VIEW_DISTANCE_BLOCKS) >= distance;
++                        if (spawn & tick) {
++                            break;
++                        }
+                     }
++                    // Paper end - optimise chunk tick iteration
++                    if (tick && chunk1.chunkStatus.isOrAfter(net.minecraft.server.level.FullChunkStatus.ENTITY_TICKING)) { // Paper - optimise chunk tick iteration
++                        chunk1.incrementInhabitedTime(j);
++                        if (spawn && flag2 && (this.spawnEnemies || this.spawnFriendlies) && this.level.getWorldBorder().isWithinBounds(chunkcoordintpair)) { // Spigot // Paper - optimise chunk tick iteration
++                            NaturalSpawner.spawnForChunk(this.level, chunk1, spawnercreature_d, this.spawnFriendlies, this.spawnEnemies, flag1);
++                        }
+ 
+-                    if (true || this.level.shouldTickBlocksAt(chunkcoordintpair.toLong())) { // Paper - optimise chunk tick iteration
+-                        this.level.tickChunk(chunk1, k);
+-                        if ((chunksTicked++ & 1) == 0) net.minecraft.server.MinecraftServer.getServer().executeMidTickTasks(); // Paper
++                        if (true || this.level.shouldTickBlocksAt(chunkcoordintpair.toLong())) { // Paper - optimise chunk tick iteration
++                            this.level.tickChunk(chunk1, k);
++                            if ((chunksTicked++ & 1) == 0) net.minecraft.server.MinecraftServer.getServer().executeMidTickTasks(); // Paper
++                        }
+                     }
+                 }
+-            }
+-            // Paper start - optimise chunk tick iteration
++                // Paper start - optimise chunk tick iteration
+             } finally {
+                 if (iterator1 instanceof io.papermc.paper.util.maplist.IteratorSafeOrderedReferenceSet.Iterator safeIterator) {
+                     safeIterator.finishedIterating();
+@@ -665,13 +669,13 @@ public class ServerChunkCache extends ChunkSource {
+             gameprofilerfiller.popPush("customSpawners");
+             if (flag2) {
+                 try (co.aikar.timings.Timing ignored = this.level.timings.miscMobSpawning.startTiming()) { // Paper - timings
+-                this.level.tickCustomSpawners(this.spawnEnemies, this.spawnFriendlies);
++                    this.level.tickCustomSpawners(this.spawnEnemies, this.spawnFriendlies);
+                 } // Paper - timings
+             }
+ 
+             gameprofilerfiller.popPush("broadcast");
+             // Paper - optimise chunk tick iteration
+-                this.level.timings.broadcastChunkUpdates.startTiming(); // Paper - timing
++            this.level.timings.broadcastChunkUpdates.startTiming(); // Paper - timing
+             // Paper start - optimise chunk tick iteration
+             if (!this.chunkMap.needsChangeBroadcasting.isEmpty()) {
+                 it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet<ChunkHolder> copy = this.chunkMap.needsChangeBroadcasting.clone();
+@@ -685,7 +689,7 @@ public class ServerChunkCache extends ChunkSource {
+                 }
+             }
+             // Paper end - optimise chunk tick iteration
+-                this.level.timings.broadcastChunkUpdates.stopTiming(); // Paper - timing
++            this.level.timings.broadcastChunkUpdates.stopTiming(); // Paper - timing
+             // Paper - optimise chunk tick iteration
+             gameprofilerfiller.pop();
+             gameprofilerfiller.pop();
+diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
+index 17610196db7a1c6feb2cf74a02479a8691aa323f..3f26fdcc5cbf0a684ad724ab8c042d0053cc187e 100644
+--- a/src/main/java/net/minecraft/server/level/ServerLevel.java
++++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
+@@ -317,7 +317,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+         java.util.function.Consumer<net.minecraft.world.level.chunk.ChunkAccess> consumer = (net.minecraft.world.level.chunk.ChunkAccess chunk) -> {
+             if (chunk != null) {
+                 synchronized (ret) { // Folia - region threading - make callback thread-safe TODO rebase
+-                ret.add(chunk);
++                    ret.add(chunk);
+                 } // Folia - region threading - make callback thread-safe TODO rebase
+                 chunkProvider.addTicketAtLevel(TicketType.FUTURE_AWAIT, chunk.getPos(), ticketLevel, holderIdentifier);
+             }
+@@ -687,6 +687,14 @@ public class ServerLevel extends Level implements WorldGenLevel {
+ 
+     // Add env and gen to constructor, IWorldDataServer -> WorldDataServer
+     public ServerLevel(MinecraftServer minecraftserver, Executor executor, LevelStorageSource.LevelStorageAccess convertable_conversionsession, PrimaryLevelData iworlddataserver, ResourceKey<Level> resourcekey, LevelStem worlddimension, ChunkProgressListener worldloadlistener, boolean flag, long i, List<CustomSpawner> list, boolean flag1, @Nullable RandomSequences randomsequences, org.bukkit.World.Environment env, org.bukkit.generator.ChunkGenerator gen, org.bukkit.generator.BiomeProvider biomeProvider) {
++        // ASWM START
++        this(null, minecraftserver, executor, convertable_conversionsession, iworlddataserver, resourcekey, worlddimension, worldloadlistener, flag, randomsequences, i, list, flag1, env, gen, biomeProvider);
++    }
++
++    public com.infernalsuite.aswm.level.SlimeInMemoryWorld slimeInstance;
++
++    public ServerLevel(com.infernalsuite.aswm.level.SlimeBootstrap bootstrap, MinecraftServer minecraftserver, Executor executor, LevelStorageSource.LevelStorageAccess convertable_conversionsession, PrimaryLevelData iworlddataserver, ResourceKey<Level> resourcekey, LevelStem worlddimension, ChunkProgressListener worldloadlistener, boolean flag, @Nullable RandomSequences randomsequences, long i, List<CustomSpawner> list, boolean flag1, org.bukkit.World.Environment env, org.bukkit.generator.ChunkGenerator gen, org.bukkit.generator.BiomeProvider biomeProvider) {
++        // ASWM END
+         // IRegistryCustom.Dimension iregistrycustom_dimension = minecraftserver.registryAccess(); // CraftBukkit - decompile error
+         // Holder holder = worlddimension.type(); // CraftBukkit - decompile error
+ 
+@@ -725,6 +733,12 @@ public class ServerLevel extends Level implements WorldGenLevel {
+             chunkgenerator = new org.bukkit.craftbukkit.generator.CustomChunkGenerator(this, chunkgenerator, gen);
+         }
+         // CraftBukkit end
++        // ASWM START
++        ChunkGenerator result = this.getGenerator(bootstrap);
++        if (result != null) {
++            chunkgenerator = result;
++        }
++        // ASWM END
+         boolean flag2 = minecraftserver.forceSynchronousWrites();
+         DataFixer datafixer = minecraftserver.getFixerUpper();
+         this.entityStorage = new EntityRegionFileStorage(convertable_conversionsession.getDimensionPath(resourcekey).resolve("entities"), flag2); // Paper - rewrite chunk system  //EntityPersistentStorage<Entity> entitypersistentstorage = new EntityStorage(this, convertable_conversionsession.getDimensionPath(resourcekey).resolve("entities"), datafixer, flag2, minecraftserver);
+@@ -736,7 +750,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+         //PersistentEntitySectionManager persistententitysectionmanager = this.entityManager; // Paper - rewrite chunk system
+ 
+         //Objects.requireNonNull(this.entityManager); // Paper - rewrite chunk system
+-        this.chunkSource = new ServerChunkCache(this, convertable_conversionsession, datafixer, structuretemplatemanager, executor, chunkgenerator, j, k, flag2, worldloadlistener, null, () -> { // Paper - rewrite chunk system
++        this.chunkSource = new ServerChunkCache(bootstrap, this, convertable_conversionsession, datafixer, structuretemplatemanager, executor, chunkgenerator, j, k, flag2, worldloadlistener, null, () -> { // Paper - rewrite chunk system // ASWM
+             return minecraftserver.overworld().getDataStorage();
+         });
+         this.chunkSource.getGeneratorState().ensureStructuresGenerated();
+@@ -784,6 +798,12 @@ public class ServerLevel extends Level implements WorldGenLevel {
+         this.dragonFight = enderDragonFight;
+     }
+ 
++    // ASWM START
++    public ChunkGenerator getGenerator(com.infernalsuite.aswm.level.SlimeBootstrap bootstrap) {
++        return null;
++    }
++    // ASWM END
++
+     public void setWeatherParameters(int clearDuration, int rainDuration, boolean raining, boolean thundering) {
+         this.serverLevelData.setClearWeatherTime(clearDuration);
+         this.serverLevelData.setRainTime(rainDuration);
+@@ -1006,12 +1026,12 @@ public class ServerLevel extends Level implements WorldGenLevel {
+         gameprofilerfiller.popPush("iceandsnow");
+ 
+         if (!this.paperConfig().environment.disableIceAndSnow) { // Paper
+-        for (int l = 0; l < randomTickSpeed; ++l) {
+-            if (this.random.nextInt(48) == 0) {
+-                this.getRandomBlockPosition(j, 0, k, 15, blockposition);
+-                this.tickIceAndSnow(flag, blockposition, chunk);
++            for (int l = 0; l < randomTickSpeed; ++l) {
++                if (this.random.nextInt(48) == 0) {
++                    this.getRandomBlockPosition(j, 0, k, 15, blockposition);
++                    this.tickIceAndSnow(flag, blockposition, chunk);
++                }
+             }
+-        }
+         } // Paper
+ 
+         // Paper start - optimise random block ticking
+@@ -1357,9 +1377,9 @@ public class ServerLevel extends Level implements WorldGenLevel {
+                 currentlyTickingEntity.lazySet(entity);
+             }
+             // Paper end - log detailed entity tick information
+-        ++TimingHistory.entityTicks; // Paper - timings
+-        // Spigot start
+-        co.aikar.timings.Timing timer; // Paper
++            ++TimingHistory.entityTicks; // Paper - timings
++            // Spigot start
++            co.aikar.timings.Timing timer; // Paper
+         /*if (!org.spigotmc.ActivationRange.checkIfActive(entity)) { // Paper - comment out - EAR 2, reimplement below
+             entity.tickCount++;
+             timer = entity.getType().inactiveTickTimer.startTiming(); try { // Paper - timings
+@@ -1367,36 +1387,36 @@ public class ServerLevel extends Level implements WorldGenLevel {
+             } finally { timer.stopTiming(); } // Paper
+             return;
+         }*/ // Paper - comment out EAR 2
+-        // Spigot end
+-        // Paper start- timings
+-        final boolean isActive = org.spigotmc.ActivationRange.checkIfActive(entity);
+-        timer = isActive ? entity.getType().tickTimer.startTiming() : entity.getType().inactiveTickTimer.startTiming(); // Paper
+-        try {
+-        // Paper end - timings
+-        entity.setOldPosAndRot();
+-        ProfilerFiller gameprofilerfiller = this.getProfiler();
++            // Spigot end
++            // Paper start- timings
++            final boolean isActive = org.spigotmc.ActivationRange.checkIfActive(entity);
++            timer = isActive ? entity.getType().tickTimer.startTiming() : entity.getType().inactiveTickTimer.startTiming(); // Paper
++            try {
++                // Paper end - timings
++                entity.setOldPosAndRot();
++                ProfilerFiller gameprofilerfiller = this.getProfiler();
+ 
+-        ++entity.tickCount;
+-        this.getProfiler().push(() -> {
+-            return BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString();
+-        });
+-        gameprofilerfiller.incrementCounter("tickNonPassenger");
+-        if (isActive) { // Paper - EAR 2
+-            TimingHistory.activatedEntityTicks++;
+-        entity.tick();
+-        entity.postTick(); // CraftBukkit
+-        } else { entity.inactiveTick(); } // Paper - EAR 2
+-        this.getProfiler().pop();
+-        } finally { timer.stopTiming(); } // Paper - timings
+-        Iterator iterator = entity.getPassengers().iterator();
++                ++entity.tickCount;
++                this.getProfiler().push(() -> {
++                    return BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString();
++                });
++                gameprofilerfiller.incrementCounter("tickNonPassenger");
++                if (isActive) { // Paper - EAR 2
++                    TimingHistory.activatedEntityTicks++;
++                    entity.tick();
++                    entity.postTick(); // CraftBukkit
++                } else { entity.inactiveTick(); } // Paper - EAR 2
++                this.getProfiler().pop();
++            } finally { timer.stopTiming(); } // Paper - timings
++            Iterator iterator = entity.getPassengers().iterator();
+ 
+-        while (iterator.hasNext()) {
+-            Entity entity1 = (Entity) iterator.next();
++            while (iterator.hasNext()) {
++                Entity entity1 = (Entity) iterator.next();
+ 
+-            this.tickPassenger(entity, entity1);
+-        }
+-        // } finally { timer.stopTiming(); } // Paper - timings - move up
+-        // Paper start - log detailed entity tick information
++                this.tickPassenger(entity, entity1);
++            }
++            // } finally { timer.stopTiming(); } // Paper - timings - move up
++            // Paper start - log detailed entity tick information
+         } finally {
+             if (currentlyTickingEntity.get() == entity) {
+                 currentlyTickingEntity.lazySet(null);
+@@ -1412,36 +1432,36 @@ public class ServerLevel extends Level implements WorldGenLevel {
+                 final boolean isActive = org.spigotmc.ActivationRange.checkIfActive(passenger);
+                 co.aikar.timings.Timing timer = isActive ? passenger.getType().passengerTickTimer.startTiming() : passenger.getType().passengerInactiveTickTimer.startTiming(); // Paper
+                 try {
+-                // Paper end
+-                passenger.setOldPosAndRot();
+-                ++passenger.tickCount;
+-                ProfilerFiller gameprofilerfiller = this.getProfiler();
+-
+-                gameprofilerfiller.push(() -> {
+-                    return BuiltInRegistries.ENTITY_TYPE.getKey(passenger.getType()).toString();
+-                });
+-                gameprofilerfiller.incrementCounter("tickPassenger");
+-                // Paper start - EAR 2
+-                if (isActive) {
+-                passenger.rideTick();
+-                passenger.postTick(); // CraftBukkit
+-                } else {
+-                    passenger.setDeltaMovement(Vec3.ZERO);
+-                    passenger.inactiveTick();
+-                    // copied from inside of if (isPassenger()) of passengerTick, but that ifPassenger is unnecessary
+-                    vehicle.positionRider(passenger);
+-                }
+-                // Paper end - EAR 2
+-                gameprofilerfiller.pop();
+-                Iterator iterator = passenger.getPassengers().iterator();
++                    // Paper end
++                    passenger.setOldPosAndRot();
++                    ++passenger.tickCount;
++                    ProfilerFiller gameprofilerfiller = this.getProfiler();
++
++                    gameprofilerfiller.push(() -> {
++                        return BuiltInRegistries.ENTITY_TYPE.getKey(passenger.getType()).toString();
++                    });
++                    gameprofilerfiller.incrementCounter("tickPassenger");
++                    // Paper start - EAR 2
++                    if (isActive) {
++                        passenger.rideTick();
++                        passenger.postTick(); // CraftBukkit
++                    } else {
++                        passenger.setDeltaMovement(Vec3.ZERO);
++                        passenger.inactiveTick();
++                        // copied from inside of if (isPassenger()) of passengerTick, but that ifPassenger is unnecessary
++                        vehicle.positionRider(passenger);
++                    }
++                    // Paper end - EAR 2
++                    gameprofilerfiller.pop();
++                    Iterator iterator = passenger.getPassengers().iterator();
+ 
+-                while (iterator.hasNext()) {
+-                    Entity entity2 = (Entity) iterator.next();
++                    while (iterator.hasNext()) {
++                        Entity entity2 = (Entity) iterator.next();
+ 
+-                    this.tickPassenger(passenger, entity2);
+-                }
++                        this.tickPassenger(passenger, entity2);
++                    }
+ 
+-            } finally { timer.stopTiming(); }// Paper - EAR2 timings
++                } finally { timer.stopTiming(); }// Paper - EAR2 timings
+             }
+         } else {
+             passenger.stopRiding();
+@@ -1495,18 +1515,18 @@ public class ServerLevel extends Level implements WorldGenLevel {
+         if (!savingDisabled) {
+             org.bukkit.Bukkit.getPluginManager().callEvent(new org.bukkit.event.world.WorldSaveEvent(getWorld())); // CraftBukkit
+             try (co.aikar.timings.Timing ignored = timings.worldSave.startTiming()) { // Paper
+-            if (progressListener != null) {
+-                progressListener.progressStartNoAbort(Component.translatable("menu.savingLevel"));
+-            }
++                if (progressListener != null) {
++                    progressListener.progressStartNoAbort(Component.translatable("menu.savingLevel"));
++                }
+ 
+-            this.saveLevelData();
+-            if (progressListener != null) {
+-                progressListener.progressStage(Component.translatable("menu.savingChunks"));
+-            }
++                this.saveLevelData();
++                if (progressListener != null) {
++                    progressListener.progressStage(Component.translatable("menu.savingChunks"));
++                }
+ 
+                 timings.worldSaveChunks.startTiming(); // Paper
+-            if (!close) chunkproviderserver.save(flush); // Paper - rewrite chunk system
+-            if (close) chunkproviderserver.close(true); // Paper - rewrite chunk system
++                if (!close) chunkproviderserver.save(flush); // Paper - rewrite chunk system
++                if (close) chunkproviderserver.close(true); // Paper - rewrite chunk system
+                 timings.worldSaveChunks.stopTiming(); // Paper
+             }// Paper
+             // Paper - rewrite chunk system - entity saving moved into ChunkHolder
+@@ -1834,47 +1854,47 @@ public class ServerLevel extends Level implements WorldGenLevel {
+ 
+         this.getChunkSource().blockChanged(pos);
+         if(this.paperConfig().misc.updatePathfindingOnBlockUpdate) { // Paper - option to disable pathfinding updates
+-        VoxelShape voxelshape = oldState.getCollisionShape(this, pos);
+-        VoxelShape voxelshape1 = newState.getCollisionShape(this, pos);
++            VoxelShape voxelshape = oldState.getCollisionShape(this, pos);
++            VoxelShape voxelshape1 = newState.getCollisionShape(this, pos);
+ 
+-        if (Shapes.joinIsNotEmpty(voxelshape, voxelshape1, BooleanOp.NOT_SAME)) {
+-            List<PathNavigation> list = new ObjectArrayList();
+-            Iterator iterator = this.navigatingMobs.iterator();
++            if (Shapes.joinIsNotEmpty(voxelshape, voxelshape1, BooleanOp.NOT_SAME)) {
++                List<PathNavigation> list = new ObjectArrayList();
++                Iterator iterator = this.navigatingMobs.iterator();
+ 
+-            while (iterator.hasNext()) {
+-                // CraftBukkit start - fix SPIGOT-6362
+-                Mob entityinsentient;
+-                try {
+-                    entityinsentient = (Mob) iterator.next();
+-                } catch (java.util.ConcurrentModificationException ex) {
+-                    // This can happen because the pathfinder update below may trigger a chunk load, which in turn may cause more navigators to register
+-                    // In this case we just run the update again across all the iterators as the chunk will then be loaded
+-                    // As this is a relative edge case it is much faster than copying navigators (on either read or write)
+-                    this.sendBlockUpdated(pos, oldState, newState, flags);
+-                    return;
+-                }
+-                // CraftBukkit end
+-                PathNavigation navigationabstract = entityinsentient.getNavigation();
++                while (iterator.hasNext()) {
++                    // CraftBukkit start - fix SPIGOT-6362
++                    Mob entityinsentient;
++                    try {
++                        entityinsentient = (Mob) iterator.next();
++                    } catch (java.util.ConcurrentModificationException ex) {
++                        // This can happen because the pathfinder update below may trigger a chunk load, which in turn may cause more navigators to register
++                        // In this case we just run the update again across all the iterators as the chunk will then be loaded
++                        // As this is a relative edge case it is much faster than copying navigators (on either read or write)
++                        this.sendBlockUpdated(pos, oldState, newState, flags);
++                        return;
++                    }
++                    // CraftBukkit end
++                    PathNavigation navigationabstract = entityinsentient.getNavigation();
+ 
+-                if (navigationabstract.shouldRecomputePath(pos)) {
+-                    list.add(navigationabstract);
++                    if (navigationabstract.shouldRecomputePath(pos)) {
++                        list.add(navigationabstract);
++                    }
+                 }
+-            }
+ 
+-            try {
+-                this.isUpdatingNavigations = true;
+-                iterator = list.iterator();
++                try {
++                    this.isUpdatingNavigations = true;
++                    iterator = list.iterator();
+ 
+-                while (iterator.hasNext()) {
+-                    PathNavigation navigationabstract1 = (PathNavigation) iterator.next();
++                    while (iterator.hasNext()) {
++                        PathNavigation navigationabstract1 = (PathNavigation) iterator.next();
+ 
+-                    navigationabstract1.recomputePath();
++                        navigationabstract1.recomputePath();
++                    }
++                } finally {
++                    this.isUpdatingNavigations = false;
+                 }
+-            } finally {
+-                this.isUpdatingNavigations = false;
+-            }
+ 
+-        }
++            }
+         } // Paper
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/level/chunk/PalettedContainer.java b/src/main/java/net/minecraft/world/level/chunk/PalettedContainer.java
+index 16fbc633de3a1d9e5e8c65ae107397a6f0e50811..d04c0147a87d4b31e6b5b090abeec316d235f1bd 100644
+--- a/src/main/java/net/minecraft/world/level/chunk/PalettedContainer.java
++++ b/src/main/java/net/minecraft/world/level/chunk/PalettedContainer.java
+@@ -31,7 +31,8 @@ public class PalettedContainer<T> implements PaletteResize<T>, PalettedContainer
+     };
+     public final IdMap<T> registry;
+     private final T @org.jetbrains.annotations.Nullable [] presetValues; // Paper - Anti-Xray - Add preset values
+-    private volatile PalettedContainer.Data<T> data;
++
++    public volatile PalettedContainer.Data<T> data; // ASWM
+     private final PalettedContainer.Strategy strategy;
+     // private final ThreadingDetector threadingDetector = new ThreadingDetector("PalettedContainer"); // Paper - unused
+ 
+@@ -399,7 +400,7 @@ public class PalettedContainer<T> implements PaletteResize<T>, PalettedContainer
+         void accept(T object, int count);
+     }
+ 
+-    static record Data<T>(PalettedContainer.Configuration<T> configuration, BitStorage storage, Palette<T> palette) {
++    public static record Data<T>(PalettedContainer.Configuration<T> configuration, BitStorage storage, Palette<T> palette) { // ASWM
+         public void copyFrom(Palette<T> palette, BitStorage storage) {
+             for(int i = 0; i < storage.getSize(); ++i) {
+                 T object = palette.valueFor(storage.get(i));
+diff --git a/src/main/java/net/minecraft/world/level/chunk/storage/ChunkSerializer.java b/src/main/java/net/minecraft/world/level/chunk/storage/ChunkSerializer.java
+index 1379084a80ce25644f13736b4a5ee5fabbd9ec1f..464e1c7970af5aa06ef563b823d7fd8b2776f8f5 100644
+--- a/src/main/java/net/minecraft/world/level/chunk/storage/ChunkSerializer.java
++++ b/src/main/java/net/minecraft/world/level/chunk/storage/ChunkSerializer.java
+@@ -1,6 +1,9 @@
+ package net.minecraft.world.level.chunk.storage;
+ 
+ import com.google.common.collect.Maps;
++import com.infernalsuite.aswm.api.world.SlimeWorld;
++import com.infernalsuite.aswm.level.NMSSlimeWorld;
++import com.infernalsuite.aswm.level.SlimeLevelInstance;
+ import com.mojang.logging.LogUtils;
+ import com.mojang.serialization.Codec;
+ import com.mojang.serialization.DataResult;
+@@ -134,6 +137,7 @@ public class ChunkSerializer {
+     public static ProtoChunk read(ServerLevel world, PoiManager poiStorage, ChunkPos chunkPos, CompoundTag nbt) {
+         // Paper start - add variant for async calls
+         InProgressChunkHolder holder = loadChunk(world, poiStorage, chunkPos, nbt, true);
++
+         return holder.protoChunk;
+     }
+     // Paper start
+@@ -229,36 +233,40 @@ public class ChunkSerializer {
+             // Paper start - rewrite the light engine
+             if (flag) {
+                 try {
+-                int y = sectionData.getByte("Y");
+-                // Paper end - rewrite the light engine
+-                if (flag3) {
+-                    // Paper start - rewrite the light engine
+-                    // this is where our diff is
+-                    blockNibbles[y - minSection] = new ca.spottedleaf.starlight.common.light.SWMRNibbleArray(sectionData.getByteArray("BlockLight").clone(), sectionData.getInt(BLOCKLIGHT_STATE_TAG)); // clone for data safety
+-                } else {
+-                    blockNibbles[y - minSection] = new ca.spottedleaf.starlight.common.light.SWMRNibbleArray(null, sectionData.getInt(BLOCKLIGHT_STATE_TAG));
++                    int y = sectionData.getByte("Y");
+                     // Paper end - rewrite the light engine
+-                }
++                    if (flag3) {
++                        // Paper start - rewrite the light engine
++                        // this is where our diff is
++                        blockNibbles[y - minSection] = new ca.spottedleaf.starlight.common.light.SWMRNibbleArray(sectionData.getByteArray("BlockLight").clone(), sectionData.getInt(BLOCKLIGHT_STATE_TAG)); // clone for data safety
++                    } else {
++                        blockNibbles[y - minSection] = new ca.spottedleaf.starlight.common.light.SWMRNibbleArray(null, sectionData.getInt(BLOCKLIGHT_STATE_TAG));
++                        // Paper end - rewrite the light engine
++                    }
+ 
+-                if (flag4) {
+-                    // Paper start - rewrite the light engine
+-                    // we store under the same key so mod programs editing nbt
+-                    // can still read the data, hopefully.
+-                    // however, for compatibility we store chunks as unlit so vanilla
+-                    // is forced to re-light them if it encounters our data. It's too much of a burden
+-                    // to try and maintain compatibility with a broken and inferior skylight management system.
+-                    skyNibbles[y - minSection] = new ca.spottedleaf.starlight.common.light.SWMRNibbleArray(sectionData.getByteArray("SkyLight").clone(), sectionData.getInt(SKYLIGHT_STATE_TAG)); // clone for data safety
+-                } else if (flag1) {
+-                    skyNibbles[y - minSection] = new ca.spottedleaf.starlight.common.light.SWMRNibbleArray(null, sectionData.getInt(SKYLIGHT_STATE_TAG));
+-                    // Paper end - rewrite the light engine
+-                }
++                    if (flag4) {
++                        // Paper start - rewrite the light engine
++                        // we store under the same key so mod programs editing nbt
++                        // can still read the data, hopefully.
++                        // however, for compatibility we store chunks as unlit so vanilla
++                        // is forced to re-light them if it encounters our data. It's too much of a burden
++                        // to try and maintain compatibility with a broken and inferior skylight management system.
++                        skyNibbles[y - minSection] = new ca.spottedleaf.starlight.common.light.SWMRNibbleArray(sectionData.getByteArray("SkyLight").clone(), sectionData.getInt(SKYLIGHT_STATE_TAG)); // clone for data safety
++                    } else if (flag1) {
++                        skyNibbles[y - minSection] = new ca.spottedleaf.starlight.common.light.SWMRNibbleArray(null, sectionData.getInt(SKYLIGHT_STATE_TAG));
++                        // Paper end - rewrite the light engine
++                    }
+ 
+-                // Paper start - rewrite the light engine
++                    // Paper start - rewrite the light engine
+                 } catch (Exception ex) {
+                     LOGGER.warn("Failed to load light data for chunk " + chunkPos + " in world '" + world.getWorld().getName() + "', light will be regenerated", ex);
+                     flag = false;
+                 }
+                 // Paper end - rewrite light engine
++
++                if(world instanceof SlimeLevelInstance) {
++                    poiStorage.checkConsistencyWithBlocks(SectionPos.of(chunkPos.getWorldPosition()), achunksection[j]);
++                }
+             }
+         }
+ 
+@@ -441,7 +449,7 @@ public class ChunkSerializer {
+         ChunkSerializer.LOGGER.error("Recoverable errors when loading section [" + chunkPos.x + ", " + y + ", " + chunkPos.z + "]: " + message);
+     }
+ 
+-    private static Codec<PalettedContainerRO<Holder<Biome>>> makeBiomeCodec(Registry<Biome> biomeRegistry) {
++    public static Codec<PalettedContainerRO<Holder<Biome>>> makeBiomeCodec(Registry<Biome> biomeRegistry) { // ASWM
+         return PalettedContainer.codecRO(biomeRegistry.asHolderIdMap(), biomeRegistry.holderByNameCodec(), PalettedContainer.Strategy.SECTION_BIOMES, biomeRegistry.getHolderOrThrow(Biomes.PLAINS));
+     }
+ 
+@@ -620,7 +628,7 @@ public class ChunkSerializer {
+             nbttagcompound.put(BLOCK_TICKS_TAG, asyncsavedata.blockTickList);
+             nbttagcompound.put(FLUID_TICKS_TAG, asyncsavedata.fluidTickList);
+         } else {
+-        ChunkSerializer.saveTicks(world, nbttagcompound, chunk.getTicksForSerialization());
++            ChunkSerializer.saveTicks(world, nbttagcompound, chunk.getTicksForSerialization());
+         }
+         // Paper end
+         nbttagcompound.put("PostProcessing", ChunkSerializer.packOffsets(chunk.getPostProcessing()));
