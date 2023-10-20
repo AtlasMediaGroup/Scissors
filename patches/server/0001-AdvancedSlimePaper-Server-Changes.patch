@@ -19,7 +19,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 diff --git a/src/main/java/com/infernalsuite/aswm/Converter.java b/src/main/java/com/infernalsuite/aswm/Converter.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..7d1753c0b7e89bbf0c245a0231b62773eca2779e
@@ -2814,3 +2813,10 @@ index 1379084a80ce25644f13736b4a5ee5fabbd9ec1f..464e1c7970af5aa06ef563b823d7fd8b
          }
          // Paper end
          nbttagcompound.put("PostProcessing", ChunkSerializer.packOffsets(chunk.getPostProcessing()));
+diff --git a/src/main/resources/META-INF/services/com.infernalsuite.aswm.api.SlimeNMSBridge b/src/main/resources/META-INF/services/com.infernalsuite.aswm.api.SlimeNMSBridge
+new file mode 100644
+index 0000000000000000000000000000000000000000..916b4d2edba2f2a8a0fc1fdb6ab6a57e2a16f938
+--- /dev/null
++++ b/src/main/resources/META-INF/services/com.infernalsuite.aswm.api.SlimeNMSBridge
+@@ -0,0 +1 @@
++com.infernalsuite.aswm.SlimeNMSBridgeImpl
