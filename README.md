@@ -15,7 +15,7 @@ local machine. You do not need to do this if you are compiling on macOS or Linux
 
 ## Links
 ### [Scissors Download](https://ci.plex.us.org/job/Scissors)
-### [Scissors Javadoc](https://javadoc.scissors.gg/1.20.1)
+### [Scissors Javadoc](https://javadoc.scissors.gg/1.20.2)
 ### [Scissors Announcements](https://totalfreedom.tf/forums/scissors-announcements.55)
 ### [Scissors General Discussion](https://totalfreedom.tf/forums/scissors-discussion.56/)
 
