@@ -1,9 +1,15 @@
 # Scissors [![Build Status](https://ci.plex.us.org/job/Scissors/job/slime%252F1.20.2/badge/icon)](https://ci.plex.us.org/job/Scissors/job/slime%252F1.20.2/)
 
 Scissors is a fork of Paper that aims to fix exploits possible in Creative Mode. Many of these exploits are ones that
-Paper's own team has either refused to fix or would have.  
+Paper's own team has either refused to fix or would have.
 
 All SWM patches/SWM API belongs to [AdvancedSlimePaper and InfernalSuite](https://github.com/InfernalSuite/AdvancedSlimePaper)
+
+Note: This will not compile on Windows by default. To make it compile, you need to go to the `aswm-api/src`
+and `aswm-core/src` files and replace the default paths with the **full path** to
+the `submodules/AdvancedSlimePaper/api` and `submodules/AdvancedSlimePaper/core` on your local machine. This does not
+need to be done on macOS or Linux. Example: `../submodules/AdvancedSlimePaper/api/src`
+becomes `C:/Users/telesphoreo/IdeaProjects/Scissors-slime-1.20.2/submodules/AdvancedSlimePaper/api/src`
 
 ## Links
 ### [Scissors Download](https://ci.plex.us.org/job/Scissors)

@@ -56,7 +56,7 @@ index a79461457ea19339f47572c70705d655ebc55276..321c6408bdaf7fb99d40e1130b2b687b
      standardInput = System.`in`
      workingDir = rootProject.layout.projectDirectory
 diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
-index 4b002e8b75d117b726b0de274a76d3596fce015b..a46d3f40642bbf249c2d24e689f474d07175ca09 100644
+index 4b002e8b75d117b726b0de274a76d3596fce015b..87fd35ad9c7364124286fa5e9ef1d4b7efa73990 100644
 --- a/src/main/java/com/destroystokyo/paper/Metrics.java
 +++ b/src/main/java/com/destroystokyo/paper/Metrics.java
 @@ -593,7 +593,7 @@ public class Metrics {
@@ -73,7 +73,7 @@ index 4b002e8b75d117b726b0de274a76d3596fce015b..a46d3f40642bbf249c2d24e689f474d0
                  if (implVersion != null) {
                      final String buildOrHash = implVersion.substring(implVersion.lastIndexOf('-') + 1);
 -                    paperVersion = "git-Paper-%s-%s".formatted(Bukkit.getServer().getMinecraftVersion(), buildOrHash);
-+                    paperVersion = "git-Scissors-%s-%s".formatted(Bukkit.getServer().getMinecraftVersion(), buildOrHash); // Scissors
++                    paperVersion = "git-ScissorsASWM-%s-%s".formatted(Bukkit.getServer().getMinecraftVersion(), buildOrHash); // Scissors
                  } else {
                      paperVersion = "unknown";
                  }
