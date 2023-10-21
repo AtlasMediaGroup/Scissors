@@ -50,3 +50,6 @@ Scissors-Server
 Scissors-API
 
 !gradle/wrapper/gradle-wrapper.jar
+
+aswm-api/src
+aswm-core/src
