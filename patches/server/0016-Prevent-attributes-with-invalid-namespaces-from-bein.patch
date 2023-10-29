@@ -6,7 +6,7 @@ Subject: [PATCH] Prevent attributes with invalid namespaces from being applied
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
-index 5bd581c1a82236359c810037333590d0d9741587..35d640654ec483b98eeddb4887107a07f93f57aa 100644
+index ed6e5060901c348c4f56a573c23e2000d8f2fb72..5cdf1e6fcdc9e2bd821f40ec9bf95cf03f03179a 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 @@ -46,6 +46,7 @@ import net.minecraft.nbt.NbtIo;
@@ -20,7 +20,7 @@ index 5bd581c1a82236359c810037333590d0d9741587..35d640654ec483b98eeddb4887107a07
 @@ -487,7 +488,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
              AttributeModifier attribMod = CraftAttributeInstance.convert(nmsModifier);
  
-             String attributeName = CraftAttributeMap.convertIfNeeded(entry.getString(ATTRIBUTES_IDENTIFIER.NBT)); // Paper
+             String attributeName = CraftAttributeMap.convertIfNeeded(entry.getString(CraftMetaItem.ATTRIBUTES_IDENTIFIER.NBT)); // Paper
 -            if (attributeName == null || attributeName.isEmpty()) {
 +            if (attributeName == null || attributeName.isEmpty() || attributeName.length() > 256 || !ResourceLocation.isValidResourceLocation(attributeName)) { // Scissors
                  continue;
