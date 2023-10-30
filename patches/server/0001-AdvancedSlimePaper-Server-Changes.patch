@@ -1948,7 +1948,7 @@ index 7e8dc9e8f381abfdcce2746edc93122d623622d1..12aadf4c981cdb1a6405de99016f4b40
      public FullChunkStatus status;
  
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 97745f0bab8d82d397c6c2a5775aed92bca0a034..7a9373df55bdbd01eb30ac9c623561087bd6b43e 100644
+index 8f31413c939cc2b0454ad3d9a1b618dbae449d00..3d5d79e428a7b0f1aa7d0d3911e6d61b9537e8a0 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -268,7 +268,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -2217,7 +2217,7 @@ index 97745f0bab8d82d397c6c2a5775aed92bca0a034..7a9373df55bdbd01eb30ac9c62356108
      public ChatDecorator getChatDecorator() {
          // Paper start - moved to ChatPreviewProcessor
 diff --git a/src/main/java/net/minecraft/server/level/ServerChunkCache.java b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
-index 17b6925b46f8386dcfc561483693de516465ec12..ebba74b64206722b3514797ef512ee591b4a3d60 100644
+index 8c33a12ca879c46893150d6adfb8aa4d397c6b4c..fb07f7f530a02820732b18c69ef54789707bdc8b 100644
 --- a/src/main/java/net/minecraft/server/level/ServerChunkCache.java
 +++ b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
 @@ -167,7 +167,11 @@ public class ServerChunkCache extends ChunkSource {
@@ -2358,7 +2358,7 @@ index 17b6925b46f8386dcfc561483693de516465ec12..ebba74b64206722b3514797ef512ee59
              gameprofilerfiller.pop();
              gameprofilerfiller.pop();
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 17610196db7a1c6feb2cf74a02479a8691aa323f..3f26fdcc5cbf0a684ad724ab8c042d0053cc187e 100644
+index 584a768f2ce1c98a1de7749060c47f21721f9055..529b7caf18443b23422402ba62747b788ade69f3 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -317,7 +317,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
@@ -2581,7 +2581,7 @@ index 17610196db7a1c6feb2cf74a02479a8691aa323f..3f26fdcc5cbf0a684ad724ab8c042d00
              passenger.stopRiding();
 @@ -1495,18 +1515,18 @@ public class ServerLevel extends Level implements WorldGenLevel {
          if (!savingDisabled) {
-             org.bukkit.Bukkit.getPluginManager().callEvent(new org.bukkit.event.world.WorldSaveEvent(getWorld())); // CraftBukkit
+             org.bukkit.Bukkit.getPluginManager().callEvent(new org.bukkit.event.world.WorldSaveEvent(this.getWorld())); // CraftBukkit
              try (co.aikar.timings.Timing ignored = timings.worldSave.startTiming()) { // Paper
 -            if (progressListener != null) {
 -                progressListener.progressStartNoAbort(Component.translatable("menu.savingLevel"));

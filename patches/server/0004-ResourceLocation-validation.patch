@@ -123,18 +123,18 @@ index 081691f9710ff1115e4308f79ed49fbc38941193..c29dfd15e147d5c4d9c9584ff7803c2a
              this.lootTableSeed = nbt.getLong("LootTableSeed");
              return false; // Paper - always load the items, table may still remain
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftLootable.java b/src/main/java/org/bukkit/craftbukkit/block/CraftLootable.java
-index 5b9ccbd767630abfee648a4653f33d8ac625bd0c..05830258ba0f7d19b1d86c0d8c85df8ffc94dfce 100644
+index f6942cb3ef1f9ef03708d4bc932ea9aeb1c13894..8b32864bafb3c1948993688be8f639dd6492057e 100644
 --- a/src/main/java/org/bukkit/craftbukkit/block/CraftLootable.java
 +++ b/src/main/java/org/bukkit/craftbukkit/block/CraftLootable.java
 @@ -34,8 +34,14 @@ public abstract class CraftLootable<T extends RandomizableContainerBlockEntity>
              return null;
          }
  
--        ResourceLocation key = getSnapshot().lootTable;
+-        ResourceLocation key = this.getSnapshot().lootTable;
 -        return Bukkit.getLootTable(CraftNamespacedKey.fromMinecraft(key));
 +        // Scissors start - Return a null loot table if the specified loot table is not valid
 +        try {
-+            ResourceLocation key = getSnapshot().lootTable;
++            ResourceLocation key = this.getSnapshot().lootTable;
 +            return Bukkit.getLootTable(CraftNamespacedKey.fromMinecraft(key));
 +        } catch (Exception ex) {
 +            return null;
@@ -144,7 +144,7 @@ index 5b9ccbd767630abfee648a4653f33d8ac625bd0c..05830258ba0f7d19b1d86c0d8c85df8f
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftMinecartContainer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftMinecartContainer.java
-index 0dd0ce9a9b3253e87eda12354249ec2fd2a33cf2..b6920f9432ca1736afbe775186fbbcf11cf046fb 100644
+index 313ee5c8737b2e57f9b5db6512c1871766b2ccd4..aa7fa17b9fb8519d8b57e27a5b422249b9b875d8 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftMinecartContainer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftMinecartContainer.java
 @@ -33,8 +33,14 @@ public abstract class CraftMinecartContainer extends CraftMinecart implements Lo
@@ -165,7 +165,7 @@ index 0dd0ce9a9b3253e87eda12354249ec2fd2a33cf2..b6920f9432ca1736afbe775186fbbcf1
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
-index 153e4c88c168097eb4a78650e7c9c120bec202a3..4d6af55197bb6933daac50fc638f9c23fe652f39 100644
+index b4e45d8e9851552f30c9c29d3d9671e1e9094c38..4e8e1a6b718d9ec8720efb648ab023e9e39f67e3 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
 @@ -80,8 +80,14 @@ public abstract class CraftMob extends CraftLivingEntity implements Mob {
