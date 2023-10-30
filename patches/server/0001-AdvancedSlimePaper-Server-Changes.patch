@@ -181,7 +181,7 @@ index 0000000000000000000000000000000000000000..61518ab2b68e7a41500f3c8c8a5ec123
 \ No newline at end of file
 diff --git a/src/main/java/com/infernalsuite/aswm/SimpleDataFixerConverter.java b/src/main/java/com/infernalsuite/aswm/SimpleDataFixerConverter.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..7dcfe5e080f567ab7d0cd6d0c47a6aaa4daae55f
+index 0000000000000000000000000000000000000000..21120ef498bda725f6360d289e7d21553b0f614d
 --- /dev/null
 +++ b/src/main/java/com/infernalsuite/aswm/SimpleDataFixerConverter.java
 @@ -0,0 +1,101 @@
@@ -217,7 +217,7 @@ index 0000000000000000000000000000000000000000..7dcfe5e080f567ab7d0cd6d0c47a6aaa
 +            return data;
 +        }
 +
-+        Map<com.infernalsuite.aswm.ChunkPos, SlimeChunk> chunks = new HashMap<>();
++        Map<ChunkPos, SlimeChunk> chunks = new HashMap<>();
 +        for (SlimeChunk chunk : data.getChunkStorage()) {
 +            List<CompoundTag> entities = new ArrayList<>();
 +            List<CompoundTag> blockEntities = new ArrayList<>();
@@ -288,10 +288,10 @@ index 0000000000000000000000000000000000000000..7dcfe5e080f567ab7d0cd6d0c47a6aaa
 +}
 diff --git a/src/main/java/com/infernalsuite/aswm/SlimeNMSBridgeImpl.java b/src/main/java/com/infernalsuite/aswm/SlimeNMSBridgeImpl.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..d014c27b896ea862bb3f7ff7d39df476513bb5f8
+index 0000000000000000000000000000000000000000..2cb9ae2314fd3bdbbf8c7e161cd7b9300ab580d8
 --- /dev/null
 +++ b/src/main/java/com/infernalsuite/aswm/SlimeNMSBridgeImpl.java
-@@ -0,0 +1,205 @@
+@@ -0,0 +1,211 @@
 +package com.infernalsuite.aswm;
 +
 +import com.infernalsuite.aswm.api.SlimeNMSBridge;
@@ -304,6 +304,7 @@ index 0000000000000000000000000000000000000000..d014c27b896ea862bb3f7ff7d39df476
 +import com.mojang.serialization.Lifecycle;
 +import net.minecraft.SharedConstants;
 +import net.minecraft.core.registries.Registries;
++import net.minecraft.nbt.CompoundTag;
 +import net.minecraft.resources.ResourceKey;
 +import net.minecraft.resources.ResourceLocation;
 +import net.minecraft.server.MinecraftServer;
@@ -470,6 +471,11 @@ index 0000000000000000000000000000000000000000..d014c27b896ea862bb3f7ff7d39df476
 +
 +        // level.setReady(true);
 +        level.setSpawnSettings(world.getPropertyMap().getValue(SlimeProperties.ALLOW_MONSTERS), world.getPropertyMap().getValue(SlimeProperties.ALLOW_ANIMALS));
++
++        var nmsExtraData = (CompoundTag) Converter.convertTag(world.getExtraData());
++
++        //Attempt to read PDC
++        if (nmsExtraData.get("BukkitValues") != null) level.getWorld().readBukkitValues(nmsExtraData.get("BukkitValues"));
 +
 +        return level;
 +    }
@@ -1326,14 +1332,15 @@ index 0000000000000000000000000000000000000000..b159fc8751e9840b311cc1eda01e496e
 \ No newline at end of file
 diff --git a/src/main/java/com/infernalsuite/aswm/level/SlimeInMemoryWorld.java b/src/main/java/com/infernalsuite/aswm/level/SlimeInMemoryWorld.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..043de6fba8387ce851d1d54c501cd834a1760c60
+index 0000000000000000000000000000000000000000..f0509f07a743302dfedce9413b0d9c8fb3ff111d
 --- /dev/null
 +++ b/src/main/java/com/infernalsuite/aswm/level/SlimeInMemoryWorld.java
-@@ -0,0 +1,247 @@
+@@ -0,0 +1,259 @@
 +package com.infernalsuite.aswm.level;
 +
 +import com.flowpowered.nbt.CompoundTag;
 +import com.infernalsuite.aswm.ChunkPos;
++import com.infernalsuite.aswm.Converter;
 +import com.infernalsuite.aswm.api.exceptions.WorldAlreadyExistsException;
 +import com.infernalsuite.aswm.api.loaders.SlimeLoader;
 +import com.infernalsuite.aswm.api.world.SlimeChunk;
@@ -1562,6 +1569,17 @@ index 0000000000000000000000000000000000000000..043de6fba8387ce851d1d54c501cd834
 +
 +            cloned.put(entry.getKey(), clonedChunk);
 +        }
++
++        // Serialize Bukkit Values (PDC)
++
++        var nmsTag = new net.minecraft.nbt.CompoundTag();
++
++        instance.getWorld().storeBukkitValues(nmsTag);
++
++        // Bukkit stores the relevant tag as a tag with the key "BukkitValues" in the tag we supply to it
++        var flowTag = Converter.convertTag("BukkitValues", nmsTag.getCompound("BukkitValues"));
++
++        world.getExtraData().getValue().put(flowTag);
 +
 +        return new SkeletonSlimeWorld(world.getName(),
 +                world.getLoader(),
