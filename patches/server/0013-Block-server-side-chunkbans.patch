@@ -5,7 +5,7 @@ Subject: [PATCH] Block server-side chunkbans
 
 
 diff --git a/src/main/java/net/minecraft/network/PacketEncoder.java b/src/main/java/net/minecraft/network/PacketEncoder.java
-index 45b4f1c295eda2fcc5067a4b21de247218ef117f..f2e7585630ff724f966c7bcedc17e502d786870d 100644
+index d364bd57b1675c8b21d781c2bc16c3e65800455c..f2e7585630ff724f966c7bcedc17e502d786870d 100644
 --- a/src/main/java/net/minecraft/network/PacketEncoder.java
 +++ b/src/main/java/net/minecraft/network/PacketEncoder.java
 @@ -7,8 +7,16 @@ import io.netty.handler.codec.MessageToByteEncoder;
@@ -49,7 +49,7 @@ index 45b4f1c295eda2fcc5067a4b21de247218ef117f..f2e7585630ff724f966c7bcedc17e502
      protected void encode(ChannelHandlerContext channelHandlerContext, Packet<?> packet, ByteBuf byteBuf) throws Exception {
          Attribute<ConnectionProtocol.CodecData<?>> attribute = channelHandlerContext.channel().attr(this.codecKey);
          ConnectionProtocol.CodecData<?> codecData = attribute.get();
-@@ -34,39 +59,59 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
+@@ -34,46 +59,59 @@ public class PacketEncoder extends MessageToByteEncoder<Packet<?>> {
                  throw new IOException("Can't serialize unregistered packet");
              } else {
                  FriendlyByteBuf friendlyByteBuf = new FriendlyByteBuf(byteBuf);
@@ -69,13 +69,17 @@ index 45b4f1c295eda2fcc5067a4b21de247218ef117f..f2e7585630ff724f966c7bcedc17e502
 -                    JvmProfiler.INSTANCE.onPacketSent(codecData.protocol(), i, channelHandlerContext.channel().remoteAddress(), k);
 +                    k = this.tryWrite(packet, friendlyByteBuf, channelHandlerContext, i);
                  } catch (Throwable var13) {
--                    LOGGER.error("Packet encoding of packet ID {} threw (skippable? {})", i, packet.isSkippable(), var13); // Paper - Give proper error message
+-                    // Paper start - Give proper error message
+-                    String packetName = io.papermc.paper.util.ObfHelper.INSTANCE.deobfClassName(packet.getClass().getName());
+-                    if (packetName.contains(".")) {
+-                        packetName = packetName.substring(packetName.lastIndexOf(".") + 1);
+-                    }
+-
+-                    LOGGER.error("Packet encoding of packet {} (ID: {}) threw (skippable? {})", packetName, i, packet.isSkippable(), var13);
+-                    // Paper end
 -                    if (packet.isSkippable()) {
 -                        throw new SkipPacketException(var13);
-+                    packet = capPacket(packet, i);
-+                    if (packet == null) {
-+                        throw new SkipPacketException(new IllegalArgumentException("Packet too big: " + packet));
-                     }
+-                    }
 -
 -                    throw var13;
 -                } finally {
@@ -83,7 +87,10 @@ index 45b4f1c295eda2fcc5067a4b21de247218ef117f..f2e7585630ff724f966c7bcedc17e502
 -                    int packetLength = friendlyByteBuf.readableBytes();
 -                    if (packetLength > MAX_PACKET_SIZE) {
 -                        throw new PacketTooLargeException(packet, this.codecKey, packetLength);
--                    }
++                    packet = capPacket(packet, i);
++                    if (packet == null) {
++                        throw new SkipPacketException(new IllegalArgumentException("Packet too big: " + packet));
+                     }
 -                    // Paper end
 -                    ProtocolSwapHandler.swapProtocolIfNeeded(attribute, packet);
 +                    friendlyByteBuf.clear();
