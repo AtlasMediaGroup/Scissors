@@ -5,7 +5,7 @@ Subject: [PATCH] Build changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index a79461457ea19339f47572c70705d655ebc55276..321c6408bdaf7fb99d40e1130b2b687b97a2ad43 100644
+index 79beac737c17412913983614bd478d33e3c6ed58..27d5dd68175641152cb78e6aba69890c00ef9b51 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -13,8 +13,13 @@ configurations.named(log4jPlugins.compileClasspathConfigurationName) {
@@ -96,7 +96,7 @@ index c5d5648f4ca603ef2b1df723b58f9caf4dd3c722..21ded7c14c56a40feaa7741131be5166
                  .completer(new ConsoleCommandCompleter(this.server))
                  .option(LineReader.Option.COMPLETE_IN_WORD, true);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 7a9373df55bdbd01eb30ac9c623561087bd6b43e..9f8b2fe4fd9377d48623e80f65dde03479f4fad0 100644
+index 3d5d79e428a7b0f1aa7d0d3911e6d61b9537e8a0..97231b3a80c248efca4a7ef644272801644386d5 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1712,7 +1712,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -109,10 +109,10 @@ index 7a9373df55bdbd01eb30ac9c623561087bd6b43e..9f8b2fe4fd9377d48623e80f65dde034
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index b7e7e6ed60f55d2ab5e4fcefb3638ad1768c3b7f..f7c3b65e0d6c76189aea00232b33722c4363d7dd 100644
+index 9c08303de2891de92e06de8a939a618b7a6f7321..43e331f2946faaf3e7e66e4a81a6b34604647c3b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -267,7 +267,7 @@ import javax.annotation.Nullable; // Paper
+@@ -269,7 +269,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {
