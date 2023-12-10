@@ -1,18 +1,18 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Video <videogamesm12@gmail.com>
-Date: Sun, 13 Mar 2022 06:10:22 -0600
+From: Telesphoreo <me@telesphoreo.me>
+Date: Sun, 10 Dec 2023 16:57:48 -0600
 Subject: [PATCH] Fixes log spam caused by invalid entities in beehives
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
-index 41c9f074203915c31c1ae7a160ce509c13383f84..8b4989593da43fc2fd661ac66bfe5ae1eb5e2780 100644
+index dfd364ac4b7551a13c4c6c100b5e62c0dfb10595..e0b0dec10dfc5d8e336a4c0f7005e7186f925c1a 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
 @@ -11,6 +11,7 @@ import net.minecraft.nbt.CompoundTag;
  import net.minecraft.nbt.ListTag;
  import net.minecraft.nbt.NbtUtils;
  import net.minecraft.network.protocol.game.DebugPackets;
-+import net.minecraft.resources.ResourceLocation; // Scissors
++import net.minecraft.resources.ResourceLocation;
  import net.minecraft.sounds.SoundEvents;
  import net.minecraft.sounds.SoundSource;
  import net.minecraft.tags.BlockTags;
@@ -27,6 +27,6 @@ index 41c9f074203915c31c1ae7a160ce509c13383f84..8b4989593da43fc2fd661ac66bfe5ae1
 +            }
 +            // Scissors end
 +
-             BeehiveBlockEntity.BeeData tileentitybeehive_hivebee = new BeehiveBlockEntity.BeeData(nbttagcompound1.getCompound("EntityData"), nbttagcompound1.getInt("TicksInHive"), nbttagcompound1.getInt("MinOccupationTicks"));
+             BeehiveBlockEntity.BeeData tileentitybeehive_hivebee = new BeehiveBlockEntity.BeeData(nbttagcompound1.getCompound("EntityData").copy(), nbttagcompound1.getInt("TicksInHive"), nbttagcompound1.getInt("MinOccupationTicks"));
  
              this.stored.add(tileentitybeehive_hivebee);
