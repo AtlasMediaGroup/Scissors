@@ -18,10 +18,10 @@ index 82b53a7bfb37bfa1752a016a8a454c0b994b9108..b8720020f98ea26da7d3225ddfbb1d9e
              if (optional.isEmpty()) {
                  return Blocks.AIR.defaultBlockState();
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/AbstractArrow.java b/src/main/java/net/minecraft/world/entity/projectile/AbstractArrow.java
-index 8affdd74769aed9aa92a76ba539cd9d27208827c..23e480535bfb4071cde84fc400c2e6acb129e1ae 100644
+index 42ebd91196ae420eee57f4380abc558555457163..8e81f50b52bc1d3eb25a842d1c41a7a18f53bf27 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/AbstractArrow.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/AbstractArrow.java
-@@ -541,7 +541,7 @@ public abstract class AbstractArrow extends Projectile {
+@@ -560,7 +560,7 @@ public abstract class AbstractArrow extends Projectile {
          this.setCritArrow(nbt.getBoolean("crit"));
          this.setPierceLevel(nbt.getByte("PierceLevel"));
          if (nbt.contains("SoundEvent", 8)) {

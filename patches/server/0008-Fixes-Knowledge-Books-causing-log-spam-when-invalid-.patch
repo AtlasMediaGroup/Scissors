@@ -31,7 +31,7 @@ index 37f37be56bab171df442b980ff46ff325daae283..deade19d16a7d6870171b9a60806a8ca
          }
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaKnowledgeBook.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaKnowledgeBook.java
-index 50fdb086ffec84edc5138737c95f08ed4757a6f3..da312b4670fc0ac07e4ab798d4793025e362783e 100644
+index e904bf8b6a7d18a0e846c3b59e2d7f3d6e530e39..65b076b376bf6ab363a3eb62dfa2c96c45624957 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaKnowledgeBook.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaKnowledgeBook.java
 @@ -41,7 +41,11 @@ public class CraftMetaKnowledgeBook extends CraftMetaItem implements KnowledgeBo
