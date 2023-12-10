@@ -50,3 +50,5 @@ Scissors-Server
 Scissors-API
 
 !gradle/wrapper/gradle-wrapper.jar
+
+paper-api-generator
