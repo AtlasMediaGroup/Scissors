@@ -59,10 +59,10 @@ index 4092c7a8c2b0d9d26e6f4d97386735236300d132..04c47cf1a920ae6c356449df801227ee
              }
          }
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index d0f7baa80cb7d0883304abe2ed990c258a0d92b6..bedd53797391005d70dcdd61c5ed6d56a32fee5c 100644
+index de277d61b718fe07a87d75a2547bb1c7f8553aa1..e2dbfe581717cc107d89206c1ba46014a6965693 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
-@@ -21,6 +21,7 @@ import java.util.function.Predicate;
+@@ -23,6 +23,7 @@ import java.util.function.Predicate;
  import java.util.stream.Collectors;
  import java.util.stream.Stream;
  import javax.annotation.Nullable;
@@ -70,7 +70,7 @@ index d0f7baa80cb7d0883304abe2ed990c258a0d92b6..bedd53797391005d70dcdd61c5ed6d56
  import net.minecraft.ChatFormatting;
  import net.minecraft.Util;
  import net.minecraft.advancements.CriteriaTriggers;
-@@ -254,6 +255,12 @@ public final class ItemStack {
+@@ -277,6 +278,12 @@ public final class ItemStack {
  
      // CraftBukkit - break into own method
      private void load(CompoundTag nbttagcompound) {
@@ -83,7 +83,7 @@ index d0f7baa80cb7d0883304abe2ed990c258a0d92b6..bedd53797391005d70dcdd61c5ed6d56
          this.item = (Item) BuiltInRegistries.ITEM.get(new ResourceLocation(nbttagcompound.getString("id")));
          this.count = nbttagcompound.getByte("Count");
          if (nbttagcompound.contains("tag", 10)) {
-@@ -563,7 +570,11 @@ public final class ItemStack {
+@@ -584,7 +591,11 @@ public final class ItemStack {
          nbt.putString("id", minecraftkey == null ? "minecraft:air" : minecraftkey.toString());
          nbt.putByte("Count", (byte) this.count);
          if (this.tag != null) {
@@ -96,7 +96,7 @@ index d0f7baa80cb7d0883304abe2ed990c258a0d92b6..bedd53797391005d70dcdd61c5ed6d56
          }
  
          return nbt;
-@@ -893,6 +904,7 @@ public final class ItemStack {
+@@ -918,6 +929,7 @@ public final class ItemStack {
      // Paper end
  
      public void setTag(@Nullable CompoundTag nbt) {

@@ -5,10 +5,10 @@ Subject: [PATCH] Don't log invalid teams to console
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 168b002377e258f84a3bb86dd8e4a5f42060e3e0..065d2c1543832190bd8bdcd4b553542115c07e64 100644
+index 5a11c89e10a9214fddc37f57c9b937494da19c9c..cb6319c539542b5391532cadb71310532a72c2c9 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -861,7 +861,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -860,7 +860,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
              boolean flag = scoreboardteam != null && this.level().getScoreboard().addPlayerToTeam(this.getStringUUID(), scoreboardteam);
  
              if (!flag) {

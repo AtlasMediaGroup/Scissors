@@ -6,7 +6,7 @@ Subject: [PATCH] Limit amount of vehicle collision checks to 3 and discard
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java
-index 44a6118d3bd67a95180f750c17967561946e2e87..8aece67eba8d6b558bc2441b8b8e599f86e12e4f 100644
+index 48b1cddfca671ac8bcb93a1b60518a4ee9e977e2..48a1b0cd306f3c23d7d4049dfa6a2c1be7b5a05f 100644
 --- a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java
 +++ b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java
 @@ -8,6 +8,7 @@ import com.mojang.datafixers.util.Pair;
@@ -17,7 +17,7 @@ index 44a6118d3bd67a95180f750c17967561946e2e87..8aece67eba8d6b558bc2441b8b8e599f
  import javax.annotation.Nullable;
  import net.minecraft.BlockUtil;
  import net.minecraft.Util;
-@@ -111,6 +112,7 @@ public abstract class AbstractMinecart extends Entity {
+@@ -104,6 +105,7 @@ public abstract class AbstractMinecart extends VehicleEntity {
      private double flyingX = 0.949999988079071D; // Paper - restore vanilla precision
      private double flyingY = 0.949999988079071D; // Paper - restore vanilla precision
      private double flyingZ = 0.949999988079071D; // Paper - restore vanilla precision
@@ -25,7 +25,7 @@ index 44a6118d3bd67a95180f750c17967561946e2e87..8aece67eba8d6b558bc2441b8b8e599f
      public double maxSpeed = 0.4D;
      // CraftBukkit end
  
-@@ -432,8 +434,8 @@ public abstract class AbstractMinecart extends Entity {
+@@ -384,8 +386,8 @@ public abstract class AbstractMinecart extends VehicleEntity {
              if (this.getMinecartType() == AbstractMinecart.Type.RIDEABLE && this.getDeltaMovement().horizontalDistanceSqr() > 0.01D) {
                  List<Entity> list = this.level().getEntities((Entity) this, this.getBoundingBox().inflate(0.20000000298023224D, 0.0D, 0.20000000298023224D), EntitySelector.pushableBy(this));
  
@@ -36,7 +36,7 @@ index 44a6118d3bd67a95180f750c17967561946e2e87..8aece67eba8d6b558bc2441b8b8e599f
  
                      while (iterator.hasNext()) {
                          Entity entity = (Entity) iterator.next();
-@@ -462,6 +464,14 @@ public abstract class AbstractMinecart extends Entity {
+@@ -414,6 +416,14 @@ public abstract class AbstractMinecart extends VehicleEntity {
                              entity.push(this);
                          }
                      }
@@ -52,7 +52,7 @@ index 44a6118d3bd67a95180f750c17967561946e2e87..8aece67eba8d6b558bc2441b8b8e599f
              } else {
                  Iterator iterator1 = this.level().getEntities(this, this.getBoundingBox().inflate(0.20000000298023224D, 0.0D, 0.20000000298023224D)).iterator();
 diff --git a/src/main/java/net/minecraft/world/entity/vehicle/Boat.java b/src/main/java/net/minecraft/world/entity/vehicle/Boat.java
-index 5c07da62c82bc70138f6cb5007629d6974be69ac..301a72dffd4ac58333d987e85d22136498d2d82a 100644
+index c041c0b81be41cfd128c2f5ba56a5329d50b2efc..7dcbdcb30d264cf76fd975489918509e6e589127 100644
 --- a/src/main/java/net/minecraft/world/entity/vehicle/Boat.java
 +++ b/src/main/java/net/minecraft/world/entity/vehicle/Boat.java
 @@ -5,6 +5,7 @@ import com.google.common.collect.UnmodifiableIterator;
@@ -63,7 +63,7 @@ index 5c07da62c82bc70138f6cb5007629d6974be69ac..301a72dffd4ac58333d987e85d221364
  import javax.annotation.Nullable;
  import net.minecraft.BlockUtil;
  import net.minecraft.core.BlockPos;
-@@ -112,6 +113,7 @@ public class Boat extends Entity implements VariantHolder<Boat.Type> {
+@@ -108,6 +109,7 @@ public class Boat extends VehicleEntity implements VariantHolder<Boat.Type> {
      public double unoccupiedDeceleration = -1;
      public boolean landBoats = false;
      // CraftBukkit end
@@ -71,7 +71,7 @@ index 5c07da62c82bc70138f6cb5007629d6974be69ac..301a72dffd4ac58333d987e85d221364
  
      public Boat(EntityType<? extends Boat> type, Level world) {
          super(type, world);
-@@ -465,9 +467,9 @@ public class Boat extends Entity implements VariantHolder<Boat.Type> {
+@@ -408,9 +410,9 @@ public class Boat extends VehicleEntity implements VariantHolder<Boat.Type> {
          this.checkInsideBlocks();
          List<Entity> list = this.level().getEntities((Entity) this, this.getBoundingBox().inflate(0.20000000298023224D, -0.009999999776482582D, 0.20000000298023224D), EntitySelector.pushableBy(this));
  
@@ -83,7 +83,7 @@ index 5c07da62c82bc70138f6cb5007629d6974be69ac..301a72dffd4ac58333d987e85d221364
  
              while (iterator.hasNext()) {
                  Entity entity = (Entity) iterator.next();
-@@ -480,6 +482,14 @@ public class Boat extends Entity implements VariantHolder<Boat.Type> {
+@@ -423,6 +425,14 @@ public class Boat extends VehicleEntity implements VariantHolder<Boat.Type> {
                      }
                  }
              }
