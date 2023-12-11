@@ -5,7 +5,7 @@ Subject: [PATCH] Fix ClickEvents on Signs bypassing permissions
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
-index 38cde466714e5663cd416b6afd5d2558e139ec09..ed48eaae75e709361a260421934b6b925ae9b427 100644
+index bc01970c5ef9cde4a75394d6977837e924a38463..12ae1d0b819c2968fed903c14f9523b492a506ff 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
 @@ -8,8 +8,10 @@ import java.util.Objects;
@@ -27,7 +27,7 @@ index 38cde466714e5663cd416b6afd5d2558e139ec09..ed48eaae75e709361a260421934b6b92
  import net.minecraft.server.level.ServerLevel;
  import net.minecraft.server.level.ServerPlayer;
  import net.minecraft.server.network.FilteredText;
-@@ -30,6 +33,7 @@ import net.minecraft.world.level.block.SignBlock;
+@@ -32,6 +35,7 @@ import net.minecraft.world.level.block.SignBlock;
  import net.minecraft.world.level.block.state.BlockState;
  import net.minecraft.world.phys.Vec2;
  import net.minecraft.world.phys.Vec3;
@@ -35,7 +35,7 @@ index 38cde466714e5663cd416b6afd5d2558e139ec09..ed48eaae75e709361a260421934b6b92
  import org.slf4j.Logger;
  import org.bukkit.block.sign.Side;
  import org.bukkit.craftbukkit.block.CraftBlock;
-@@ -37,6 +41,7 @@ import org.bukkit.craftbukkit.util.CraftChatMessage;
+@@ -39,6 +43,7 @@ import org.bukkit.craftbukkit.util.CraftChatMessage;
  import org.bukkit.entity.Player;
  import org.bukkit.event.block.SignChangeEvent;
  // CraftBukkit end
@@ -43,7 +43,7 @@ index 38cde466714e5663cd416b6afd5d2558e139ec09..ed48eaae75e709361a260421934b6b92
  
  public class SignBlockEntity extends BlockEntity implements CommandSource { // CraftBukkit - implements
  
-@@ -291,6 +296,21 @@ public class SignBlockEntity extends BlockEntity implements CommandSource { // C
+@@ -289,6 +294,21 @@ public class SignBlockEntity extends BlockEntity implements CommandSource { // C
                  }
                  player.getServer().getCommands().performPrefixedCommand(this.createCommandSourceStack(((org.bukkit.craftbukkit.entity.CraftPlayer) event.getPlayer()).getHandle(), world, pos), event.getMessage());
                  // Paper end

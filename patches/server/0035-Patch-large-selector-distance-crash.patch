@@ -1,49 +1,47 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Luna <lunahatesgogle@gmail.com>
-Date: Sun, 2 Apr 2023 16:29:51 -0300
+From: Telesphoreo <me@telesphoreo.me>
+Date: Sun, 10 Dec 2023 18:57:50 -0600
 Subject: [PATCH] Patch large selector distance crash
 
 
 diff --git a/src/main/java/net/minecraft/advancements/critereon/MinMaxBounds.java b/src/main/java/net/minecraft/advancements/critereon/MinMaxBounds.java
-index 8897496323378080135127f53db004d576476c21..5f957d3241c1931f8166bc9e4960cef15679e932 100644
+index d87ffb5ed4550757016c2fabaa2845a6aaac74d7..7e8cf65ac53f595292d161da0735bf97081e832a 100644
 --- a/src/main/java/net/minecraft/advancements/critereon/MinMaxBounds.java
 +++ b/src/main/java/net/minecraft/advancements/critereon/MinMaxBounds.java
-@@ -129,9 +129,9 @@ public interface MinMaxBounds<T extends Number> {
+@@ -123,11 +123,11 @@ public interface MinMaxBounds<T extends Number> {
  
      public static record Doubles(Optional<Double> min, Optional<Double> max, Optional<Double> minSq, Optional<Double> maxSq) implements MinMaxBounds<Double> {
          public static final MinMaxBounds.Doubles ANY = new MinMaxBounds.Doubles(Optional.empty(), Optional.empty());
 -        public static final Codec<MinMaxBounds.Doubles> CODEC = MinMaxBounds.createCodec(Codec.DOUBLE, MinMaxBounds.Doubles::new);
 +        public static final Codec<MinMaxBounds.Doubles> CODEC = MinMaxBounds.<Double, MinMaxBounds.Doubles>createCodec(Codec.DOUBLE, MinMaxBounds.Doubles::new); // Scissors - compile fixes
  
--        private Doubles(Optional<Double> optional, Optional<Double> optional2) {
-+        public Doubles(Optional<Double> optional, Optional<Double> optional2) { // Scissors - private -> public
-             this(optional, optional2, squareOpt(optional), squareOpt(optional2));
-         }
+-        private Doubles(Optional<Double> min, Optional<Double> max) {
++        public Doubles(Optional<Double> min, Optional<Double> max) {
+             this(min, max, squareOpt(min), squareOpt(max));
+-        }
++        } // Scissors - private -> public
  
-@@ -202,7 +202,7 @@ public interface MinMaxBounds<T extends Number> {
+         private static MinMaxBounds.Doubles create(StringReader reader, Optional<Double> min, Optional<Double> max) throws CommandSyntaxException {
+             if (min.isPresent() && max.isPresent() && min.get() > max.get()) {
+@@ -188,7 +188,7 @@ public interface MinMaxBounds<T extends Number> {
  
      public static record Ints(Optional<Integer> min, Optional<Integer> max, Optional<Long> minSq, Optional<Long> maxSq) implements MinMaxBounds<Integer> {
          public static final MinMaxBounds.Ints ANY = new MinMaxBounds.Ints(Optional.empty(), Optional.empty());
 -        public static final Codec<MinMaxBounds.Ints> CODEC = MinMaxBounds.createCodec(Codec.INT, MinMaxBounds.Ints::new);
 +        public static final Codec<MinMaxBounds.Ints> CODEC = MinMaxBounds.<Integer, MinMaxBounds.Ints>createCodec(Codec.INT, MinMaxBounds.Ints::new); // Scissors - compile fixes
  
-         private Ints(Optional<Integer> optional, Optional<Integer> optional2) {
-             this(optional, optional2, optional.map((integer) -> {
+         private Ints(Optional<Integer> min, Optional<Integer> max) {
+             this(min, max, min.map((i) -> {
 diff --git a/src/main/java/net/minecraft/commands/arguments/selector/EntitySelector.java b/src/main/java/net/minecraft/commands/arguments/selector/EntitySelector.java
-index 73c15a0c56a103ba4e62f0a51af8d42566b07245..6cb3e86f2d661a55536b782729f768ef72163223 100644
+index 73c15a0c56a103ba4e62f0a51af8d42566b07245..f0a84efe86407ab3d7a9f064140c12df43265adc 100644
 --- a/src/main/java/net/minecraft/commands/arguments/selector/EntitySelector.java
 +++ b/src/main/java/net/minecraft/commands/arguments/selector/EntitySelector.java
-@@ -5,11 +5,13 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
- import java.util.Collections;
- import java.util.Iterator;
- import java.util.List;
-+import java.util.Optional; // Scissors
- import java.util.UUID;
- import java.util.function.BiConsumer;
+@@ -10,6 +10,8 @@ import java.util.function.BiConsumer;
  import java.util.function.Function;
  import java.util.function.Predicate;
  import javax.annotation.Nullable;
-+import me.totalfreedom.scissors.MathUtility; // Scissors
++
++import me.totalfreedom.scissors.MathUtility;
  import net.minecraft.advancements.critereon.MinMaxBounds;
  import net.minecraft.commands.CommandSourceStack;
  import net.minecraft.commands.arguments.EntityArgument;
@@ -54,8 +52,8 @@ index 73c15a0c56a103ba4e62f0a51af8d42566b07245..6cb3e86f2d661a55536b782729f768ef
 -        this.range = distance;
 +        // Scissors start - Patch large selector distance crash
 +        this.range = new MinMaxBounds.Doubles(
-+                distance.min().map(min -> Math.min(min, 1024)),
-+                distance.max().map(max -> Math.min(max, 1024))
++            distance.min().map(min -> Math.min(min, 1024)),
++            distance.max().map(max -> Math.min(max, 1024))
 +        );
          this.position = positionOffset;
 -        this.aabb = box;

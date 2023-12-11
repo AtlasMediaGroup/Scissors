@@ -5,10 +5,10 @@ Subject: [PATCH] Prevent invalid container events
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 4ea2c551d924f976a8de9e2ae521544f323fbec4..83ae366b4f52261e2e2b65a4183d7ca823edd315 100644
+index 987001ab3a7cdd1c8c37e528077e5d33060ab505..87d5f576ef8be68256191df7c3bf4f081c2e7370 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -30,6 +30,7 @@ import java.util.function.UnaryOperator;
+@@ -29,6 +29,7 @@ import java.util.function.UnaryOperator;
  import java.util.stream.Collectors;
  import java.util.stream.Stream;
  import javax.annotation.Nullable;
@@ -16,7 +16,7 @@ index 4ea2c551d924f976a8de9e2ae521544f323fbec4..83ae366b4f52261e2e2b65a4183d7ca8
  import net.minecraft.ChatFormatting;
  import net.minecraft.SharedConstants;
  import net.minecraft.Util;
-@@ -2900,6 +2901,18 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
+@@ -2902,6 +2903,18 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
                          return;
                      }
  

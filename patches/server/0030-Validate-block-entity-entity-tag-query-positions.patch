@@ -5,10 +5,10 @@ Subject: [PATCH] Validate block entity/entity tag query positions
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 83ae366b4f52261e2e2b65a4183d7ca823edd315..67b5447ffcf54c54b2087df456690a9bed98fbd3 100644
+index 87d5f576ef8be68256191df7c3bf4f081c2e7370..acb4a7ad68a1d6c1ba43eafdd85ab5f824621507 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -1262,7 +1262,7 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
+@@ -1267,7 +1267,7 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
          if (this.player.hasPermissions(2)) {
              Entity entity = this.player.level().getEntity(packet.getEntityId());
  
@@ -17,7 +17,7 @@ index 83ae366b4f52261e2e2b65a4183d7ca823edd315..67b5447ffcf54c54b2087df456690a9b
                  CompoundTag nbttagcompound = entity.saveWithoutId(new CompoundTag());
  
                  this.player.connection.send(new ClientboundTagQueryPacket(packet.getTransactionId(), nbttagcompound));
-@@ -1274,7 +1274,10 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
+@@ -1299,7 +1299,10 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
      @Override
      public void handleBlockEntityTagQuery(ServerboundBlockEntityTagQuery packet) {
          PacketUtils.ensureRunningOnSameThread(packet, this, this.player.serverLevel());
