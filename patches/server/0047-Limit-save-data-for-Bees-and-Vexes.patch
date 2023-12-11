@@ -5,10 +5,10 @@ Subject: [PATCH] Limit save data for Bees and Vexes
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/animal/Bee.java b/src/main/java/net/minecraft/world/entity/animal/Bee.java
-index 9a7956befc346e1b58f064213800fd099a052fc6..2ebedd806bafc6ff7c4bf5a962ead50ce2ad1a8a 100644
+index a87a34b0c4c8e5d0cf079025c230b1434c919b54..7cbcbbed6ec45a32bbfe8118bf186c6580f065ca 100644
 --- a/src/main/java/net/minecraft/world/entity/animal/Bee.java
 +++ b/src/main/java/net/minecraft/world/entity/animal/Bee.java
-@@ -227,8 +227,12 @@ public class Bee extends Animal implements NeutralMob, FlyingAnimal {
+@@ -234,8 +234,12 @@ public class Bee extends Animal implements NeutralMob, FlyingAnimal {
      @Override
      public void readAdditionalSaveData(CompoundTag nbt) {
          this.hivePos = null;
@@ -24,7 +24,7 @@ index 9a7956befc346e1b58f064213800fd099a052fc6..2ebedd806bafc6ff7c4bf5a962ead50c
  
          this.savedFlowerPos = null;
 diff --git a/src/main/java/net/minecraft/world/entity/monster/Vex.java b/src/main/java/net/minecraft/world/entity/monster/Vex.java
-index 90e577b1a89b02c38daff2845a63dafe5ed929e1..1a2b6ee032ab6952634c9f596820db3e7374fb50 100644
+index 30ea3f64234fd1fda8dada3c7fb12be0730322a8..b621b9a50047c5283b259d67019989ec823576e0 100644
 --- a/src/main/java/net/minecraft/world/entity/monster/Vex.java
 +++ b/src/main/java/net/minecraft/world/entity/monster/Vex.java
 @@ -118,8 +118,12 @@ public class Vex extends Monster implements TraceableEntity {

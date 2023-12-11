@@ -18,10 +18,10 @@ index 7204b973c3ad9239e82355513f6d538107102e48..2463444778f19f937b18173798c04d9d
          }
  
 diff --git a/src/main/java/net/minecraft/world/entity/ai/attributes/AttributeModifier.java b/src/main/java/net/minecraft/world/entity/ai/attributes/AttributeModifier.java
-index a7380ce6dcbf64ad8a51dd047d178ae887518041..cb015941e5ea4618bd0964f4aa66a9f0fceb27a1 100644
+index 1b0db545f93b51368c2d384dd1ba45b93d9eff87..5c3633aa6a256a197502c8139cbf61c2f493bda7 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/attributes/AttributeModifier.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/attributes/AttributeModifier.java
-@@ -92,7 +92,7 @@ public class AttributeModifier {
+@@ -86,7 +86,7 @@ public class AttributeModifier {
              AttributeModifier.Operation operation = AttributeModifier.Operation.fromValue(nbt.getInt("Operation"));
              return new AttributeModifier(uUID, nbt.getString("Name"), nbt.getDouble("Amount"), operation);
          } catch (Exception var3) {

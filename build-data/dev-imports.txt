@@ -11,3 +11,4 @@
 
 minecraft net/minecraft/network/chat/HoverEvent
 minecraft net/minecraft/world/entity/EntityType
+minecraft net/minecraft/network/protocol/game/ServerboundSetCommandMinecartPacket
