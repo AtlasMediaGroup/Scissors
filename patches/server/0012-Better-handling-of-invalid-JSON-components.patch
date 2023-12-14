@@ -23,10 +23,10 @@ index 200ed770b57e1a9240abf0473968d4b85cbefe3c..1a2a3b506e2f9bce77294c3788451bfd
      }
  }
 diff --git a/src/main/java/net/minecraft/network/chat/Component.java b/src/main/java/net/minecraft/network/chat/Component.java
-index e0037b99838519eee5fb6f7e95ffaad252f08baf..0d3295f93895c314fcfd753f98173e85bcf8c078 100644
+index d3a80d0a23be762c05931ae8001d98e43cab2b4a..ba13650b52e39c9cc5cfa421f7720c7d4ba75678 100644
 --- a/src/main/java/net/minecraft/network/chat/Component.java
 +++ b/src/main/java/net/minecraft/network/chat/Component.java
-@@ -24,6 +24,8 @@ import java.util.List;
+@@ -23,6 +23,8 @@ import java.util.List;
  import java.util.Optional;
  import java.util.UUID;
  import javax.annotation.Nullable;
@@ -35,7 +35,7 @@ index e0037b99838519eee5fb6f7e95ffaad252f08baf..0d3295f93895c314fcfd753f98173e85
  import net.minecraft.Util;
  import net.minecraft.network.chat.contents.DataSource;
  import net.minecraft.network.chat.contents.KeybindContents;
-@@ -324,6 +326,26 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
+@@ -315,6 +317,26 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
              return json == null ? null : Serializer.deserialize(json);
          }
  
