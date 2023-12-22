@@ -1,17 +1,17 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Luna <lunahatesgogle@gmail.com>
-Date: Sat, 12 Mar 2022 22:22:22 -0300
+From: Telesphoreo <me@telesphoreo.me>
+Date: Thu, 21 Dec 2023 23:23:17 -0600
 Subject: [PATCH] Build changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 79beac737c17412913983614bd478d33e3c6ed58..27d5dd68175641152cb78e6aba69890c00ef9b51 100644
+index b12b5a1e82a5ebf47135a3863a390a45a9d8d8ec..780ef52f50556633c2e402790e339ef513f6bf24 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -13,8 +13,13 @@ configurations.named(log4jPlugins.compileClasspathConfigurationName) {
- val alsoShade: Configuration by configurations.creating
+@@ -27,8 +27,13 @@ repositories {
  
  dependencies {
+     extraRuntime(platform("net.kyori:adventure-bom:4.15.0-SNAPSHOT"))
 -    implementation(project(":paper-api"))
 -    implementation(project(":paper-mojangapi"))
 +    implementation(project(":aswm-core"))
@@ -24,7 +24,7 @@ index 79beac737c17412913983614bd478d33e3c6ed58..27d5dd68175641152cb78e6aba69890c
      // Paper start
      implementation("org.jline:jline-terminal-jansi:3.21.0")
      implementation("net.minecrell:terminalconsoleappender:1.3.0")
-@@ -66,11 +71,19 @@ tasks.jar {
+@@ -80,11 +85,19 @@ tasks.jar {
          val gitHash = git("rev-parse", "--short=7", "HEAD").getText().trim()
          val implementationVersion = System.getenv("BUILD_NUMBER") ?: "\"$gitHash\""
          val date = git("show", "-s", "--format=%ci", gitHash).getText().trim() // Paper
@@ -46,7 +46,7 @@ index 79beac737c17412913983614bd478d33e3c6ed58..27d5dd68175641152cb78e6aba69890c
              "Implementation-Vendor" to date, // Paper
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
-@@ -154,7 +167,7 @@ fun TaskContainer.registerRunTask(
+@@ -168,7 +181,7 @@ fun TaskContainer.registerRunTask(
      name: String,
      block: JavaExec.() -> Unit
  ): TaskProvider<JavaExec> = register<JavaExec>(name) {
@@ -96,10 +96,10 @@ index c5d5648f4ca603ef2b1df723b58f9caf4dd3c722..21ded7c14c56a40feaa7741131be5166
                  .completer(new ConsoleCommandCompleter(this.server))
                  .option(LineReader.Option.COMPLETE_IN_WORD, true);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 3d5d79e428a7b0f1aa7d0d3911e6d61b9537e8a0..97231b3a80c248efca4a7ef644272801644386d5 100644
+index 34f19ac897a30c0c4e3ab406013fcca1c8b7db93..6f284b7cd52ea47bd96ecd3b7a21d68ae5c12d77 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1712,7 +1712,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1866,7 +1866,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
@@ -108,19 +108,6 @@ index 3d5d79e428a7b0f1aa7d0d3911e6d61b9537e8a0..97231b3a80c248efca4a7ef644272801
      }
  
      public SystemReport fillSystemReport(SystemReport details) {
-diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 9c08303de2891de92e06de8a939a618b7a6f7321..43e331f2946faaf3e7e66e4a81a6b34604647c3b 100644
---- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-+++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -269,7 +269,7 @@ import javax.annotation.Nullable; // Paper
- import javax.annotation.Nonnull; // Paper
- 
- public final class CraftServer implements Server {
--    private final String serverName = "Paper"; // Paper
-+    private final String serverName = "Scissors"; // Scissors // Paper
-     private final String serverVersion;
-     private final String bukkitVersion = Versioning.getBukkitVersion();
-     private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 index 774556a62eb240da42e84db4502e2ed43495be17..741c76c4dfa0bb34cc23bd795c194bdea10418cc 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
