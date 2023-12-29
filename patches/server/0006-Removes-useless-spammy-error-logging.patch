@@ -1,0 +1,20 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Telesphoreo <me@telesphoreo.me>
+Date: Sun, 10 Dec 2023 16:58:55 -0600
+Subject: [PATCH] Removes useless spammy error logging
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
+index 182bc05a839781794188352120968fdf67e794e7..98118cadae93000192003b40e9051a6df216d197 100644
+--- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
++++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
+@@ -1812,8 +1812,7 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
+                 resource = CraftNamespacedKey.fromMinecraft(key);
+             }
+         } catch (IllegalArgumentException ex) {
+-            org.bukkit.Bukkit.getLogger().warning("Namespaced resource does not validate: " + key.toString());
+-            ex.printStackTrace();
++            // Scissors - Don't log errors thrown by invalid namespaces when an error is thrown
+         }
+ 
+         return resource;

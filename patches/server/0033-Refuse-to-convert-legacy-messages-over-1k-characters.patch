@@ -1,0 +1,18 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Allink <arclicious@vivaldi.net>
+Date: Tue, 16 Aug 2022 17:13:02 +0100
+Subject: [PATCH] Refuse to convert legacy messages over 1k characters
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftChatMessage.java b/src/main/java/org/bukkit/craftbukkit/util/CraftChatMessage.java
+index 730d8e3cf2d9ca05b2d6219cf1856b8721871a37..63e71c5cb4ac4d17d2cfa5324fd842a0d3c61eb5 100644
+--- a/src/main/java/org/bukkit/craftbukkit/util/CraftChatMessage.java
++++ b/src/main/java/org/bukkit/craftbukkit/util/CraftChatMessage.java
+@@ -198,6 +198,7 @@ public final class CraftChatMessage {
+     }
+ 
+     public static Component[] fromString(String message, boolean keepNewlines, boolean plain) {
++        if (message.length() > 1_000) return new Component[]{Component.empty()}; // Scissors - Refuse to convert legacy messages over 1k characters
+         return new StringMessage(message, keepNewlines, plain).getOutput();
+     }
+ 

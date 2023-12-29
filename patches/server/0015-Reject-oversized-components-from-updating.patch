@@ -1,0 +1,32 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Video <videogamesm12@gmail.com>
+Date: Mon, 28 Mar 2022 16:49:17 -0600
+Subject: [PATCH] Reject oversized components from updating
+
+
+diff --git a/src/main/java/net/minecraft/network/chat/ComponentUtils.java b/src/main/java/net/minecraft/network/chat/ComponentUtils.java
+index 7daca712816a79cc4a30b084afbd3d07b5d3755f..a7e04eb4284e7d5148e1c7b991620d666785ec70 100644
+--- a/src/main/java/net/minecraft/network/chat/ComponentUtils.java
++++ b/src/main/java/net/minecraft/network/chat/ComponentUtils.java
+@@ -38,8 +38,9 @@ public class ComponentUtils {
+     }
+ 
+     public static MutableComponent updateForEntity(@Nullable CommandSourceStack source, Component text, @Nullable Entity sender, int depth) throws CommandSyntaxException {
++        MutableComponent result; // Scissors
+         if (depth > 100) {
+-            return text.copy();
++            result = text.copy(); // Scissors
+         } else {
+             // Paper start
+             if (text instanceof io.papermc.paper.adventure.AdventureComponent adventureComponent) {
+@@ -52,8 +53,9 @@ public class ComponentUtils {
+                 mutableComponent.append(updateForEntity(source, component, sender, depth + 1));
+             }
+ 
+-            return mutableComponent.withStyle(resolveStyle(source, text.getStyle(), sender, depth));
++            result = mutableComponent.withStyle(resolveStyle(source, text.getStyle(), sender, depth)); // Scissors
+         }
++        return Component.Serializer.toJson(result).length() > 65535 ? Component.empty() : result; // Scissors
+     }
+ 
+     private static Style resolveStyle(@Nullable CommandSourceStack source, Style style, @Nullable Entity sender, int depth) throws CommandSyntaxException {

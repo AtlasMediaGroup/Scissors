@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Allink <arclicious@vivaldi.net>
+Date: Tue, 17 May 2022 05:57:52 +0100
+Subject: [PATCH] Don't log invalid teams to console
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+index 8c81cd6a6563e4eb46a26c30baa3dfd9df3ecf1f..b01c443746f0c4c8c37fb5955351eff1689be1c4 100644
+--- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
++++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+@@ -860,7 +860,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
+             boolean flag = scoreboardteam != null && this.level().getScoreboard().addPlayerToTeam(this.getStringUUID(), scoreboardteam);
+ 
+             if (!flag) {
+-                LivingEntity.LOGGER.warn("Unable to add mob to team \"{}\" (that team probably doesn't exist)", s);
++                // Scissors - Prevent log spam possible with this error message, easily provokable by players in creative.
+             }
+         }
+ 

@@ -1,0 +1,44 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Allink <arclicious@vivaldi.net>
+Date: Wed, 5 Jul 2023 22:58:24 +0100
+Subject: [PATCH] Limit save data for Bees and Vexes
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/animal/Bee.java b/src/main/java/net/minecraft/world/entity/animal/Bee.java
+index a87a34b0c4c8e5d0cf079025c230b1434c919b54..7cbcbbed6ec45a32bbfe8118bf186c6580f065ca 100644
+--- a/src/main/java/net/minecraft/world/entity/animal/Bee.java
++++ b/src/main/java/net/minecraft/world/entity/animal/Bee.java
+@@ -234,8 +234,12 @@ public class Bee extends Animal implements NeutralMob, FlyingAnimal {
+     @Override
+     public void readAdditionalSaveData(CompoundTag nbt) {
+         this.hivePos = null;
+-        if (nbt.contains("HivePos")) {
+-            this.hivePos = NbtUtils.readBlockPos(nbt.getCompound("HivePos"));
++        if (nbt.contains("HivePos"))
++        {
++            // Scissors start - Limit HivePos
++            final BlockPos savedHivePos = NbtUtils.readBlockPos(nbt.getCompound("HivePos"));
++            this.hivePos = this.level().isLoadedAndInBounds(savedHivePos) ? savedHivePos : null;
++            // Scissors end - Limit HivePos
+         }
+ 
+         this.savedFlowerPos = null;
+diff --git a/src/main/java/net/minecraft/world/entity/monster/Vex.java b/src/main/java/net/minecraft/world/entity/monster/Vex.java
+index 30ea3f64234fd1fda8dada3c7fb12be0730322a8..b621b9a50047c5283b259d67019989ec823576e0 100644
+--- a/src/main/java/net/minecraft/world/entity/monster/Vex.java
++++ b/src/main/java/net/minecraft/world/entity/monster/Vex.java
+@@ -118,8 +118,12 @@ public class Vex extends Monster implements TraceableEntity {
+     @Override
+     public void readAdditionalSaveData(CompoundTag nbt) {
+         super.readAdditionalSaveData(nbt);
+-        if (nbt.contains("BoundX")) {
+-            this.boundOrigin = new BlockPos(nbt.getInt("BoundX"), nbt.getInt("BoundY"), nbt.getInt("BoundZ"));
++        if (nbt.contains("BoundX"))
++        {
++            // Scissors start - Limit Vex bound origin
++            final BlockPos savedBoundOrigin = new BlockPos(nbt.getInt("BoundX"), nbt.getInt("BoundY"), nbt.getInt("BoundZ"));
++            this.boundOrigin = this.level().isLoadedAndInBounds(savedBoundOrigin) ? savedBoundOrigin : null;
++            // Scissors end - Limit Vex bound origin
+         }
+ 
+         if (nbt.contains("LifeTicks")) {

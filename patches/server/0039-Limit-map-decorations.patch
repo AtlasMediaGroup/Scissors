@@ -1,0 +1,36 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Luna <lunahatesgogle@gmail.com>
+Date: Fri, 28 Apr 2023 16:29:23 -0300
+Subject: [PATCH] Limit map decorations
+
+
+diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundMapItemDataPacket.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundMapItemDataPacket.java
+index 17343d515044f3678b4edf070ee7ca244adc4228..8ade519114bec879bed8e8e23707a85327da131b 100644
+--- a/src/main/java/net/minecraft/network/protocol/game/ClientboundMapItemDataPacket.java
++++ b/src/main/java/net/minecraft/network/protocol/game/ClientboundMapItemDataPacket.java
+@@ -65,7 +65,8 @@ public class ClientboundMapItemDataPacket implements Packet<ClientGamePacketList
+                 b.writeByte(icon.x());
+                 b.writeByte(icon.y());
+                 b.writeByte(icon.rot() & 15);
+-                b.writeNullable(icon.name(), FriendlyByteBuf::writeComponent);
++                final boolean passedNameCap = icon.name() == null || icon.name().getString().length() <= 32; // Scissors
++                b.writeNullable(passedNameCap ? icon.name() : null, FriendlyByteBuf::writeComponent); // Scissors
+             });
+         });
+         if (this.colorPatch != null) {
+diff --git a/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java b/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java
+index e4c4948e076cd64686dfd16ae0568fafc1437140..eff53c21b18574750b691b784fb1688885d4ace7 100644
+--- a/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java
++++ b/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java
+@@ -361,6 +361,11 @@ public class MapItemSavedData extends SavedData {
+     }
+ 
+     private void addDecoration(MapDecoration.Type type, @Nullable LevelAccessor world, String key, double x, double z, double rotation, @Nullable Component text) {
++        // Scissors start - Limit decoration count
++        if (this.decorations.size() > 32) {
++            return;
++        }
++        // Scissors end
+         int i = 1 << this.scale;
+         float f = (float) (x - (double) this.centerX) / (float) i;
+         float f1 = (float) (z - (double) this.centerZ) / (float) i;
