@@ -6,7 +6,7 @@ Subject: [PATCH] Limit amount of vehicle collision checks to 3 and discard
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java
-index 48b1cddfca671ac8bcb93a1b60518a4ee9e977e2..48a1b0cd306f3c23d7d4049dfa6a2c1be7b5a05f 100644
+index c906ca07509939a06b9aaf2da0dafb172830a638..c1e91ea440202014419aa9601915f9288a41e32c 100644
 --- a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java
 +++ b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java
 @@ -8,6 +8,7 @@ import com.mojang.datafixers.util.Pair;
@@ -18,9 +18,9 @@ index 48b1cddfca671ac8bcb93a1b60518a4ee9e977e2..48a1b0cd306f3c23d7d4049dfa6a2c1b
  import net.minecraft.BlockUtil;
  import net.minecraft.Util;
 @@ -104,6 +105,7 @@ public abstract class AbstractMinecart extends VehicleEntity {
-     private double flyingX = 0.949999988079071D; // Paper - restore vanilla precision
-     private double flyingY = 0.949999988079071D; // Paper - restore vanilla precision
-     private double flyingZ = 0.949999988079071D; // Paper - restore vanilla precision
+     private double flyingX = 0.95;
+     private double flyingY = 0.95;
+     private double flyingZ = 0.95;
 +    private long lastLargeCollision = 0L; // Scissors - Add a collision debounce
      public double maxSpeed = 0.4D;
      // CraftBukkit end
