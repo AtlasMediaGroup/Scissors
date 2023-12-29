@@ -1,4 +1,4 @@
 [submodule "submodules/AdvancedSlimePaper"]
 	path = submodules/AdvancedSlimePaper
 	url = https://github.com/InfernalSuite/AdvancedSlimePaper.git
-	branch = main
+	branch = mc/1.20.4
