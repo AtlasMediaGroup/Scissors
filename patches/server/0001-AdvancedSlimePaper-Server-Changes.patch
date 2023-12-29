@@ -181,7 +181,7 @@ index 0000000000000000000000000000000000000000..61518ab2b68e7a41500f3c8c8a5ec123
 \ No newline at end of file
 diff --git a/src/main/java/com/infernalsuite/aswm/SimpleDataFixerConverter.java b/src/main/java/com/infernalsuite/aswm/SimpleDataFixerConverter.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..1e340b382ea19a46bf16d58f0655a9320f262354
+index 0000000000000000000000000000000000000000..967523e3b2913a57d5f6ee443142d71e96d3fe00
 --- /dev/null
 +++ b/src/main/java/com/infernalsuite/aswm/SimpleDataFixerConverter.java
 @@ -0,0 +1,104 @@
@@ -217,7 +217,7 @@ index 0000000000000000000000000000000000000000..1e340b382ea19a46bf16d58f0655a932
 +            return data;
 +        }
 +
-+        Map<com.infernalsuite.aswm.ChunkPos, SlimeChunk> chunks = new HashMap<>();
++        Map<ChunkPos, SlimeChunk> chunks = new HashMap<>();
 +        for (SlimeChunk chunk : data.getChunkStorage()) {
 +            List<CompoundTag> entities = new ArrayList<>();
 +            List<CompoundTag> blockEntities = new ArrayList<>();
@@ -291,13 +291,12 @@ index 0000000000000000000000000000000000000000..1e340b382ea19a46bf16d58f0655a932
 +}
 diff --git a/src/main/java/com/infernalsuite/aswm/SlimeNMSBridgeImpl.java b/src/main/java/com/infernalsuite/aswm/SlimeNMSBridgeImpl.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..c9b9cff84b203581e943d8f37b574878a3a5994c
+index 0000000000000000000000000000000000000000..2cb9ae2314fd3bdbbf8c7e161cd7b9300ab580d8
 --- /dev/null
 +++ b/src/main/java/com/infernalsuite/aswm/SlimeNMSBridgeImpl.java
-@@ -0,0 +1,238 @@
+@@ -0,0 +1,211 @@
 +package com.infernalsuite.aswm;
 +
-+import com.flowpowered.nbt.CompoundMap;
 +import com.infernalsuite.aswm.api.SlimeNMSBridge;
 +import com.infernalsuite.aswm.api.world.SlimeWorld;
 +import com.infernalsuite.aswm.api.world.SlimeWorldInstance;
@@ -309,7 +308,6 @@ index 0000000000000000000000000000000000000000..c9b9cff84b203581e943d8f37b574878
 +import net.minecraft.SharedConstants;
 +import net.minecraft.core.registries.Registries;
 +import net.minecraft.nbt.CompoundTag;
-+import net.minecraft.nbt.Tag;
 +import net.minecraft.resources.ResourceKey;
 +import net.minecraft.resources.ResourceLocation;
 +import net.minecraft.server.MinecraftServer;
@@ -328,18 +326,13 @@ index 0000000000000000000000000000000000000000..c9b9cff84b203581e943d8f37b574878
 +import org.bukkit.Bukkit;
 +import org.bukkit.World;
 +import org.bukkit.craftbukkit.CraftWorld;
-+import org.bukkit.craftbukkit.persistence.CraftPersistentDataContainer;
-+import org.bukkit.craftbukkit.persistence.CraftPersistentDataTypeRegistry;
-+import org.bukkit.persistence.PersistentDataContainer;
 +import org.jetbrains.annotations.Nullable;
 +
 +import java.io.IOException;
 +import java.util.Locale;
-+import java.util.Map;
 +
 +public class SlimeNMSBridgeImpl implements SlimeNMSBridge {
 +
-+    private static final CraftPersistentDataTypeRegistry REGISTRY = new CraftPersistentDataTypeRegistry();
 +    private static final SimpleDataFixerConverter DATA_FIXER_CONVERTER = new SimpleDataFixerConverter();
 +
 +    private static final Logger LOGGER = LogManager.getLogger("SWM");
@@ -350,26 +343,6 @@ index 0000000000000000000000000000000000000000..c9b9cff84b203581e943d8f37b574878
 +
 +    public static SlimeNMSBridgeImpl instance() {
 +        return (SlimeNMSBridgeImpl) SlimeNMSBridge.instance();
-+    }
-+
-+    @Override
-+    public void extractCraftPDC(PersistentDataContainer source, CompoundMap target) {
-+        if (source instanceof CraftPersistentDataContainer craftPDC) {
-+            for (Map.Entry<String, Tag> entry : craftPDC.getRaw().entrySet()) {
-+                target.put(Converter.convertTag(entry.getKey(), entry.getValue()));
-+            }
-+        } else {
-+            throw new IllegalArgumentException("PersistentDataContainer is not a CraftPersistentDataContainer");
-+        }
-+    }
-+
-+    @Override
-+    public PersistentDataContainer extractCompoundMapIntoCraftPDC(CompoundMap source) {
-+        var container = new CraftPersistentDataContainer(REGISTRY);
-+        for (Map.Entry<String, com.flowpowered.nbt.Tag<?>> entry : source.entrySet()) {
-+            container.put(entry.getKey(), Converter.convertTag(entry.getValue()));
-+        }
-+        return container;
 +    }
 +
 +    @Override
@@ -959,10 +932,10 @@ index 0000000000000000000000000000000000000000..c94ee5460d3859d373ae81e9d3623db0
 +}
 diff --git a/src/main/java/com/infernalsuite/aswm/level/NMSSlimeWorld.java b/src/main/java/com/infernalsuite/aswm/level/NMSSlimeWorld.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..07e542e3f75bf272f53345dc040d90358e7d7b2d
+index 0000000000000000000000000000000000000000..9a27369c00345bbb94aa19f77687269dc94c0b0a
 --- /dev/null
 +++ b/src/main/java/com/infernalsuite/aswm/level/NMSSlimeWorld.java
-@@ -0,0 +1,98 @@
+@@ -0,0 +1,91 @@
 +package com.infernalsuite.aswm.level;
 +
 +import com.flowpowered.nbt.CompoundTag;
@@ -974,8 +947,6 @@ index 0000000000000000000000000000000000000000..07e542e3f75bf272f53345dc040d9035
 +import net.minecraft.SharedConstants;
 +import net.minecraft.server.level.ChunkHolder;
 +import net.minecraft.world.level.chunk.LevelChunk;
-+import org.bukkit.persistence.PersistentDataContainer;
-+import org.jetbrains.annotations.NotNull;
 +
 +import java.io.IOException;
 +import java.util.Collection;
@@ -1054,11 +1025,6 @@ index 0000000000000000000000000000000000000000..07e542e3f75bf272f53345dc040d9035
 +    @Override
 +    public int getDataVersion() {
 +        return SharedConstants.getCurrentVersion().getDataVersion().getVersion();
-+    }
-+
-+    @Override
-+    public @NotNull PersistentDataContainer getPersistentDataContainer() {
-+        return memoryWorld.getPersistentDataContainer();
 +    }
 +}
 \ No newline at end of file
@@ -1381,10 +1347,10 @@ index 0000000000000000000000000000000000000000..b159fc8751e9840b311cc1eda01e496e
 \ No newline at end of file
 diff --git a/src/main/java/com/infernalsuite/aswm/level/SlimeInMemoryWorld.java b/src/main/java/com/infernalsuite/aswm/level/SlimeInMemoryWorld.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..9bdf0e3778a03cbbf3af213e8c197257ce0964f6
+index 0000000000000000000000000000000000000000..f0509f07a743302dfedce9413b0d9c8fb3ff111d
 --- /dev/null
 +++ b/src/main/java/com/infernalsuite/aswm/level/SlimeInMemoryWorld.java
-@@ -0,0 +1,269 @@
+@@ -0,0 +1,259 @@
 +package com.infernalsuite.aswm.level;
 +
 +import com.flowpowered.nbt.CompoundTag;
@@ -1396,7 +1362,6 @@ index 0000000000000000000000000000000000000000..9bdf0e3778a03cbbf3af213e8c197257
 +import com.infernalsuite.aswm.api.world.SlimeWorld;
 +import com.infernalsuite.aswm.api.world.SlimeWorldInstance;
 +import com.infernalsuite.aswm.api.world.properties.SlimePropertyMap;
-+import com.infernalsuite.aswm.pdc.FlowPersistentDataContainer;
 +import com.infernalsuite.aswm.serialization.slime.SlimeSerializer;
 +import com.infernalsuite.aswm.skeleton.SkeletonCloning;
 +import com.infernalsuite.aswm.skeleton.SkeletonSlimeWorld;
@@ -1407,8 +1372,6 @@ index 0000000000000000000000000000000000000000..9bdf0e3778a03cbbf3af213e8c197257
 +import net.minecraft.world.level.material.Fluid;
 +import net.minecraft.world.ticks.LevelChunkTicks;
 +import org.bukkit.World;
-+import org.bukkit.persistence.PersistentDataContainer;
-+import org.jetbrains.annotations.NotNull;
 +
 +import java.io.IOException;
 +import java.util.*;
@@ -1424,7 +1387,6 @@ index 0000000000000000000000000000000000000000..9bdf0e3778a03cbbf3af213e8c197257
 +    private final SlimeWorld liveWorld;
 +
 +    private final CompoundTag extra;
-+    private final FlowPersistentDataContainer extraPDC;
 +    private final SlimePropertyMap propertyMap;
 +    private final SlimeLoader loader;
 +
@@ -1447,7 +1409,6 @@ index 0000000000000000000000000000000000000000..9bdf0e3778a03cbbf3af213e8c197257
 +            this.chunkStorage.put(pos, initial);
 +        }
 +
-+        this.extraPDC = new FlowPersistentDataContainer(extra);
 +        this.liveWorld = new NMSSlimeWorld(this);
 +    }
 +
@@ -1647,11 +1608,6 @@ index 0000000000000000000000000000000000000000..9bdf0e3778a03cbbf3af213e8c197257
 +
 +    public SlimeLevelInstance getInstance() {
 +        return instance;
-+    }
-+
-+    @Override
-+    public @NotNull PersistentDataContainer getPersistentDataContainer() {
-+        return this.extraPDC;
 +    }
 +}
 diff --git a/src/main/java/com/infernalsuite/aswm/level/SlimeLevelGenerator.java b/src/main/java/com/infernalsuite/aswm/level/SlimeLevelGenerator.java
