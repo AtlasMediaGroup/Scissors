@@ -5,10 +5,10 @@ Subject: [PATCH] Prevent player banning using duplicate UUIDs
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 9c2a2e441eb7efeee0caaec442158a66acfe8cc6..1ae51a64ede4bb74356737474050eceb350e4c8f 100644
+index ca309311928654ca7e971e98114d7c16d8341a55..4d3faab706e04c1ad495a59e6523524730a48f70 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -1688,7 +1688,13 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1693,7 +1693,13 @@ public class ServerLevel extends Level implements WorldGenLevel {
          if (entity != null) {
              ServerLevel.LOGGER.warn("Force-added player with duplicate UUID {}", player.getUUID());
              entity.unRide();

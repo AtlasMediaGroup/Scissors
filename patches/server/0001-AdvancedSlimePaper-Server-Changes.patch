@@ -1887,10 +1887,10 @@ index d72041aa814ff179e6e29a45dcd359a91d426d47..9c16cd0728d2252cf4dadb45779e2ad0
      private static final Logger LOGGER = LogUtils.getClassLogger();
  
 diff --git a/src/main/java/io/papermc/paper/chunk/system/scheduling/ChunkHolderManager.java b/src/main/java/io/papermc/paper/chunk/system/scheduling/ChunkHolderManager.java
-index abd0217cf0bff183c8e262edc173a53403797c1a..42170127cc1ed35cb2aec6bf7eb473a0137c63bb 100644
+index 6bc7c6f16a1649fc9e24e7cf90fca401e5bd4875..8bad563d6ff3ae3a41e7ff3170e4bce3bc74136d 100644
 --- a/src/main/java/io/papermc/paper/chunk/system/scheduling/ChunkHolderManager.java
 +++ b/src/main/java/io/papermc/paper/chunk/system/scheduling/ChunkHolderManager.java
-@@ -165,7 +165,8 @@ public final class ChunkHolderManager {
+@@ -166,7 +166,8 @@ public final class ChunkHolderManager {
          return this.chunkHolders.size();
      }
  
@@ -1900,7 +1900,7 @@ index abd0217cf0bff183c8e262edc173a53403797c1a..42170127cc1ed35cb2aec6bf7eb473a0
          TickThread.ensureTickThread("Closing world off-main");
          if (halt) {
              LOGGER.info("Waiting 60s for chunk system to halt for world '" + this.world.getWorld().getName() + "'");
-@@ -1316,7 +1317,7 @@ public final class ChunkHolderManager {
+@@ -1317,7 +1318,7 @@ public final class ChunkHolderManager {
  
      public boolean processTicketUpdates() {
          co.aikar.timings.MinecraftTimings.distanceManagerTick.startTiming(); try { // Paper - add timings for distance manager
@@ -2232,7 +2232,7 @@ index 44ada45d9bf2d9b48e5de1c3cb1a855902f3884b..869bb52fbdc4a5a96324e3cf5b6a3cd5
              gameprofilerfiller.pop();
              gameprofilerfiller.pop();
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 6041f1f5151f26d389f946d70f16e1de76db496b..9c2a2e441eb7efeee0caaec442158a66acfe8cc6 100644
+index 676087c3addd712939c865b39ddb5d9f0bc7ce25..ca309311928654ca7e971e98114d7c16d8341a55 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -319,7 +319,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
@@ -2244,7 +2244,7 @@ index 6041f1f5151f26d389f946d70f16e1de76db496b..9c2a2e441eb7efeee0caaec442158a66
                  } // Folia - region threading - make callback thread-safe TODO rebase
                  chunkProvider.addTicketAtLevel(TicketType.FUTURE_AWAIT, chunk.getPos(), ticketLevel, holderIdentifier);
              }
-@@ -689,6 +689,14 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -694,6 +694,14 @@ public class ServerLevel extends Level implements WorldGenLevel {
  
      // Add env and gen to constructor, IWorldDataServer -> WorldDataServer
      public ServerLevel(MinecraftServer minecraftserver, Executor executor, LevelStorageSource.LevelStorageAccess convertable_conversionsession, PrimaryLevelData iworlddataserver, ResourceKey<Level> resourcekey, LevelStem worlddimension, ChunkProgressListener worldloadlistener, boolean flag, long i, List<CustomSpawner> list, boolean flag1, @Nullable RandomSequences randomsequences, org.bukkit.World.Environment env, org.bukkit.generator.ChunkGenerator gen, org.bukkit.generator.BiomeProvider biomeProvider) {
@@ -2259,7 +2259,7 @@ index 6041f1f5151f26d389f946d70f16e1de76db496b..9c2a2e441eb7efeee0caaec442158a66
          // IRegistryCustom.Dimension iregistrycustom_dimension = minecraftserver.registryAccess(); // CraftBukkit - decompile error
          // Holder holder = worlddimension.type(); // CraftBukkit - decompile error
  
-@@ -727,6 +735,12 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -732,6 +740,12 @@ public class ServerLevel extends Level implements WorldGenLevel {
              chunkgenerator = new org.bukkit.craftbukkit.generator.CustomChunkGenerator(this, chunkgenerator, gen);
          }
          // CraftBukkit end
@@ -2272,7 +2272,7 @@ index 6041f1f5151f26d389f946d70f16e1de76db496b..9c2a2e441eb7efeee0caaec442158a66
          boolean flag2 = minecraftserver.forceSynchronousWrites();
          DataFixer datafixer = minecraftserver.getFixerUpper();
          this.entityStorage = new EntityRegionFileStorage(convertable_conversionsession.getDimensionPath(resourcekey).resolve("entities"), flag2); // Paper - rewrite chunk system  //EntityPersistentStorage<Entity> entitypersistentstorage = new EntityStorage(this, convertable_conversionsession.getDimensionPath(resourcekey).resolve("entities"), datafixer, flag2, minecraftserver);
-@@ -738,7 +752,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -743,7 +757,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
          //PersistentEntitySectionManager persistententitysectionmanager = this.entityManager; // Paper - rewrite chunk system
  
          //Objects.requireNonNull(this.entityManager); // Paper - rewrite chunk system
@@ -2281,7 +2281,7 @@ index 6041f1f5151f26d389f946d70f16e1de76db496b..9c2a2e441eb7efeee0caaec442158a66
              return minecraftserver.overworld().getDataStorage();
          });
          this.chunkSource.getGeneratorState().ensureStructuresGenerated();
-@@ -786,6 +800,12 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -791,6 +805,12 @@ public class ServerLevel extends Level implements WorldGenLevel {
          this.dragonFight = enderDragonFight;
      }
  
@@ -2294,7 +2294,7 @@ index 6041f1f5151f26d389f946d70f16e1de76db496b..9c2a2e441eb7efeee0caaec442158a66
      public void setWeatherParameters(int clearDuration, int rainDuration, boolean raining, boolean thundering) {
          this.serverLevelData.setClearWeatherTime(clearDuration);
          this.serverLevelData.setRainTime(rainDuration);
-@@ -1023,14 +1043,14 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1028,14 +1048,14 @@ public class ServerLevel extends Level implements WorldGenLevel {
          gameprofilerfiller.popPush("iceandsnow");
  
          if (!this.paperConfig().environment.disableIceAndSnow) { // Paper
@@ -2316,7 +2316,7 @@ index 6041f1f5151f26d389f946d70f16e1de76db496b..9c2a2e441eb7efeee0caaec442158a66
          } // Paper
  
          gameprofilerfiller.popPush("tickBlocks");
-@@ -1074,7 +1094,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1079,7 +1099,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
  
      @VisibleForTesting
      public void tickPrecipitation(BlockPos pos) {
@@ -2325,7 +2325,7 @@ index 6041f1f5151f26d389f946d70f16e1de76db496b..9c2a2e441eb7efeee0caaec442158a66
          tickPrecipitation(pos.mutable(), this.getChunkAt(pos));
      }
      public void tickPrecipitation(BlockPos.MutableBlockPos blockposition1, final LevelChunk chunk) {
-@@ -1381,9 +1401,9 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1386,9 +1406,9 @@ public class ServerLevel extends Level implements WorldGenLevel {
                  currentlyTickingEntity.lazySet(entity);
              }
              // Paper end - log detailed entity tick information
@@ -2338,7 +2338,7 @@ index 6041f1f5151f26d389f946d70f16e1de76db496b..9c2a2e441eb7efeee0caaec442158a66
          /*if (!org.spigotmc.ActivationRange.checkIfActive(entity)) { // Paper - comment out - EAR 2, reimplement below
              entity.tickCount++;
              timer = entity.getType().inactiveTickTimer.startTiming(); try { // Paper - timings
-@@ -1391,36 +1411,36 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1396,36 +1416,36 @@ public class ServerLevel extends Level implements WorldGenLevel {
              } finally { timer.stopTiming(); } // Paper
              return;
          }*/ // Paper - comment out EAR 2
@@ -2402,7 +2402,7 @@ index 6041f1f5151f26d389f946d70f16e1de76db496b..9c2a2e441eb7efeee0caaec442158a66
          } finally {
              if (currentlyTickingEntity.get() == entity) {
                  currentlyTickingEntity.lazySet(null);
-@@ -1436,36 +1456,36 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1441,36 +1461,36 @@ public class ServerLevel extends Level implements WorldGenLevel {
                  final boolean isActive = org.spigotmc.ActivationRange.checkIfActive(passenger);
                  co.aikar.timings.Timing timer = isActive ? passenger.getType().passengerTickTimer.startTiming() : passenger.getType().passengerInactiveTickTimer.startTiming(); // Paper
                  try {
@@ -2466,7 +2466,7 @@ index 6041f1f5151f26d389f946d70f16e1de76db496b..9c2a2e441eb7efeee0caaec442158a66
              }
          } else {
              passenger.stopRiding();
-@@ -1519,18 +1539,18 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1524,18 +1544,18 @@ public class ServerLevel extends Level implements WorldGenLevel {
          if (!savingDisabled) {
              org.bukkit.Bukkit.getPluginManager().callEvent(new org.bukkit.event.world.WorldSaveEvent(this.getWorld())); // CraftBukkit
              try (co.aikar.timings.Timing ignored = timings.worldSave.startTiming()) { // Paper
@@ -2494,7 +2494,7 @@ index 6041f1f5151f26d389f946d70f16e1de76db496b..9c2a2e441eb7efeee0caaec442158a66
                  timings.worldSaveChunks.stopTiming(); // Paper
              }// Paper
              // Paper - rewrite chunk system - entity saving moved into ChunkHolder
-@@ -1858,47 +1878,47 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1863,47 +1883,47 @@ public class ServerLevel extends Level implements WorldGenLevel {
  
          this.getChunkSource().blockChanged(pos);
          if(this.paperConfig().misc.updatePathfindingOnBlockUpdate) { // Paper - option to disable pathfinding updates
