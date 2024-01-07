@@ -4,23 +4,6 @@ Date: Sun, 10 Dec 2023 13:11:22 -0600
 Subject: [PATCH] UUID validation
 
 
-diff --git a/src/main/java/net/minecraft/nbt/NbtUtils.java b/src/main/java/net/minecraft/nbt/NbtUtils.java
-index b65dcff9812dbc3256c080ac264c4aafd83ce276..82b53a7bfb37bfa1752a016a8a454c0b994b9108 100644
---- a/src/main/java/net/minecraft/nbt/NbtUtils.java
-+++ b/src/main/java/net/minecraft/nbt/NbtUtils.java
-@@ -74,7 +74,11 @@ public final class NbtUtils {
-         UUID uUID = nbt.hasUUID("Id") ? nbt.getUUID("Id") : Util.NIL_UUID;
-         // Paper start - support string UUID's
-         if (nbt.contains("Id", Tag.TAG_STRING)) {
--            uUID = UUID.fromString(nbt.getString("Id"));
-+            // Scissors start - Validate String UUIDs in game profiles
-+            try {
-+                uUID = UUID.fromString(nbt.getString("Id"));
-+            } catch (Exception ignored) {}
-+            // Scissors end
-         }
-         // Paper end
-         String string = nbt.getString("Name");
 diff --git a/src/main/java/net/minecraft/network/chat/HoverEvent.java b/src/main/java/net/minecraft/network/chat/HoverEvent.java
 index 7fd85ae2ebd7225f06d874aa7e37fbdb89e3ea92..b2cc15da40aa7bbcfc234b4e147ed0e53f359efa 100644
 --- a/src/main/java/net/minecraft/network/chat/HoverEvent.java

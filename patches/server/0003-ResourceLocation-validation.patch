@@ -44,39 +44,17 @@ index 1f55185814125c691288294d18bf1580461c8066..259d65f8e21f9cf99585d416eafdc967
          }
  
 diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
-index 940b8d0b89d7e55c938aefbe80ee71b0db3dacb8..297a214a7833fd67640c94352671483bc4fc8dd5 100644
+index 6cfce9755dd464a7afb01f9032e567ce3bcd5bc5..264c94f49035236e3584a3577f2516f0f430a552 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityType.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityType.java
-@@ -593,7 +593,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
-         }), (entity) -> {
+@@ -599,7 +599,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+             if (generation) entity.generation = true; // Paper - add generation bool param
              entity.load(nbt);
          }, () -> {
 -            EntityType.LOGGER.warn("Skipping Entity with id {}", nbt.getString("id"));
 +            // Scissors - Don't log invalid entities
          });
      }
- 
-@@ -612,7 +612,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
-     }
- 
-     public static Optional<EntityType<?>> by(CompoundTag nbt) {
--        return BuiltInRegistries.ENTITY_TYPE.getOptional(new ResourceLocation(nbt.getString("id")));
-+        return BuiltInRegistries.ENTITY_TYPE.getOptional(ResourceLocation.tryParse(nbt.getString("id"))); // Scissors
-     }
- 
-     @Nullable
-diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index 5af48151159135b869ec4753bbcf79dd257c1570..6c4425c08ea4a4444bac50fe5cf587870d9576a5 100644
---- a/src/main/java/net/minecraft/world/entity/Mob.java
-+++ b/src/main/java/net/minecraft/world/entity/Mob.java
-@@ -620,7 +620,7 @@ public abstract class Mob extends LivingEntity implements Targeting {
- 
-         this.setLeftHanded(nbt.getBoolean("LeftHanded"));
-         if (nbt.contains("DeathLootTable", 8)) {
--            this.lootTable = new ResourceLocation(nbt.getString("DeathLootTable"));
-+            this.lootTable = ResourceLocation.tryParse(nbt.getString("DeathLootTable")); // Scissors
-             this.lootTableSeed = nbt.getLong("DeathLootTableSeed");
-         }
  
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 index a18aadbf7ae83713e1f2b21553185d8000bc7699..f5ad7ddf13cbb6452c2927aef9b54eae3335b4c6 100644
