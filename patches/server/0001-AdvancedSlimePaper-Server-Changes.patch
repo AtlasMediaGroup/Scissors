@@ -1910,7 +1910,7 @@ index 6bc7c6f16a1649fc9e24e7cf90fca401e5bd4875..8bad563d6ff3ae3a41e7ff3170e4bce3
      }
  
 diff --git a/src/main/java/io/papermc/paper/chunk/system/scheduling/ChunkLoadTask.java b/src/main/java/io/papermc/paper/chunk/system/scheduling/ChunkLoadTask.java
-index e7fb084ddb88ab62f1d493a999cc82b9258d275e..943cdd570c9e5c87ee9f3984404e08b4cdffeca0 100644
+index 310e61db5d845f904119dcb84d981e7c608bf1a8..1ab142554a6593dac816c73d21f3757af6a23bf2 100644
 --- a/src/main/java/io/papermc/paper/chunk/system/scheduling/ChunkLoadTask.java
 +++ b/src/main/java/io/papermc/paper/chunk/system/scheduling/ChunkLoadTask.java
 @@ -6,6 +6,7 @@ import ca.spottedleaf.concurrentutil.lock.ReentrantAreaLock;
@@ -2232,7 +2232,7 @@ index 44ada45d9bf2d9b48e5de1c3cb1a855902f3884b..869bb52fbdc4a5a96324e3cf5b6a3cd5
              gameprofilerfiller.pop();
              gameprofilerfiller.pop();
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 676087c3addd712939c865b39ddb5d9f0bc7ce25..ca309311928654ca7e971e98114d7c16d8341a55 100644
+index 7c31f619a6e8e3539c547fc43d821d2cce7df7e7..46f1793d86310036ed816487f7a1ad4e41d2f7c5 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -319,7 +319,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
@@ -2494,7 +2494,7 @@ index 676087c3addd712939c865b39ddb5d9f0bc7ce25..ca309311928654ca7e971e98114d7c16
                  timings.worldSaveChunks.stopTiming(); // Paper
              }// Paper
              // Paper - rewrite chunk system - entity saving moved into ChunkHolder
-@@ -1863,47 +1883,47 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1864,47 +1884,47 @@ public class ServerLevel extends Level implements WorldGenLevel {
  
          this.getChunkSource().blockChanged(pos);
          if(this.paperConfig().misc.updatePathfindingOnBlockUpdate) { // Paper - option to disable pathfinding updates
@@ -2598,7 +2598,7 @@ index 16fbc633de3a1d9e5e8c65ae107397a6f0e50811..d04c0147a87d4b31e6b5b090abeec316
              for(int i = 0; i < storage.getSize(); ++i) {
                  T object = palette.valueFor(storage.get(i));
 diff --git a/src/main/java/net/minecraft/world/level/chunk/storage/ChunkSerializer.java b/src/main/java/net/minecraft/world/level/chunk/storage/ChunkSerializer.java
-index 1379084a80ce25644f13736b4a5ee5fabbd9ec1f..464e1c7970af5aa06ef563b823d7fd8b2776f8f5 100644
+index daa7525074facfbf31c1183e872f083a02697700..71773432c4895a3893d6f7076328e1224404f6f1 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/storage/ChunkSerializer.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/storage/ChunkSerializer.java
 @@ -1,6 +1,9 @@

@@ -5,10 +5,10 @@ Subject: [PATCH] Patch invalid entity rotation log spam
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index a8ae232f9ef204e6dd2f14c1e92008ceb7af7ab2..4f032b8303c6c1dc3c829c3c09009aaa0a5209fa 100644
+index 2e11d0f17fc8fa4ed84c40dd9747e136675030a4..acd0dcf69a23ec6dda8e58621b8634076ba8eec1 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -4734,7 +4734,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+@@ -4745,7 +4745,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
  
      public void setXRot(float pitch) {
          if (!Float.isFinite(pitch)) {
