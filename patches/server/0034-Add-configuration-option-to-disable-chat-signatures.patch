@@ -40,7 +40,7 @@ index 74cf1c043beef03cfd5adf481414a5ee78bef2a6..939f4a0639c847b94cfc9acf1409a7a3
      }
  }
 diff --git a/src/main/java/net/minecraft/network/chat/SignedMessageChain.java b/src/main/java/net/minecraft/network/chat/SignedMessageChain.java
-index 85a8a687b1568a56e3e646b37ef78b562c1b8a82..68e2edd39dcbcc9199aeaecff9b3280914ba9270 100644
+index 22ead092ae984d1eaa052fe97981ce3c49b521d8..77be2549c1c836fd21f510ed1082cbd22ec60f09 100644
 --- a/src/main/java/net/minecraft/network/chat/SignedMessageChain.java
 +++ b/src/main/java/net/minecraft/network/chat/SignedMessageChain.java
 @@ -5,6 +5,8 @@ import java.time.Instant;
@@ -62,7 +62,7 @@ index 85a8a687b1568a56e3e646b37ef78b562c1b8a82..68e2edd39dcbcc9199aeaecff9b32809
                      }
  
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 889f142b6f87d4ccf4c1d2ffd379c96fbbfddd44..4bdd2e731102c7e3a312ad3144537042dce46923 100644
+index 24bd79c80b1b8fadce647febcf461f564e1eae88..e94f9879bfd06e9f45373389bbdce67ee05a9773 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -1,5 +1,6 @@
@@ -72,7 +72,6 @@ index 889f142b6f87d4ccf4c1d2ffd379c96fbbfddd44..4bdd2e731102c7e3a312ad3144537042
  import me.totalfreedom.scissors.event.player.SpectatorTeleportEvent; // Scissors
  import com.google.common.collect.Lists;
  import com.google.common.primitives.Floats;
-@@ -2247,7 +2248,7 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
  
      private void handleMessageDecodeFailure(SignedMessageChain.DecodeException exception) {
          ServerGamePacketListenerImpl.LOGGER.warn("Failed to update secure chat state for {}: '{}'", this.player.getGameProfile().getName(), exception.getComponent().getString());
@@ -81,7 +80,7 @@ index 889f142b6f87d4ccf4c1d2ffd379c96fbbfddd44..4bdd2e731102c7e3a312ad3144537042
              this.disconnect(exception.getComponent(), exception.kickCause); // Paper - kick event causes
          } else {
              this.player.sendSystemMessage(exception.getComponent().copy().withStyle(ChatFormatting.RED));
-@@ -2295,6 +2296,7 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
+@@ -2297,6 +2298,7 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
              Optional<LastSeenMessages> optional = this.lastSeenMessages.applyUpdate(acknowledgment);
  
              if (optional.isEmpty()) {
@@ -89,7 +88,7 @@ index 889f142b6f87d4ccf4c1d2ffd379c96fbbfddd44..4bdd2e731102c7e3a312ad3144537042
                  ServerGamePacketListenerImpl.LOGGER.warn("Failed to validate message acknowledgements from {}", this.player.getName().getString());
                  this.disconnect(ServerGamePacketListenerImpl.CHAT_VALIDATION_FAILED, org.bukkit.event.player.PlayerKickEvent.Cause.CHAT_VALIDATION_FAILED); // Paper - kick event causes
              }
-@@ -2493,6 +2495,7 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
+@@ -2495,6 +2497,7 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
  
          synchronized (this.lastSeenMessages) {
              if (!this.lastSeenMessages.applyOffset(packet.offset())) {
@@ -97,7 +96,7 @@ index 889f142b6f87d4ccf4c1d2ffd379c96fbbfddd44..4bdd2e731102c7e3a312ad3144537042
                  ServerGamePacketListenerImpl.LOGGER.warn("Failed to validate message acknowledgements from {}", this.player.getName().getString());
                  this.disconnect(ServerGamePacketListenerImpl.CHAT_VALIDATION_FAILED, org.bukkit.event.player.PlayerKickEvent.Cause.CHAT_VALIDATION_FAILED); // Paper - kick event causes
              }
-@@ -3471,6 +3474,7 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
+@@ -3473,6 +3476,7 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
      @Override
      public void handleChatSessionUpdate(ServerboundChatSessionUpdatePacket packet) {
          PacketUtils.ensureRunningOnSameThread(packet, this, this.player.serverLevel());

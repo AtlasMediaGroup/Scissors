@@ -59,7 +59,7 @@ index 4092c7a8c2b0d9d26e6f4d97386735236300d132..04c47cf1a920ae6c356449df801227ee
              }
          }
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index de277d61b718fe07a87d75a2547bb1c7f8553aa1..e2dbfe581717cc107d89206c1ba46014a6965693 100644
+index d1effd5d7b9eb2d715c9a3e16adbef2541b1ccf2..622617bcfd1f41d1d055b916efd972d9f6dae083 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
 @@ -23,6 +23,7 @@ import java.util.function.Predicate;
@@ -105,7 +105,7 @@ index de277d61b718fe07a87d75a2547bb1c7f8553aa1..e2dbfe581717cc107d89206c1ba46014
          this.processEnchantOrder(this.tag); // Paper
          if (this.getItem().canBeDepleted()) {
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
-index f5ad7ddf13cbb6452c2927aef9b54eae3335b4c6..041e3c8fb7c9ca69a7c7c1c952ed9915a75d7752 100644
+index 5edca8cdad2c3e3e8d2dd9f6ab02b3d63beb768d..eed465e73e073f6d741752b9bc5cfe99f1b26676 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 @@ -9,6 +9,7 @@ import java.util.Iterator;
@@ -116,7 +116,7 @@ index f5ad7ddf13cbb6452c2927aef9b54eae3335b4c6..041e3c8fb7c9ca69a7c7c1c952ed9915
  import net.minecraft.SharedConstants;
  import net.minecraft.Util;
  import net.minecraft.core.BlockPos;
-@@ -212,6 +213,17 @@ public abstract class AbstractFurnaceBlockEntity extends BaseContainerBlockEntit
+@@ -213,6 +214,17 @@ public abstract class AbstractFurnaceBlockEntity extends BaseContainerBlockEntit
      public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
  
      public List<ItemStack> getContents() {
@@ -164,7 +164,7 @@ index 416aa989ebb18a8741cc9d605a1180ab830f6643..a9a8c9e68e5b767dec2c26495685da88
      }
  
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java
-index c57efcb9a79337ec791e4e8f6671612f0a82b441..2cbb8170953cb555411db8c171a3d1d91eb799bb 100644
+index bc01481ac5990ad1cfd1def5a16dd0ed2f9de8c9..5948d7f87c2f2021345d58db18ec1c996ae8bf7a 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java
 @@ -3,6 +3,7 @@ package net.minecraft.world.level.block.entity;
@@ -252,7 +252,7 @@ index 881379681c39230a00b3a1f11cd87498984396c7..d0513b72cdaec3b67b9341d251367b19
      }
  
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
-index d4dcf7fe26474ae07374e7761d823bc5c8b54f97..7352183f7eaa1ddcd028e53f4b66a1c34e32b988 100644
+index df1c1c27b7c0065f8179d59bdb9de01dde22befa..68cccd8d6dd1d8e196c9e2d4efdd15891fe48567 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 @@ -6,6 +6,7 @@ import java.util.function.BooleanSupplier;

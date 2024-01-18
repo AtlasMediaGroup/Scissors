@@ -5,7 +5,7 @@ Subject: [PATCH] Reject oversized components from updating
 
 
 diff --git a/src/main/java/net/minecraft/network/chat/ComponentUtils.java b/src/main/java/net/minecraft/network/chat/ComponentUtils.java
-index 7daca712816a79cc4a30b084afbd3d07b5d3755f..a7e04eb4284e7d5148e1c7b991620d666785ec70 100644
+index 57206594f305961a33542e1f8079c75bfa7c535f..ea4504be0eb115e563a4abd9dcbcedd57f9edcc2 100644
 --- a/src/main/java/net/minecraft/network/chat/ComponentUtils.java
 +++ b/src/main/java/net/minecraft/network/chat/ComponentUtils.java
 @@ -38,8 +38,9 @@ public class ComponentUtils {
@@ -17,7 +17,7 @@ index 7daca712816a79cc4a30b084afbd3d07b5d3755f..a7e04eb4284e7d5148e1c7b991620d66
 -            return text.copy();
 +            result = text.copy(); // Scissors
          } else {
-             // Paper start
+             // Paper start - adventure; pass actual vanilla component
              if (text instanceof io.papermc.paper.adventure.AdventureComponent adventureComponent) {
 @@ -52,8 +53,9 @@ public class ComponentUtils {
                  mutableComponent.append(updateForEntity(source, component, sender, depth + 1));

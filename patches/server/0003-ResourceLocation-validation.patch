@@ -44,11 +44,11 @@ index 1f55185814125c691288294d18bf1580461c8066..259d65f8e21f9cf99585d416eafdc967
          }
  
 diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
-index 6cfce9755dd464a7afb01f9032e567ce3bcd5bc5..264c94f49035236e3584a3577f2516f0f430a552 100644
+index 081937597a8984b52a1e92d4c6032c04c942116e..9a540393339e85a06ac9e29d6539517b663ed312 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityType.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityType.java
 @@ -599,7 +599,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
-             if (generation) entity.generation = true; // Paper - add generation bool param
+             if (generation) entity.generation = true; // Paper - Don't fire sync event during generation
              entity.load(nbt);
          }, () -> {
 -            EntityType.LOGGER.warn("Skipping Entity with id {}", nbt.getString("id"));
@@ -57,10 +57,10 @@ index 6cfce9755dd464a7afb01f9032e567ce3bcd5bc5..264c94f49035236e3584a3577f2516f0
      }
  
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
-index a18aadbf7ae83713e1f2b21553185d8000bc7699..f5ad7ddf13cbb6452c2927aef9b54eae3335b4c6 100644
+index 5eaab97a0c3b93a44a45e2ed11033fe01c0c95c2..5edca8cdad2c3e3e8d2dd9f6ab02b3d63beb768d 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
-@@ -289,7 +289,12 @@ public abstract class AbstractFurnaceBlockEntity extends BaseContainerBlockEntit
+@@ -290,7 +290,12 @@ public abstract class AbstractFurnaceBlockEntity extends BaseContainerBlockEntit
          while (iterator.hasNext()) {
              String s = (String) iterator.next();
  
@@ -88,7 +88,7 @@ index b5b1831631e233a96b6fd55972a8862b0f420da8..a086f12c09a5e38f63c8de118fcb5a6a
              return true;
          } else {
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
-index 64875525df244db838560f5fefb7b1b07b0f1f51..fd490db7431404b0324e5ade474ec95d694aa489 100644
+index a94300a457b25f0e33a8eeabba6dd5720ca9ab1e..de300a7888f95e7770690ecdc36e44803e3634fd 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
 @@ -50,7 +50,7 @@ public abstract class RandomizableContainerBlockEntity extends BaseContainerBloc

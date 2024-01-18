@@ -5,7 +5,7 @@ Subject: [PATCH] Validate BlockState and SoundEvent values
 
 
 diff --git a/src/main/java/net/minecraft/nbt/NbtUtils.java b/src/main/java/net/minecraft/nbt/NbtUtils.java
-index 80083fed4b44b9d433925f09db83e559582109a1..032fc2add6c25780a3663fd1d2e429fcfd37dc4a 100644
+index 8e68a094a22243f3e84110ddf81136219ac1de7c..807194e1c4d4b6808e60b2db57b596c7de5c27de 100644
 --- a/src/main/java/net/minecraft/nbt/NbtUtils.java
 +++ b/src/main/java/net/minecraft/nbt/NbtUtils.java
 @@ -231,7 +231,7 @@ public final class NbtUtils {
@@ -15,5 +15,5 @@ index 80083fed4b44b9d433925f09db83e559582109a1..032fc2add6c25780a3663fd1d2e429fc
 -            ResourceLocation resourceLocation = ResourceLocation.tryParse(nbt.getString("Name"));
 +            ResourceLocation resourceLocation = ResourceLocation.tryParse(nbt.getString("Name")); // Scissors - Validate BlockState
              Optional<? extends Holder<Block>> optional = resourceLocation != null ? blockLookup.get(ResourceKey.create(Registries.BLOCK, resourceLocation)) : Optional.empty();
-             // Paper end
+             // Paper end - Validate resource location
              if (optional.isEmpty()) {
