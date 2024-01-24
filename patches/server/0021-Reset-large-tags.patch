@@ -59,7 +59,7 @@ index 4092c7a8c2b0d9d26e6f4d97386735236300d132..04c47cf1a920ae6c356449df801227ee
              }
          }
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index d7d51f16396ad5539d39b7914125b559bd7dd2b4..1e161e6ee3f1214600c57f7a7df9117284892927 100644
+index ed27a963223bfe18310ad5adabf461b5e307ef9c..1af25c1e91e1a93c6c6c8445a1d9fbeb4f15916b 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
 @@ -23,6 +23,7 @@ import java.util.function.Predicate;
@@ -105,7 +105,7 @@ index d7d51f16396ad5539d39b7914125b559bd7dd2b4..1e161e6ee3f1214600c57f7a7df91172
          this.processEnchantOrder(this.tag); // Paper
          if (this.getItem().canBeDepleted()) {
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
-index 6c725197846a3715e9e8d124635e908325d37166..366130c00b80cf03367d64ddd86f76eb40c1e997 100644
+index c4b972846200b1e3fb84c75c200122906f84a245..a53b3a3102e5b3e7860bb51f5af4faeecb0474c0 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 @@ -9,6 +9,7 @@ import java.util.Iterator;
@@ -194,7 +194,7 @@ index bc01481ac5990ad1cfd1def5a16dd0ed2f9de8c9..5948d7f87c2f2021345d58db18ec1c99
      }
  
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/ChestBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/ChestBlockEntity.java
-index a71414397bd45ee7bcacfeef0041d80dfa25f114..f51abf1722e98d7ce9e616d84472d847e597eafb 100644
+index 9b1243d96e0694c62fc9e82e9be540bce0d2b3ad..0f734147d0cb86ff6c8a4c28733cf4cb9b7856d4 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/ChestBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/ChestBlockEntity.java
 @@ -1,5 +1,6 @@

@@ -426,7 +426,7 @@ index 61840cfd64caba6595dfc99c91c76a195638d4ee..9acd9ecac6d72701835e04a17fddade7
  
              if (optionset.has("initSettings")) { // CraftBukkit
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index cc9dff21beae4b2f80dd2db6f4cf4311706eab8b..be500a504fe94ed12c76e26ddee90ffe19857db6 100644
+index 6de6dad36203479677a29ad61e21bc369d4e5513..2aed9abbcb2526a2535099fe8d345d25ec099faa 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 @@ -222,6 +222,16 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
@@ -447,7 +447,7 @@ index cc9dff21beae4b2f80dd2db6f4cf4311706eab8b..be500a504fe94ed12c76e26ddee90ffe
          this.setFlightAllowed(dedicatedserverproperties.allowFlight);
          this.setMotd(dedicatedserverproperties.motd);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 6067c246b3974c54e3c8f0f9178809ea3a9349ed..1f13958e86b98733ea1640bc4a1c16bcc89296df 100644
+index 99d7d1e760aa4b9eecd20093aca1c23c0683e53a..ac2b2664789114b7068abf31be7a619f55a362d0 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -1036,6 +1036,7 @@ public final class CraftServer implements Server {
@@ -466,7 +466,7 @@ index 6067c246b3974c54e3c8f0f9178809ea3a9349ed..1f13958e86b98733ea1640bc4a1c16bc
          this.overrideAllCommandBlockCommands = this.commandsConfiguration.getStringList("command-block-overrides").contains("*");
          this.ignoreVanillaPermissions = this.commandsConfiguration.getBoolean("ignore-vanilla-permissions");
  
-@@ -3010,6 +3012,14 @@ public final class CraftServer implements Server {
+@@ -3007,6 +3009,14 @@ public final class CraftServer implements Server {
              return CraftServer.this.console.paperConfigurations.createLegacyObject(CraftServer.this.console);
          }
  
@@ -482,7 +482,7 @@ index 6067c246b3974c54e3c8f0f9178809ea3a9349ed..1f13958e86b98733ea1640bc4a1c16bc
          public void restart() {
              org.spigotmc.RestartCommand.restart();
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index 9faa47caa5712477a9311c1bbeac893a81d25d20..41ffc6977c8e8cbfcb9eba7db202075e2cc8e2bc 100644
+index ce341f42b3a5e17fb6d1f7de8057e73137ae2a6e..058819b39f0e2ba248e0a0c834f462a89263442b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -181,6 +181,20 @@ public class Main {

@@ -5,7 +5,7 @@ Subject: [PATCH] Add length limit to note block sound
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/SkullBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/SkullBlockEntity.java
-index 4430520d32024d897c93c1d9f8652ccb2c202c01..ceef1a7fd41751f553f21784217f95a210bd24d9 100644
+index 6f52256bfb668aee7fd1628c1c0c7b3434b847a6..74f1227ecf664cf0d4f62d6f9c3e65ffc07b146e 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/SkullBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/SkullBlockEntity.java
 @@ -113,7 +113,7 @@ public class SkullBlockEntity extends BlockEntity {

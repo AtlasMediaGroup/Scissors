@@ -93,10 +93,10 @@ index 186547674894fd084bceb478bb6017b747df4173..74c880425964da042ca57c097eb93273
                      }
                  }).reduce((accumulator, current) -> {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index ef2ef6f34e2045ccbf93de123785b44886072cee..261c0f577cb88409a4b7dbec477eacde0a27aa79 100644
+index a9649cbd58e22411bfac00580a2c266cd9133802..ec0e041ee2ce4d763859a53221fb75a8da6dc283 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -2528,11 +2528,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+@@ -2525,11 +2525,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
                      if (nbt.contains("CustomName", 8)) {
                          String s = nbt.getString("CustomName");
  
@@ -110,7 +110,7 @@ index ef2ef6f34e2045ccbf93de123785b44886072cee..261c0f577cb88409a4b7dbec477eacde
  
                      this.setCustomNameVisible(nbt.getBoolean("CustomNameVisible"));
 diff --git a/src/main/java/net/minecraft/world/scores/ScoreboardSaveData.java b/src/main/java/net/minecraft/world/scores/ScoreboardSaveData.java
-index b49d60d20d170d16a7daf2bc874e5d8d04552b3e..56ae1fa22bb722f91a06d7344bf879210f4ef8f2 100644
+index 6c3ed29e13ea78ceb1c9bb11ce0d9938bb8b4c62..ab2f9b9a021e05ad66a3701577862fa2acf81f52 100644
 --- a/src/main/java/net/minecraft/world/scores/ScoreboardSaveData.java
 +++ b/src/main/java/net/minecraft/world/scores/ScoreboardSaveData.java
 @@ -41,7 +41,7 @@ public class ScoreboardSaveData extends SavedData {

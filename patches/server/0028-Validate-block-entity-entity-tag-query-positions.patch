@@ -5,7 +5,7 @@ Subject: [PATCH] Validate block entity/entity tag query positions
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 7297a195c03709028d6a9b61231279a6d8070923..031afb99994e66f10d327c482cd9fb793ede9c45 100644
+index 06fd1a549c9829c250c983861e3a02ed14c21f4f..af9af2fd22eb9ecaec86888752f177f6ed6ae0b0 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -1264,7 +1264,7 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl

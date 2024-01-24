@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Telesphoreo <me@telesphoreo.me>
-Date: Sun, 10 Dec 2023 13:40:21 -0600
+Date: Wed, 24 Jan 2024 16:28:16 -0600
 Subject: [PATCH] ResourceLocation validation
 
 
@@ -44,7 +44,7 @@ index 1f55185814125c691288294d18bf1580461c8066..259d65f8e21f9cf99585d416eafdc967
          }
  
 diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
-index 081937597a8984b52a1e92d4c6032c04c942116e..9a540393339e85a06ac9e29d6539517b663ed312 100644
+index edc723ea5ca3a325106e7af38c60dbf9f0f5fb77..1b5305c4ac7881c76d4fd326c4547d7e242b8ea4 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityType.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityType.java
 @@ -599,7 +599,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
@@ -57,7 +57,7 @@ index 081937597a8984b52a1e92d4c6032c04c942116e..9a540393339e85a06ac9e29d6539517b
      }
  
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
-index 5eaab97a0c3b93a44a45e2ed11033fe01c0c95c2..5edca8cdad2c3e3e8d2dd9f6ab02b3d63beb768d 100644
+index d04fc84eef11adb5ea64077f48794b6ed7fb3ada..c4b972846200b1e3fb84c75c200122906f84a245 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 @@ -290,7 +290,12 @@ public abstract class AbstractFurnaceBlockEntity extends BaseContainerBlockEntit
@@ -73,7 +73,7 @@ index 5eaab97a0c3b93a44a45e2ed11033fe01c0c95c2..5edca8cdad2c3e3e8d2dd9f6ab02b3d6
 +            // Scissors end
          }
  
-         // Paper start - cook speed API
+         // Paper start - cook speed multiplier API
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BrushableBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BrushableBlockEntity.java
 index b5b1831631e233a96b6fd55972a8862b0f420da8..a086f12c09a5e38f63c8de118fcb5a6a30e40b52 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BrushableBlockEntity.java
@@ -144,7 +144,7 @@ index 313ee5c8737b2e57f9b5db6512c1871766b2ccd4..a115a13ec911884a804800fc13f0347b
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
-index 5f6a1fb323782816f706ccf7df922cb203238302..21b4594379a5e904ad60f9c9512ace94e7ed5f68 100644
+index 31f62fbb54ec7b270fbd8afba7bd7c4bfafa09e3..684e69753be0398ebe57172454aba8cc45cf6502 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftMob.java
 @@ -80,8 +80,15 @@ public abstract class CraftMob extends CraftLivingEntity implements Mob {
