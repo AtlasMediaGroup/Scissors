@@ -5,7 +5,7 @@ Subject: [PATCH] Limit map decorations
 
 
 diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundMapItemDataPacket.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundMapItemDataPacket.java
-index 81f3e64d94fa17e45411e5c1641d9c5a2fe3d2e2..bcf6e2ce9f00d1688a5fa00ec055a57389346922 100644
+index 17343d515044f3678b4edf070ee7ca244adc4228..8ade519114bec879bed8e8e23707a85327da131b 100644
 --- a/src/main/java/net/minecraft/network/protocol/game/ClientboundMapItemDataPacket.java
 +++ b/src/main/java/net/minecraft/network/protocol/game/ClientboundMapItemDataPacket.java
 @@ -65,7 +65,8 @@ public class ClientboundMapItemDataPacket implements Packet<ClientGamePacketList
@@ -19,7 +19,7 @@ index 81f3e64d94fa17e45411e5c1641d9c5a2fe3d2e2..bcf6e2ce9f00d1688a5fa00ec055a573
          });
          if (this.colorPatch != null) {
 diff --git a/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java b/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java
-index e4c4948e076cd64686dfd16ae0568fafc1437140..eff53c21b18574750b691b784fb1688885d4ace7 100644
+index 45269115e63cfc3bd7dc740a5694e2cc7c35bcb1..85ea95f55fd6177748edf921e2380142d93b8b06 100644
 --- a/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java
 +++ b/src/main/java/net/minecraft/world/level/saveddata/maps/MapItemSavedData.java
 @@ -361,6 +361,11 @@ public class MapItemSavedData extends SavedData {

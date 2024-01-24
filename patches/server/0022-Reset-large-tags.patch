@@ -59,7 +59,7 @@ index 4092c7a8c2b0d9d26e6f4d97386735236300d132..04c47cf1a920ae6c356449df801227ee
              }
          }
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index d1effd5d7b9eb2d715c9a3e16adbef2541b1ccf2..622617bcfd1f41d1d055b916efd972d9f6dae083 100644
+index d7d51f16396ad5539d39b7914125b559bd7dd2b4..1e161e6ee3f1214600c57f7a7df9117284892927 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
 @@ -23,6 +23,7 @@ import java.util.function.Predicate;
@@ -105,7 +105,7 @@ index d1effd5d7b9eb2d715c9a3e16adbef2541b1ccf2..622617bcfd1f41d1d055b916efd972d9
          this.processEnchantOrder(this.tag); // Paper
          if (this.getItem().canBeDepleted()) {
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
-index 5edca8cdad2c3e3e8d2dd9f6ab02b3d63beb768d..eed465e73e073f6d741752b9bc5cfe99f1b26676 100644
+index 6c725197846a3715e9e8d124635e908325d37166..366130c00b80cf03367d64ddd86f76eb40c1e997 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 @@ -9,6 +9,7 @@ import java.util.Iterator;
@@ -252,7 +252,7 @@ index 881379681c39230a00b3a1f11cd87498984396c7..d0513b72cdaec3b67b9341d251367b19
      }
  
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
-index df1c1c27b7c0065f8179d59bdb9de01dde22befa..68cccd8d6dd1d8e196c9e2d4efdd15891fe48567 100644
+index a61d7cd2b078fe511ff00344197b6ea11feebfb2..dd23c2ed904a3694337008207c953f7ed2a6e2ac 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 @@ -6,6 +6,7 @@ import java.util.function.BooleanSupplier;

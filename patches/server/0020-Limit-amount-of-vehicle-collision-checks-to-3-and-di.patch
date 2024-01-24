@@ -6,7 +6,7 @@ Subject: [PATCH] Limit amount of vehicle collision checks to 3 and discard
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java
-index c906ca07509939a06b9aaf2da0dafb172830a638..c1e91ea440202014419aa9601915f9288a41e32c 100644
+index d514ec1e4cbdc579c3a61533998437903afdc8b6..99576adcba7dafeb7aaccff48b53365c930ccad7 100644
 --- a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java
 +++ b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecart.java
 @@ -8,6 +8,7 @@ import com.mojang.datafixers.util.Pair;
@@ -52,7 +52,7 @@ index c906ca07509939a06b9aaf2da0dafb172830a638..c1e91ea440202014419aa9601915f928
              } else {
                  Iterator iterator1 = this.level().getEntities(this, this.getBoundingBox().inflate(0.20000000298023224D, 0.0D, 0.20000000298023224D)).iterator();
 diff --git a/src/main/java/net/minecraft/world/entity/vehicle/Boat.java b/src/main/java/net/minecraft/world/entity/vehicle/Boat.java
-index c041c0b81be41cfd128c2f5ba56a5329d50b2efc..7dcbdcb30d264cf76fd975489918509e6e589127 100644
+index db6aa75d642f4a7258f197933671907faf79c8f2..9b7a358d61ea5caffa5f501f2586f316cc338c00 100644
 --- a/src/main/java/net/minecraft/world/entity/vehicle/Boat.java
 +++ b/src/main/java/net/minecraft/world/entity/vehicle/Boat.java
 @@ -5,6 +5,7 @@ import com.google.common.collect.UnmodifiableIterator;

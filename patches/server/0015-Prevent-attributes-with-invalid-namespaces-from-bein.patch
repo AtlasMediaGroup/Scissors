@@ -6,7 +6,7 @@ Subject: [PATCH] Prevent attributes with invalid namespaces from being applied
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
-index 591e37648241870546b14a9732b2c94eef5f0354..45f39201acf88d715b6efea5a329701e2ea8300d 100644
+index a3e4ae01dc156dc248f48b8ab6d7dcd26853eb10..97b086571c6a0e8ea829b4b52714b52cc32f9a7b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaItem.java
 @@ -47,6 +47,7 @@ import net.minecraft.nbt.NbtIo;

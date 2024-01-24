@@ -5,7 +5,7 @@ Subject: [PATCH] Don't log on too many chained updates
 
 
 diff --git a/src/main/java/net/minecraft/world/level/redstone/CollectingNeighborUpdater.java b/src/main/java/net/minecraft/world/level/redstone/CollectingNeighborUpdater.java
-index 598dc0d3a2b9387e76d7e4e19e54c4573a24bc54..9eed28bf8bc7e2fa528729cde01a535bc7040815 100644
+index 395bb163fb1d62dd2e6949e1146c337c0bbc626f..a40f014c4065fd6f7b27483ccc659bd31d5b7235 100644
 --- a/src/main/java/net/minecraft/world/level/redstone/CollectingNeighborUpdater.java
 +++ b/src/main/java/net/minecraft/world/level/redstone/CollectingNeighborUpdater.java
 @@ -56,7 +56,7 @@ public class CollectingNeighborUpdater implements NeighborUpdater {

@@ -40,7 +40,7 @@ index 7ef14e4441a329c680a5dfe4bfb5033ffcb8f9d5..eff5bdf00b0aa7a9925ff59a62ead725
              executor.performCommand(world);
          } else {
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/JigsawBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/JigsawBlockEntity.java
-index 3a210e138b6ae065fd32e1b1e0e49999e20c4667..183c47a6fbf5201c38d5eb182049643862ca0964 100644
+index e2e31d6383c7de4f2eede46987d51978a5692639..9e5bb41c20e92cc39c99bfb3c801e9e432ba23cd 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/JigsawBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/JigsawBlockEntity.java
 @@ -2,6 +2,8 @@ package net.minecraft.world.level.block.entity;

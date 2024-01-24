@@ -33,7 +33,7 @@ index d87ffb5ed4550757016c2fabaa2845a6aaac74d7..7e8cf65ac53f595292d161da0735bf97
          private Ints(Optional<Integer> min, Optional<Integer> max) {
              this(min, max, min.map((i) -> {
 diff --git a/src/main/java/net/minecraft/commands/arguments/selector/EntitySelector.java b/src/main/java/net/minecraft/commands/arguments/selector/EntitySelector.java
-index 73c15a0c56a103ba4e62f0a51af8d42566b07245..f0a84efe86407ab3d7a9f064140c12df43265adc 100644
+index 676a1499747b071515479130875157263d3a8352..6a65850101b8ea348a4bfeaeca805a39987b06fc 100644
 --- a/src/main/java/net/minecraft/commands/arguments/selector/EntitySelector.java
 +++ b/src/main/java/net/minecraft/commands/arguments/selector/EntitySelector.java
 @@ -10,6 +10,8 @@ import java.util.function.BiConsumer;

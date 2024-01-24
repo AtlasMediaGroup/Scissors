@@ -5,7 +5,7 @@ Subject: [PATCH] Refuse to convert legacy messages over 1k characters
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftChatMessage.java b/src/main/java/org/bukkit/craftbukkit/util/CraftChatMessage.java
-index 730d8e3cf2d9ca05b2d6219cf1856b8721871a37..63e71c5cb4ac4d17d2cfa5324fd842a0d3c61eb5 100644
+index 753200057e74b8e2d5274894b982e6ee946a559e..25df28c8a2061a754cb576634b63d5ca6e5011d1 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftChatMessage.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftChatMessage.java
 @@ -198,6 +198,7 @@ public final class CraftChatMessage {

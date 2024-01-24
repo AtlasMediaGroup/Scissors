@@ -5,7 +5,7 @@ Subject: [PATCH] Disable running commands in books by default
 
 
 diff --git a/src/main/java/net/minecraft/world/item/WrittenBookItem.java b/src/main/java/net/minecraft/world/item/WrittenBookItem.java
-index 31911c09fe15753ae32fa39417bdc9e9de552a88..b810a5afcb2343174e37efb7dd8a36b968b07c3a 100644
+index 258a636a59203c4e5415a89002c6a607338f9514..dbc2993a105214d945a49e1eb5b910d28c09ae41 100644
 --- a/src/main/java/net/minecraft/world/item/WrittenBookItem.java
 +++ b/src/main/java/net/minecraft/world/item/WrittenBookItem.java
 @@ -2,6 +2,7 @@ package net.minecraft.world.item;

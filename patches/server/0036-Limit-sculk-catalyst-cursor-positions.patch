@@ -5,7 +5,7 @@ Subject: [PATCH] Limit sculk catalyst cursor positions
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/SculkSpreader.java b/src/main/java/net/minecraft/world/level/block/SculkSpreader.java
-index de90a216321f7d82310a0d1c915fefe64360534c..7e52f6c26234cf6fa092151d51c0c6b70dc22ca8 100644
+index 01e13e6d3ebd84cff0019f56efff16747420dc95..d4058bc31ca291cbc95eeef594fc35e1ff6a3dde 100644
 --- a/src/main/java/net/minecraft/world/level/block/SculkSpreader.java
 +++ b/src/main/java/net/minecraft/world/level/block/SculkSpreader.java
 @@ -181,7 +181,7 @@ public class SculkSpreader {

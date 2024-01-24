@@ -5,7 +5,7 @@ Subject: [PATCH] Mute invalid attributes
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/ai/attributes/AttributeMap.java b/src/main/java/net/minecraft/world/entity/ai/attributes/AttributeMap.java
-index 7204b973c3ad9239e82355513f6d538107102e48..2463444778f19f937b18173798c04d9d9788a824 100644
+index 897d7632ecfea40890433474870dd7a5e534d8ab..7c522cf74bd86a73a08ebd1b2de69b5b9da6559b 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/attributes/AttributeMap.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/attributes/AttributeMap.java
 @@ -147,7 +147,7 @@ public class AttributeMap {

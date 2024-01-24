@@ -1,14 +1,14 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Telesphoreo <me@telesphoreo.me>
-Date: Sat, 26 Mar 2022 21:51:07 -0500
+Date: Tue, 23 Jan 2024 19:01:02 -0600
 Subject: [PATCH] Change version fetcher to AMG
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index 9d687da5bdf398bb3f6c84cdf1249a7213d09f2e..bc5ed619e05f24f3ad50a6a81306d120869f57a1 100644
+index 9d687da5bdf398bb3f6c84cdf1249a7213d09f2e..48dd50d0e443a59835e92616874c9856c7cbc401 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-@@ -4,11 +4,13 @@ import com.destroystokyo.paper.util.VersionFetcher;
+@@ -4,6 +4,7 @@ import com.destroystokyo.paper.util.VersionFetcher;
  import com.google.common.base.Charsets;
  import com.google.common.io.Resources;
  import com.google.gson.*;
@@ -16,13 +16,11 @@ index 9d687da5bdf398bb3f6c84cdf1249a7213d09f2e..bc5ed619e05f24f3ad50a6a81306d120
  import net.kyori.adventure.text.Component;
  import net.kyori.adventure.text.event.ClickEvent;
  import net.kyori.adventure.text.format.NamedTextColor;
- import net.kyori.adventure.text.format.TextDecoration;
- import net.kyori.adventure.text.TextComponent;
+@@ -16,11 +17,12 @@ import java.io.*;
+ import java.net.HttpURLConnection;
+ import java.net.URL;
+ import java.util.stream.StreamSupport;
 +import org.bukkit.Bukkit; // Scissors
- 
- import javax.annotation.Nonnull;
- import javax.annotation.Nullable;
-@@ -19,8 +21,8 @@ import java.util.stream.StreamSupport;
  
  public class PaperVersionFetcher implements VersionFetcher {
      private static final java.util.regex.Pattern VER_PATTERN = java.util.regex.Pattern.compile("^([0-9\\.]*)\\-.*R"); // R is an anchor, will always give '-R' at end
@@ -77,15 +75,15 @@ index 9d687da5bdf398bb3f6c84cdf1249a7213d09f2e..bc5ed619e05f24f3ad50a6a81306d120
          switch (distance) {
              case -1:
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index c737c5d62407337d3db2899cfc01713a058a6467..54891c5d7ca19a4fdab74a8729814a6fecee3fda 100644
+index 41ffc6977c8e8cbfcb9eba7db202075e2cc8e2bc..5a0ac2025bbed41c207964a28d963dccb41a623e 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
-@@ -301,7 +301,7 @@ public class Main {
+@@ -315,7 +315,7 @@ public class Main {
                      if (buildDate.before(deadline.getTime())) {
                          // Paper start - This is some stupid bullshit
                          System.err.println("*** Warning, you've not updated in a while! ***");
 -                        System.err.println("*** Please download a new build as per instructions from https://papermc.io/downloads/paper ***"); // Paper
-+                        System.err.println("*** Please download a new build from https://ci.scissors.gg/job/Scissors ***"); // Scissors > // Paper
++                        System.err.println("*** Please download a new build as per instructions from https://ci.scissors.gg/job/Scissors ***"); // Paper
                          //System.err.println("*** Server will start in 20 seconds ***");
                          //Thread.sleep(TimeUnit.SECONDS.toMillis(20));
-                         // Paper End
+                         // Paper end
