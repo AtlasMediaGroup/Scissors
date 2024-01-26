@@ -5,10 +5,10 @@ Subject: [PATCH] Better handling of invalid JSON components
 
 
 diff --git a/src/main/java/io/papermc/paper/util/MCUtil.java b/src/main/java/io/papermc/paper/util/MCUtil.java
-index 200ed770b57e1a9240abf0473968d4b85cbefe3c..1a2a3b506e2f9bce77294c3788451bfd47394548 100644
+index 1ccf71be865af4d3c5ab8f4323a228a947e0bf3f..efebc156e45fca4b5a5896bd25398c28ef39dfe3 100644
 --- a/src/main/java/io/papermc/paper/util/MCUtil.java
 +++ b/src/main/java/io/papermc/paper/util/MCUtil.java
-@@ -654,12 +654,6 @@ public final class MCUtil {
+@@ -653,12 +653,6 @@ public final class MCUtil {
              return null;
          }
          String string = compound.getString(key);
@@ -93,7 +93,7 @@ index 186547674894fd084bceb478bb6017b747df4173..74c880425964da042ca57c097eb93273
                      }
                  }).reduce((accumulator, current) -> {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index a9649cbd58e22411bfac00580a2c266cd9133802..ec0e041ee2ce4d763859a53221fb75a8da6dc283 100644
+index 2c06f3ebf7e1069727387bfc60db30c958c14b5a..fc6cff4121db4c08452817df846286103fe23ad9 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -2525,11 +2525,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
