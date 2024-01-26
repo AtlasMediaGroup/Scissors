@@ -5,7 +5,7 @@ Subject: [PATCH] Add Scissors configuration file & command
 
 
 diff --git a/src/main/java/co/aikar/timings/TimingsExport.java b/src/main/java/co/aikar/timings/TimingsExport.java
-index a2f71a6d1a9e98133dff6cd0f625da9435a8af14..f83b2c4298bd1a5f65487f64bd6a11fb190a622d 100644
+index 7620c72a4c243cbeea245203ce03a97cbfa7d922..a05a348c299a68a61fabcbdcc689a89a81d1301f 100644
 --- a/src/main/java/co/aikar/timings/TimingsExport.java
 +++ b/src/main/java/co/aikar/timings/TimingsExport.java
 @@ -25,6 +25,7 @@ package co.aikar.timings;
@@ -16,7 +16,7 @@ index a2f71a6d1a9e98133dff6cd0f625da9435a8af14..f83b2c4298bd1a5f65487f64bd6a11fb
  import net.kyori.adventure.text.event.ClickEvent;
  import net.kyori.adventure.text.format.NamedTextColor;
  import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-@@ -242,7 +243,8 @@ public class TimingsExport extends Thread {
+@@ -240,7 +241,8 @@ public class TimingsExport extends Thread {
          parent.put("config", createObject(
              pair("spigot", mapAsJSON(Bukkit.spigot().getSpigotConfig(), null)),
              pair("bukkit", mapAsJSON(Bukkit.spigot().getBukkitConfig(), null)),
@@ -447,7 +447,7 @@ index 6de6dad36203479677a29ad61e21bc369d4e5513..2aed9abbcb2526a2535099fe8d345d25
          this.setFlightAllowed(dedicatedserverproperties.allowFlight);
          this.setMotd(dedicatedserverproperties.motd);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 99d7d1e760aa4b9eecd20093aca1c23c0683e53a..ac2b2664789114b7068abf31be7a619f55a362d0 100644
+index f4d2b7c1d12bff88aec747ded3a6626dbba3baae..0a94c7face891dfbb124f39632ea2d8770201a2d 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -1036,6 +1036,7 @@ public final class CraftServer implements Server {
@@ -466,7 +466,7 @@ index 99d7d1e760aa4b9eecd20093aca1c23c0683e53a..ac2b2664789114b7068abf31be7a619f
          this.overrideAllCommandBlockCommands = this.commandsConfiguration.getStringList("command-block-overrides").contains("*");
          this.ignoreVanillaPermissions = this.commandsConfiguration.getBoolean("ignore-vanilla-permissions");
  
-@@ -3007,6 +3009,14 @@ public final class CraftServer implements Server {
+@@ -2998,6 +3000,14 @@ public final class CraftServer implements Server {
              return CraftServer.this.console.paperConfigurations.createLegacyObject(CraftServer.this.console);
          }
  
