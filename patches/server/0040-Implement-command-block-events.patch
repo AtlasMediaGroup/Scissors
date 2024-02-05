@@ -18,7 +18,7 @@ index c99fc118013cb3d4043638e2001a8297e79ddf9c..cdaa81e1f2167b29ec01cc25e51a8400
      private final boolean trackOutput;
  
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 551a353e53211ed07b3069f2a82eccb8c35823bf..51e5742e265d4d624eda119e199d6bc0f528b835 100644
+index 3eae4d979400b1e206abfcee676653ce7966155e..60360cc52bbd61ae4e8b8b2f5f94b107aa0c88c8 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -1,6 +1,8 @@
@@ -47,7 +47,7 @@ index 551a353e53211ed07b3069f2a82eccb8c35823bf..51e5742e265d4d624eda119e199d6bc0
  import org.slf4j.Logger;
  
  // CraftBukkit start
-@@ -891,6 +896,16 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
+@@ -890,6 +895,16 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
                      this.player.level().getChunkAt(blockposition).setBlockEntity(tileentity);
                  }
  
@@ -64,7 +64,7 @@ index 551a353e53211ed07b3069f2a82eccb8c35823bf..51e5742e265d4d624eda119e199d6bc0
                  commandblocklistenerabstract.setCommand(s);
                  commandblocklistenerabstract.setTrackOutput(flag);
                  if (!flag) {
-@@ -922,7 +937,18 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
+@@ -921,7 +936,18 @@ public class ServerGamePacketListenerImpl extends ServerCommonPacketListenerImpl
              BaseCommandBlock commandblocklistenerabstract = packet.getCommandBlock(this.player.level());
  
              if (commandblocklistenerabstract != null) {
