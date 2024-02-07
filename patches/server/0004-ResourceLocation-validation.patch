@@ -44,10 +44,10 @@ index 1f55185814125c691288294d18bf1580461c8066..259d65f8e21f9cf99585d416eafdc967
          }
  
 diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
-index edc723ea5ca3a325106e7af38c60dbf9f0f5fb77..1b5305c4ac7881c76d4fd326c4547d7e242b8ea4 100644
+index 09e8445a3f8c6b3ebc852a75a9a25b41a51ba659..cfb2ce684da0ae97a844554b5ad3d41290058f32 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityType.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityType.java
-@@ -599,7 +599,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+@@ -595,7 +595,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
              if (generation) entity.generation = true; // Paper - Don't fire sync event during generation
              entity.load(nbt);
          }, () -> {
