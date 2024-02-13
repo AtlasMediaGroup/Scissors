@@ -1,5 +1,5 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Telesphoreo <me@telesphoreo.me>
+From: Video <videogamesm12@gmail.com>
 Date: Sun, 10 Dec 2023 17:26:11 -0600
 Subject: [PATCH] Better handling of invalid JSON components
 
@@ -93,10 +93,10 @@ index 186547674894fd084bceb478bb6017b747df4173..74c880425964da042ca57c097eb93273
                      }
                  }).reduce((accumulator, current) -> {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 9ee1e3da1cb16291ff3e37829e25227a6b97a177..1772313459992523eefd6b05bfb0b7ee33114469 100644
+index 906eded9a2ab61737a30cfe89292a71237ce4eb7..ea36187ed37d59edd2481de79372599a85f04e97 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -2525,11 +2525,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+@@ -2529,11 +2529,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
                      if (nbt.contains("CustomName", 8)) {
                          String s = nbt.getString("CustomName");
  

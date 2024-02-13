@@ -59,7 +59,7 @@ index 4092c7a8c2b0d9d26e6f4d97386735236300d132..04c47cf1a920ae6c356449df801227ee
              }
          }
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index ed27a963223bfe18310ad5adabf461b5e307ef9c..1af25c1e91e1a93c6c6c8445a1d9fbeb4f15916b 100644
+index 1ad126d992d95062a3db08374db7a927f23a0cac..345fb9722f1dc8293809256d3bb87b8964b54164 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
 @@ -23,6 +23,7 @@ import java.util.function.Predicate;
@@ -70,7 +70,7 @@ index ed27a963223bfe18310ad5adabf461b5e307ef9c..1af25c1e91e1a93c6c6c8445a1d9fbeb
  import net.minecraft.ChatFormatting;
  import net.minecraft.Util;
  import net.minecraft.advancements.CriteriaTriggers;
-@@ -277,6 +278,12 @@ public final class ItemStack {
+@@ -278,6 +279,12 @@ public final class ItemStack {
  
      // CraftBukkit - break into own method
      private void load(CompoundTag nbttagcompound) {
@@ -83,7 +83,7 @@ index ed27a963223bfe18310ad5adabf461b5e307ef9c..1af25c1e91e1a93c6c6c8445a1d9fbeb
          this.item = (Item) BuiltInRegistries.ITEM.get(new ResourceLocation(nbttagcompound.getString("id")));
          this.count = nbttagcompound.getByte("Count");
          if (nbttagcompound.contains("tag", 10)) {
-@@ -584,7 +591,11 @@ public final class ItemStack {
+@@ -585,7 +592,11 @@ public final class ItemStack {
          nbt.putString("id", minecraftkey == null ? "minecraft:air" : minecraftkey.toString());
          nbt.putByte("Count", (byte) this.count);
          if (this.tag != null) {
@@ -96,7 +96,7 @@ index ed27a963223bfe18310ad5adabf461b5e307ef9c..1af25c1e91e1a93c6c6c8445a1d9fbeb
          }
  
          return nbt;
-@@ -918,6 +929,7 @@ public final class ItemStack {
+@@ -919,6 +930,7 @@ public final class ItemStack {
      // Paper end
  
      public void setTag(@Nullable CompoundTag nbt) {
@@ -164,7 +164,7 @@ index 416aa989ebb18a8741cc9d605a1180ab830f6643..a9a8c9e68e5b767dec2c26495685da88
      }
  
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java
-index bc01481ac5990ad1cfd1def5a16dd0ed2f9de8c9..5948d7f87c2f2021345d58db18ec1c996ae8bf7a 100644
+index 9bb542ce3a8c52e1688bb1f66fc916dd23a5fd10..bdbe623ec5d3a5471e909c9933cf556a796354b6 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BrewingStandBlockEntity.java
 @@ -3,6 +3,7 @@ package net.minecraft.world.level.block.entity;

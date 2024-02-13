@@ -1,5 +1,5 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Telesphoreo <me@telesphoreo.me>
+From: Luna <lunahatesgogle@gmail.com>
 Date: Sun, 10 Dec 2023 17:13:15 -0600
 Subject: [PATCH] Do not log invalid items in HoverEvent and ItemFrame
 

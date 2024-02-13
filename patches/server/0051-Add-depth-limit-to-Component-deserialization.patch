@@ -5,7 +5,7 @@ Subject: [PATCH] Add depth limit to Component deserialization
 
 
 diff --git a/src/main/java/net/minecraft/network/chat/Component.java b/src/main/java/net/minecraft/network/chat/Component.java
-index ba13650b52e39c9cc5cfa421f7720c7d4ba75678..f500b4aa5aaea89a2a878afe70d386f044401be4 100644
+index ba13650b52e39c9cc5cfa421f7720c7d4ba75678..df3c03aeaee5c12c5d57584535c9c7aa01be7dd3 100644
 --- a/src/main/java/net/minecraft/network/chat/Component.java
 +++ b/src/main/java/net/minecraft/network/chat/Component.java
 @@ -3,9 +3,11 @@ package net.minecraft.network.chat;
@@ -47,26 +47,14 @@ index ba13650b52e39c9cc5cfa421f7720c7d4ba75678..f500b4aa5aaea89a2a878afe70d386f0
  import java.util.stream.Stream;
  // CraftBukkit end
  
-@@ -272,7 +278,8 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
- 
-     public static class SerializerAdapter implements JsonDeserializer<MutableComponent>, JsonSerializer<Component> {
- 
--        public SerializerAdapter() {}
-+        public SerializerAdapter() {
-+        }
- 
-         public MutableComponent deserialize(JsonElement jsonelement, Type type, JsonDeserializationContext jsondeserializationcontext) throws JsonParseException {
-             return Component.Serializer.deserialize(jsonelement);
-@@ -286,10 +293,66 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
+@@ -286,10 +292,65 @@ public interface Component extends Message, FormattedText, Iterable<Component> {
      public static class Serializer {
  
          private static final Gson GSON = (new GsonBuilder()).disableHtmlEscaping().create();
 +        private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("%[0-9]+\\$s"); // Scissors
-+
-+        private Serializer() {
-+        }
  
--        private Serializer() {}
+         private Serializer() {}
+ 
 +        // Scissors start
 +        static int depthChecker(int depth) {
 +            depth = depth + 1;
@@ -83,7 +71,7 @@ index ba13650b52e39c9cc5cfa421f7720c7d4ba75678..f500b4aa5aaea89a2a878afe70d386f0
 +            }
 +            return 0;
 +        }
- 
++
          static MutableComponent deserialize(JsonElement json) {
 +            int depth = 1;
 +            if (!json.isJsonPrimitive()) {
