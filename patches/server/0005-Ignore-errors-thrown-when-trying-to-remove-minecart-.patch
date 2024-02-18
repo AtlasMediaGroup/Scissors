@@ -6,7 +6,7 @@ Subject: [PATCH] Ignore errors thrown when trying to remove minecart entities
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java
-index 272095d7a09ab41227d741172735f66fd2798ce1..757ae1773ba35c2348483dddbb231060afafc602 100644
+index 6d23c39e4eadf23616080d6d08672e13b5d3c37d..0bd5c3e3bb7074b5265e3f1bf670f993c9fe167d 100644
 --- a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java
 +++ b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java
 @@ -139,7 +139,11 @@ public abstract class AbstractMinecartContainer extends AbstractMinecart impleme

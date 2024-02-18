@@ -5,7 +5,7 @@ Subject: [PATCH] Limit beacon effectRange
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java
-index bfcf9e0c342f255d285b1ef7f88d71efed653ecd..8ebee182002a360a7438938a97834f25da2695fb 100644
+index 4b81b0180dfc96fc6a88646838a886ca5b5d301b..63ea77b3e965ff18571492d511ef7c1082441f9d 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java
 @@ -87,7 +87,7 @@ public class BeaconBlockEntity extends BlockEntity implements MenuProvider, Name

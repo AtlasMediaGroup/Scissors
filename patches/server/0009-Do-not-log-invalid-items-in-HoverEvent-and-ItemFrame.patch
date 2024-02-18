@@ -18,7 +18,7 @@ index b2cc15da40aa7bbcfc234b4e147ed0e53f359efa..dbe9f81e298a931c3e0e5b879dc13b49
              }
          }
 diff --git a/src/main/java/net/minecraft/world/entity/decoration/ItemFrame.java b/src/main/java/net/minecraft/world/entity/decoration/ItemFrame.java
-index 69912c5b300b67394dce3876d2d96872033cf156..ebc403ff31385a12e072fd6a419a7787ee76429e 100644
+index 80303f9466b8c7097151be313afc9a383693d18a..a5235e9035768a588af522af645fa136c9c897cf 100644
 --- a/src/main/java/net/minecraft/world/entity/decoration/ItemFrame.java
 +++ b/src/main/java/net/minecraft/world/entity/decoration/ItemFrame.java
 @@ -436,7 +436,7 @@ public class ItemFrame extends HangingEntity {

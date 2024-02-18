@@ -5,7 +5,7 @@ Subject: [PATCH] Add depth limit to SNBT
 
 
 diff --git a/src/main/java/net/minecraft/nbt/TagParser.java b/src/main/java/net/minecraft/nbt/TagParser.java
-index 9ecd0b7ddaa8376f3c1448f810f7757c9ba1b90a..817f7f8400122da9881adcf530f379bfb69910d8 100644
+index 94cb73e7f60171aa57bd1dbe7e91ef4db94e70b7..9ed1c477620b41317c4bf2b14ebc672c2fdd4656 100644
 --- a/src/main/java/net/minecraft/nbt/TagParser.java
 +++ b/src/main/java/net/minecraft/nbt/TagParser.java
 @@ -182,9 +182,56 @@ public class TagParser {

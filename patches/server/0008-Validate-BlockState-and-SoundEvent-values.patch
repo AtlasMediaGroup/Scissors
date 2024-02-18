@@ -5,7 +5,7 @@ Subject: [PATCH] Validate BlockState and SoundEvent values
 
 
 diff --git a/src/main/java/net/minecraft/nbt/NbtUtils.java b/src/main/java/net/minecraft/nbt/NbtUtils.java
-index 8e68a094a22243f3e84110ddf81136219ac1de7c..807194e1c4d4b6808e60b2db57b596c7de5c27de 100644
+index e3a3f19a6e63fd42e29c418e5a7439972484d492..39866c58f9dbca9b4f0018922eac076c64ffbdae 100644
 --- a/src/main/java/net/minecraft/nbt/NbtUtils.java
 +++ b/src/main/java/net/minecraft/nbt/NbtUtils.java
 @@ -231,7 +231,7 @@ public final class NbtUtils {

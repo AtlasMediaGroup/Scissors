@@ -56,50 +56,6 @@ index 09e8445a3f8c6b3ebc852a75a9a25b41a51ba659..cfb2ce684da0ae97a844554b5ad3d412
          });
      }
  
-diff --git a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
-index d04fc84eef11adb5ea64077f48794b6ed7fb3ada..c4b972846200b1e3fb84c75c200122906f84a245 100644
---- a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
-+++ b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
-@@ -290,7 +290,12 @@ public abstract class AbstractFurnaceBlockEntity extends BaseContainerBlockEntit
-         while (iterator.hasNext()) {
-             String s = (String) iterator.next();
- 
--            this.recipesUsed.put(new ResourceLocation(s), nbttagcompound1.getInt(s));
-+            // Scissors start
-+            final ResourceLocation rl = ResourceLocation.tryParse(s);
-+            if (rl != null) {
-+                this.recipesUsed.put(rl, nbttagcompound1.getInt(s));
-+            }
-+            // Scissors end
-         }
- 
-         // Paper start - cook speed multiplier API
-diff --git a/src/main/java/net/minecraft/world/level/block/entity/BrushableBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BrushableBlockEntity.java
-index b5b1831631e233a96b6fd55972a8862b0f420da8..a086f12c09a5e38f63c8de118fcb5a6a30e40b52 100644
---- a/src/main/java/net/minecraft/world/level/block/entity/BrushableBlockEntity.java
-+++ b/src/main/java/net/minecraft/world/level/block/entity/BrushableBlockEntity.java
-@@ -199,7 +199,7 @@ public class BrushableBlockEntity extends BlockEntity {
- 
-     private boolean tryLoadLootTable(CompoundTag nbt) {
-         if (nbt.contains("LootTable", 8)) {
--            this.lootTable = new ResourceLocation(nbt.getString("LootTable"));
-+            this.lootTable = ResourceLocation.tryParse(nbt.getString("LootTable")); // Scissors
-             this.lootTableSeed = nbt.getLong("LootTableSeed");
-             return true;
-         } else {
-diff --git a/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
-index a94300a457b25f0e33a8eeabba6dd5720ca9ab1e..de300a7888f95e7770690ecdc36e44803e3634fd 100644
---- a/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
-+++ b/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
-@@ -50,7 +50,7 @@ public abstract class RandomizableContainerBlockEntity extends BaseContainerBloc
-         // Copied from super with changes, always check the original method
-         this.lootableData.loadNbt(nbt); // Paper
-         if (nbt.contains("LootTable", 8)) {
--            this.setLootTable(new ResourceLocation(nbt.getString("LootTable")));
-+            this.setLootTable(ResourceLocation.tryParse((nbt.getString("LootTable")))); // Scissors - Validate loot tables
-             try { org.bukkit.craftbukkit.util.CraftNamespacedKey.fromMinecraft(this.lootTable); } catch (IllegalArgumentException ex) { this.lootTable = null; } // Paper - validate
-             this.setLootTableSeed(nbt.getLong("LootTableSeed"));
-             return false; // Paper - always load the items, table may still remain
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftLootable.java b/src/main/java/org/bukkit/craftbukkit/block/CraftLootable.java
 index f6942cb3ef1f9ef03708d4bc932ea9aeb1c13894..8b32864bafb3c1948993688be8f639dd6492057e 100644
 --- a/src/main/java/org/bukkit/craftbukkit/block/CraftLootable.java

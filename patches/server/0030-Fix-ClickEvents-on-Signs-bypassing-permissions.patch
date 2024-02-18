@@ -5,7 +5,7 @@ Subject: [PATCH] Fix ClickEvents on Signs bypassing permissions
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
-index 979a8f472f866130a3abb10f535df757eaa50c20..382350d68ec1f1e24cba3a66aa90962bda42e187 100644
+index 927c7ea03560be0c86884cec70ee8e408e66cb07..c4bb1739ddcfd473ef788f97afa1019e24da8561 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/SignBlockEntity.java
 @@ -8,8 +8,10 @@ import java.util.Objects;

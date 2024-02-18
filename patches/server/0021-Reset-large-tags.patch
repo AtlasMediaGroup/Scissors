@@ -105,7 +105,7 @@ index 1ad126d992d95062a3db08374db7a927f23a0cac..345fb9722f1dc8293809256d3bb87b89
          this.processEnchantOrder(this.tag); // Paper
          if (this.getItem().canBeDepleted()) {
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
-index c4b972846200b1e3fb84c75c200122906f84a245..a53b3a3102e5b3e7860bb51f5af4faeecb0474c0 100644
+index 89d06253b00604114e543ebbe12a9993ae95dc41..2f17fa399dfff7e260fe552147fe88699ebff73e 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 @@ -9,6 +9,7 @@ import java.util.Iterator;
