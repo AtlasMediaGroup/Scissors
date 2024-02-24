@@ -5,7 +5,7 @@ Subject: [PATCH] Build changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index ce3747d8d2a8f4327766cf23d5aaa72cfcb380bc..32118caeb0fa211def89c7f83563d38b8c317ca3 100644
+index 241808d8619e17c0681f79acbbc98af5bf52dd89..82af4efd81ea8a9333bcafc3fe7d7e98ea69423b 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -13,8 +13,12 @@ configurations.named(log4jPlugins.compileClasspathConfigurationName) {
@@ -23,7 +23,7 @@ index ce3747d8d2a8f4327766cf23d5aaa72cfcb380bc..32118caeb0fa211def89c7f83563d38b
      // Paper start
      implementation("org.jline:jline-terminal-jansi:3.21.0")
      implementation("net.minecrell:terminalconsoleappender:1.3.0")
-@@ -66,11 +70,19 @@ tasks.jar {
+@@ -67,11 +71,19 @@ tasks.jar {
          val gitHash = git("rev-parse", "--short=7", "HEAD").getText().trim()
          val implementationVersion = System.getenv("BUILD_NUMBER") ?: "\"$gitHash\""
          val date = git("show", "-s", "--format=%ci", gitHash).getText().trim() // Paper
@@ -45,7 +45,7 @@ index ce3747d8d2a8f4327766cf23d5aaa72cfcb380bc..32118caeb0fa211def89c7f83563d38b
              "Implementation-Vendor" to date, // Paper
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
-@@ -154,7 +166,7 @@ fun TaskContainer.registerRunTask(
+@@ -155,7 +167,7 @@ fun TaskContainer.registerRunTask(
      name: String,
      block: JavaExec.() -> Unit
  ): TaskProvider<JavaExec> = register<JavaExec>(name) {

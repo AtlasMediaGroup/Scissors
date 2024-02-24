@@ -252,7 +252,7 @@ index 881379681c39230a00b3a1f11cd87498984396c7..d0513b72cdaec3b67b9341d251367b19
      }
  
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
-index a61d7cd2b078fe511ff00344197b6ea11feebfb2..dd23c2ed904a3694337008207c953f7ed2a6e2ac 100644
+index 757edf74751dc7183454656fda9cecc4eb601e4c..005de26f9a8a67f29a474823515ee66730690b52 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 @@ -6,6 +6,7 @@ import java.util.function.BooleanSupplier;
@@ -263,7 +263,7 @@ index a61d7cd2b078fe511ff00344197b6ea11feebfb2..dd23c2ed904a3694337008207c953f7e
  import net.minecraft.core.BlockPos;
  import net.minecraft.core.Direction;
  import net.minecraft.core.NonNullList;
-@@ -56,6 +57,17 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+@@ -57,6 +58,17 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
      private int maxStack = MAX_STACK;
  
      public List<ItemStack> getContents() {

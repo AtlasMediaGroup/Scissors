@@ -6,13 +6,13 @@ Subject: [PATCH] Ignore errors thrown when trying to remove minecart entities
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java
-index 6d23c39e4eadf23616080d6d08672e13b5d3c37d..0bd5c3e3bb7074b5265e3f1bf670f993c9fe167d 100644
+index 756d0434472921992c9d84597d7c9c824e93614c..77e9e106c522712a484d01bf7e7434c380de3621 100644
 --- a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java
 +++ b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java
-@@ -139,7 +139,11 @@ public abstract class AbstractMinecartContainer extends AbstractMinecart impleme
-     @Override
-     public void remove(Entity.RemovalReason reason) {
-         if (!this.level().isClientSide && reason.shouldDestroy()) {
+@@ -147,7 +147,11 @@ public abstract class AbstractMinecartContainer extends AbstractMinecart impleme
+     public void remove(Entity.RemovalReason entity_removalreason, EntityRemoveEvent.Cause cause) {
+         // CraftBukkit end
+         if (!this.level().isClientSide && entity_removalreason.shouldDestroy()) {
 -            Containers.dropContents(this.level(), (Entity) this, (Container) this);
 +            // Scissors start - Ignore errors thrown when trying to remove minecart entities with content in them
 +            try {
@@ -21,4 +21,4 @@ index 6d23c39e4eadf23616080d6d08672e13b5d3c37d..0bd5c3e3bb7074b5265e3f1bf670f993
 +            // Scissors end
          }
  
-         super.remove(reason);
+         super.remove(entity_removalreason, cause); // CraftBukkit - add Bukkit remove cause

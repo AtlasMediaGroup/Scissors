@@ -31,10 +31,10 @@ index 2ee4ee14ab3345486dad6b24fd9a4fcc6c746b99..c5ac6cda91a81d3075f5c763e30dc009
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java b/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
-index 1f55185814125c691288294d18bf1580461c8066..259d65f8e21f9cf99585d416eafdc967dddccf57 100644
+index 094ab43e5a209ea848bf0994db9018281c64e08d..c6faba7da6809e24d734b7d6b0b787d20163b051 100644
 --- a/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
 +++ b/src/main/java/net/minecraft/world/entity/AreaEffectCloud.java
-@@ -409,7 +409,7 @@ public class AreaEffectCloud extends Entity implements TraceableEntity {
+@@ -410,7 +410,7 @@ public class AreaEffectCloud extends Entity implements TraceableEntity {
              try {
                  this.setParticle(ParticleArgument.readParticle(new StringReader(nbt.getString("Particle")), (HolderLookup) BuiltInRegistries.PARTICLE_TYPE.asLookup()));
              } catch (CommandSyntaxException commandsyntaxexception) {
