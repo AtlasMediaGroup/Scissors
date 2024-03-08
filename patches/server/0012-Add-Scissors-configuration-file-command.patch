@@ -447,7 +447,7 @@ index 68d268b6fff126e8645b6deec3fb549ea2286b77..5cb58e351d38b7214e2002bf60851202
          this.setFlightAllowed(dedicatedserverproperties.allowFlight);
          this.setMotd(dedicatedserverproperties.motd);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 55ffdca92ee796fb949de939bb759e09f25242ff..76189b4aba89c36b2d1a4fc397435de746d95f05 100644
+index f192db9868129bd1ee45e2b29c0c7479af33ebe1..1233d9b15d86079b2710e167ada03a4d0898642f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -1053,6 +1053,7 @@ public final class CraftServer implements Server {
@@ -466,7 +466,7 @@ index 55ffdca92ee796fb949de939bb759e09f25242ff..76189b4aba89c36b2d1a4fc397435de7
          this.overrideAllCommandBlockCommands = this.commandsConfiguration.getStringList("command-block-overrides").contains("*");
          this.ignoreVanillaPermissions = this.commandsConfiguration.getBoolean("ignore-vanilla-permissions");
  
-@@ -3013,6 +3015,14 @@ public final class CraftServer implements Server {
+@@ -3028,6 +3030,14 @@ public final class CraftServer implements Server {
              return CraftServer.this.console.paperConfigurations.createLegacyObject(CraftServer.this.console);
          }
  
