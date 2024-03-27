@@ -5,7 +5,7 @@ Subject: [PATCH] Fixes log spam caused by invalid entities in beehives
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
-index 55b0e2bf98a285cdcd30e40d94192b7a1802efd8..c5f206f392efe86d801539e0bad354b125c3d411 100644
+index d445ed0895293dd45c36226051f5809be8587ebe..b9c8b70fb0bf47ffe62cf0d082156479d07da331 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
 @@ -11,6 +11,7 @@ import net.minecraft.nbt.CompoundTag;
@@ -16,7 +16,7 @@ index 55b0e2bf98a285cdcd30e40d94192b7a1802efd8..c5f206f392efe86d801539e0bad354b1
  import net.minecraft.sounds.SoundEvents;
  import net.minecraft.sounds.SoundSource;
  import net.minecraft.tags.BlockTags;
-@@ -374,6 +375,13 @@ public class BeehiveBlockEntity extends BlockEntity {
+@@ -380,6 +381,13 @@ public class BeehiveBlockEntity extends BlockEntity {
  
          for (int i = 0; i < nbttaglist.size(); ++i) {
              CompoundTag nbttagcompound1 = nbttaglist.getCompound(i);
